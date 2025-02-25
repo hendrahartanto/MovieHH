@@ -9,6 +9,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const inputLoginSchema = z.object({
   username: z.string().min(1, "Username is requried"),
@@ -29,7 +30,8 @@ export const LoginForm = () => {
   return (
     <>
       <Form {...form}>
-        <form>
+        <form className="flex flex-col gap-4">
+          <p className="text-xl mb-2 font-bold">Login</p>
           <FormField
             control={form.control}
             name="username"
@@ -37,7 +39,7 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="username" {...field} />
+                  <Input placeholder="Username" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -49,11 +51,12 @@ export const LoginForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="password" {...field} />
+                  <Input placeholder="Password" {...field} />
                 </FormControl>
               </FormItem>
             )}
           ></FormField>
+          <Button className="w-full">Login</Button>
         </form>
       </Form>
     </>
