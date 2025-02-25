@@ -4,10 +4,21 @@ import { useMemo } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
+const convert = (queryClient: QueryClient) => (m: any) => {
+  const { clientLoader, clientAction, default: Component, ...rest } = m;
+  return {
+    ...rest,
+    loader: clientLoader?.(queryClient),
+    action: clientAction?.(queryClient),
+    Component,
+  };
+};
+
 const createAppRouter = (queryClient: QueryClient) =>
   createBrowserRouter([
     {
-      path: paths.auth.register.path,
+      path: paths.auth.login.path,
+      lazy: () => import("./pages/auth/login").then(convert(queryClient)),
     },
   ]);
 
