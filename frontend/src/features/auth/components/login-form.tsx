@@ -7,12 +7,15 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link, useSearchParams } from "react-router";
+import { paths } from "@/config/paths";
 
 const inputLoginSchema = z.object({
-  username: z.string().min(1, "Username is requried"),
+  username: z.string().min(1, "Username is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -27,36 +30,54 @@ export const LoginForm = () => {
     },
   });
 
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
+
   return (
     <>
       <Form {...form}>
-        <form className="flex flex-col gap-4">
-          <p className="text-xl mb-2 font-bold">Login</p>
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="Username" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input placeholder="Password" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-          <Button className="w-full">Login</Button>
+        <form onSubmit={form.handleSubmit(() => {})}>
+          <div className="flex flex-col gap-4">
+            <p className="text-xl mb-2 font-bold">Login</p>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Username" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+          </div>
+          <div className="w-full mt-2 text-sm">
+            Don't have an account?{" "}
+            <Link
+              className="text-sm text-blue-600 hover:underline"
+              to={paths.auth.register.getHref(redirectTo)}
+            >
+              Sign Up
+            </Link>
+          </div>
         </form>
       </Form>
     </>
