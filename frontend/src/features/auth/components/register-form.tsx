@@ -104,7 +104,7 @@ export const RegisterForm = () => {
               )}
             ></FormField>
             <Button type="submit" className="w-full">
-              Login
+              Register
             </Button>
           </div>
           <div className="w-full mt-2 text-sm">
