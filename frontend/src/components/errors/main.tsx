@@ -1,3 +1,4 @@
+//TODO: redesign this page
 import { Button } from "../ui/button";
 
 export const MainErrorFallback = () => {
