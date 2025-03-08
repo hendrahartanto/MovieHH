@@ -12,3 +12,25 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id    String @id @default(uuid()) @db.Uuid
+  email String @unique
+  name  String
+  role  Role   @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Movie {
+  id          String  @id @default(uuid()) @db.Uuid
+  title       String
+  description String
+  posterUrl   String?
+}
