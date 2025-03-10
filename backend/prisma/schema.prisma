@@ -14,10 +14,11 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid()) @db.Uuid
-  email String @unique
-  name  String
-  role  Role   @default(USER)
+  id          String        @id @default(uuid()) @db.Uuid
+  email       String        @unique
+  name        String
+  role        Role          @default(USER)
+  reservation Reservation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,8 +30,82 @@ enum Role {
 }
 
 model Movie {
-  id          String  @id @default(uuid()) @db.Uuid
+  id          String           @id @default(uuid()) @db.Uuid
   title       String
   description String
   posterUrl   String?
+  genres      GenresOnMovies[]
+  showTime    ShowTime[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Genre {
+  id     String           @id @default(uuid()) @db.Uuid
+  name   String           @unique
+  movies GenresOnMovies[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GenresOnMovies {
+  movie   Movie  @relation(fields: [moveiId], references: [id])
+  moveiId String
+  genre   Genre  @relation(fields: [genreId], references: [id])
+  genreId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([moveiId, genreId])
+}
+
+model Theater {
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  seat     Seat[]
+  showTime ShowTime[]
+}
+
+model Seat {
+  id          String        @id @default(uuid()) @db.Uuid
+  seatNumber  String
+  seatRow     String
+  theater     Theater       @relation(fields: [theaterId], references: [id])
+  theaterId   String
+  reservation Reservation[]
+}
+
+model ShowTime {
+  id         String        @id @default(uuid()) @db.Uuid
+  movie      Movie         @relation(fields: [movieId], references: [id])
+  movieId    String
+  theater    Theater       @relation(fields: [theaterId], references: [id])
+  theaterId  String
+  startTime  DateTime
+  endTime    DateTime
+  reservatio Reservation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Reservation {
+  id         String            @id @default(uuid()) @db.Uuid
+  user       User              @relation(fields: [userId], references: [id])
+  userId     String
+  showTime   ShowTime          @relation(fields: [showTimeId], references: [id])
+  showTimeId String
+  seat       Seat              @relation(fields: [seatId], references: [id])
+  seatId     String
+  status     ReservationStatus @default(PENDING)
+  createAt   DateTime          @default(now())
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
 }
