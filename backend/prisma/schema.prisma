@@ -52,9 +52,9 @@ model Genre {
 
 model GenresOnMovies {
   movie   Movie  @relation(fields: [moveiId], references: [id])
-  moveiId String
+  moveiId String @db.Uuid
   genre   Genre  @relation(fields: [genreId], references: [id])
-  genreId String
+  genreId String @db.Uuid
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -74,16 +74,16 @@ model Seat {
   seatNumber  String
   seatRow     String
   theater     Theater       @relation(fields: [theaterId], references: [id])
-  theaterId   String
+  theaterId   String        @db.Uuid
   reservation Reservation[]
 }
 
 model ShowTime {
   id         String        @id @default(uuid()) @db.Uuid
   movie      Movie         @relation(fields: [movieId], references: [id])
-  movieId    String
+  movieId    String        @db.Uuid
   theater    Theater       @relation(fields: [theaterId], references: [id])
-  theaterId  String
+  theaterId  String        @db.Uuid
   startTime  DateTime
   endTime    DateTime
   reservatio Reservation[]
@@ -95,11 +95,11 @@ model ShowTime {
 model Reservation {
   id         String            @id @default(uuid()) @db.Uuid
   user       User              @relation(fields: [userId], references: [id])
-  userId     String
+  userId     String            @db.Uuid
   showTime   ShowTime          @relation(fields: [showTimeId], references: [id])
-  showTimeId String
+  showTimeId String            @db.Uuid
   seat       Seat              @relation(fields: [seatId], references: [id])
-  seatId     String
+  seatId     String            @db.Uuid
   status     ReservationStatus @default(PENDING)
   createAt   DateTime          @default(now())
 }
