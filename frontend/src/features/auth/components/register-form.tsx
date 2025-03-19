@@ -22,7 +22,8 @@ import { Link, useSearchParams } from "react-router";
 import { z } from "zod";
 
 const inputRegisterSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
+  name: z.string().min(1, "Name is required"),
   password: z.string().min(1, "Password is required"),
   role: z.enum(["regular", "admin"], {
     errorMap: () => ({ message: "Role must be either regular or admin" }),
@@ -36,7 +37,8 @@ export const RegisterForm = () => {
     resolver: zodResolver(inputRegisterSchema),
     //TODO: add default values mayybe (?)
     defaultValues: {
-      username: "",
+      email: "",
+      name: "",
       password: "",
     },
   });
@@ -52,17 +54,30 @@ export const RegisterForm = () => {
             <p className="text-xl mb-2 font-bold">Register</p>
             <FormField
               control={form.control}
-              name="username"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Username" {...field} />
+                    <Input placeholder="Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
-            ></FormField>
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="password"
@@ -75,7 +90,7 @@ export const RegisterForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            ></FormField>
+            />
             <FormField
               control={form.control}
               name="role"
@@ -102,7 +117,7 @@ export const RegisterForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            ></FormField>
+            />
             <Button type="submit" className="w-full">
               Register
             </Button>

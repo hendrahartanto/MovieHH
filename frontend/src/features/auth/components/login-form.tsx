@@ -15,7 +15,7 @@ import { Link, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
 
 const inputLoginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  email: z.string().min(1, "Email is requried").email("Invalid email format"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -25,7 +25,7 @@ export const LoginForm = () => {
   const form = useForm<inputLoginSchema>({
     resolver: zodResolver(inputLoginSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -41,12 +41,12 @@ export const LoginForm = () => {
             <p className="text-xl mb-2 font-bold">Login</p>
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Username" {...field} />
+                    <Input placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
