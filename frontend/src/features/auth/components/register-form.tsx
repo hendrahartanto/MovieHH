@@ -25,15 +25,15 @@ const inputRegisterSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
   name: z.string().min(1, "Name is required"),
   password: z.string().min(1, "Password is required"),
-  role: z.enum(["regular", "admin"], {
+  role: z.enum(["USER", "ADMIN"], {
     errorMap: () => ({ message: "Role must be either regular or admin" }),
   }),
 });
 
-type inputRegisterSchema = z.infer<typeof inputRegisterSchema>;
+type InputRegisterSchema = z.infer<typeof inputRegisterSchema>;
 
 export const RegisterForm = () => {
-  const form = useForm<inputRegisterSchema>({
+  const form = useForm<InputRegisterSchema>({
     resolver: zodResolver(inputRegisterSchema),
     //TODO: add default values mayybe (?)
     defaultValues: {
@@ -109,8 +109,8 @@ export const RegisterForm = () => {
                         <SelectValue placeholder="Role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="regular">Regular</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="USER">Regular</SelectItem>
+                        <SelectItem value="ADMIN">Admin</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

@@ -19,10 +19,10 @@ const inputLoginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-type inputLoginSchema = z.infer<typeof inputLoginSchema>;
+type InputLoginSchema = z.infer<typeof inputLoginSchema>;
 
 export const LoginForm = () => {
-  const form = useForm<inputLoginSchema>({
+  const form = useForm<InputLoginSchema>({
     resolver: zodResolver(inputLoginSchema),
     defaultValues: {
       email: "",
