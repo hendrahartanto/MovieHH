@@ -10,7 +10,10 @@ export const registerUser = async (registerUserData: CreateUserDTO) => {
   const user = await userRepository.getUserByEmail(registerUserData.email);
   if (user) throw new BadRequestError();
 
-  return userRepository.createUser(registerUserData);
+  return userRepository.createUser({
+    ...registerUserData,
+    password: passwordHash,
+  });
 };
 
 export default {

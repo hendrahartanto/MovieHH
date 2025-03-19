@@ -53,3 +53,9 @@ export class BadRequestError extends ApiError {
     super(ErrorType.BAD_REQUEST, message);
   }
 }
+
+export class InternalError extends ApiError {
+  constructor(message = "Internal Error") {
+    super(ErrorType.INTERNAL, message);
+  }
+}

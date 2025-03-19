@@ -1,15 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
-import { ApiError, ErrorType } from "./core/api-error";
+import { ApiError, ErrorType, InternalError } from "./core/api-error";
 import loggerMiddleware from "./middlewares/logger-middleware";
 import logger from "./core/utils/logger";
 import routes from "./routes/index";
-import bodyParser from "body-parser";
 
 const app = express();
 
 //to be able to accept form-data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//logger middleware
+app.use(loggerMiddleware);
 
 //testing
 app.get("/", (req, res) => {
@@ -18,9 +20,6 @@ app.get("/", (req, res) => {
 
 //routes
 app.use("/", routes);
-
-//logger middleware
-app.use(loggerMiddleware);
 
 //error middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -36,6 +35,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
     );
     logger.error(err);
+    ApiError.handle(new InternalError(), res);
   }
 });
 
