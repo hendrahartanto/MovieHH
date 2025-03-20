@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import { ApiError, ErrorType, InternalError } from "./core/api-error";
-import loggerMiddleware from "./middlewares/logger-middleware";
+import loggerMiddleware from "./middlewares/logger.middleware";
 import logger from "./core/utils/logger";
 import routes from "./routes/index";
 

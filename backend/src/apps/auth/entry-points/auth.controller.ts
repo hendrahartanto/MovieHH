@@ -1,5 +1,5 @@
 import express from "express";
-import asyncHandler from "../../../middlewares/async-handler";
+import asyncHandler from "../../../core/helpers/async-handler";
 import { createUserSchema } from "../domain/dto/create-user.dto";
 import authService from "../domain/auth.service";
 import { SuccessResponse } from "../../../core/api-response";
