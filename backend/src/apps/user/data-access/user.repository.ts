@@ -9,7 +9,12 @@ const getUserByEmail = async (email: string) => {
   return prisma.user.findUnique({ where: { email } });
 };
 
+const getUserById = async (userId: string) => {
+  return prisma.user.findUnique({ where: { id: userId } });
+};
+
 export default {
   createUser,
   getUserByEmail,
+  getUserById,
 };

@@ -1,4 +1,8 @@
-import { AuthFailureError, BadRequestError } from "../../../core/api-error";
+import {
+  AuthFailureError,
+  BadRequestError,
+  BadTokenError,
+} from "../../../core/api-error";
 import { SuccessResponse } from "../../../core/api-response";
 import userRepository from "../../user/data-access/user.repository";
 import { CreateUserDTO } from "./dto/create-user.dto";
@@ -7,6 +11,7 @@ import { LoginUserDTO } from "./dto/login-user.dto";
 import {
   generateAccessToken,
   generateRefreshToken,
+  verifyRefreshToken,
 } from "../../../core/utils/jwt";
 
 const register = async (registerUserData: CreateUserDTO) => {
@@ -34,7 +39,19 @@ const login = async (loginUserData: LoginUserDTO) => {
   return { user, accessToken, refreshToken };
 };
 
+const refreshAccessToken = async (refreshToken: string) => {
+  const decoded: any = verifyRefreshToken(refreshToken);
+  const user = await userRepository.getUserById(decoded.userId);
+
+  if (!user) throw new BadTokenError();
+
+  const newAccessTooken = generateAccessToken(user.id);
+
+  return newAccessTooken;
+};
+
 export default {
   register,
   login,
+  refreshAccessToken,
 };

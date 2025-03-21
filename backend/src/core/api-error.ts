@@ -27,6 +27,8 @@ export abstract class ApiError extends Error {
 
   public static handle(err: ApiError, res: Response): Response {
     switch (err.type) {
+      case ErrorType.BAD_TOKEN:
+      case ErrorType.TOKEN_EXPIRED:
       case ErrorType.UNAUTHORIZED:
         return new AuthFailureResponse(err.message).send(res);
       case ErrorType.INTERNAL:
@@ -62,5 +64,17 @@ export class BadRequestError extends ApiError {
 export class InternalError extends ApiError {
   constructor(message = "Internal Error") {
     super(ErrorType.INTERNAL, message);
+  }
+}
+
+export class BadTokenError extends ApiError {
+  constructor(messgae = "Token is not valid") {
+    super(ErrorType.BAD_TOKEN, messgae);
+  }
+}
+
+export class TokenExpireError extends ApiError {
+  constructor(messgae = "Token is Expired") {
+    super(ErrorType.TOKEN_EXPIRED, messgae);
   }
 }

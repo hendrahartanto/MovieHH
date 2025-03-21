@@ -4,6 +4,7 @@ import { createUserSchema } from "../domain/dto/create-user.dto";
 import authService from "../domain/auth.service";
 import { SuccessResponse } from "../../../core/api-response";
 import { loginUserSchema } from "../domain/dto/login-user.dto";
+import { TokenExpireError } from "../../../core/api-error";
 
 const register = asyncHandler(async (req, res) => {
   const validatedData = createUserSchema.parse(req.body);
@@ -29,7 +30,20 @@ const login = asyncHandler(async (req, res) => {
   new SuccessResponse("Login Success", { user, token: accessToken }).send(res);
 });
 
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const accessToken = await authService.refreshAccessToken(
+    req.cookies.refreshToken
+  );
+
+  if (!accessToken) new TokenExpireError();
+
+  new SuccessResponse("Refresh Access Token Successful", {
+    token: accessToken,
+  });
+});
+
 export default {
   register,
   login,
+  refreshAccessToken,
 };
