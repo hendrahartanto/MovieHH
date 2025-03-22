@@ -31,6 +31,7 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
+  console.log(req.cookies);
   const accessToken = await authService.refreshAccessToken(
     req.cookies.refreshToken
   );
@@ -39,7 +40,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
   new SuccessResponse("Refresh Access Token Successful", {
     token: accessToken,
-  });
+  }).send(res);
 });
 
 export default {

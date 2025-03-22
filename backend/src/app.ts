@@ -3,8 +3,12 @@ import { ApiError, ErrorType, InternalError } from "./core/api-error";
 import loggerMiddleware from "./middlewares/logger.middleware";
 import logger from "./core/utils/logger";
 import routes from "./routes/index";
+import cookieParser from "cookie-parser";
 
 const app = express();
+
+//to be able to receive cookies from request
+app.use(cookieParser());
 
 //to be able to accept form-data
 app.use(express.json());
