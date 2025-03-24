@@ -9,3 +9,7 @@ const createGenre = asyncHandler(async (req, res) => {
 
   new SuccessMsgResponse("Genre Created Successfuly");
 });
+
+export default {
+  createGenre,
+};

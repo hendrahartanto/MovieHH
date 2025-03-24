@@ -9,3 +9,7 @@ const createMovie = asyncHandler(async (req, res) => {
 
   new SuccessMsgResponse("Create Movie Successful").send(res);
 });
+
+export default {
+  createMovie,
+};
