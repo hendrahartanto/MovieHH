@@ -7,7 +7,7 @@ const createGenre = asyncHandler(async (req, res) => {
   const validatedData = createGenreSchema.parse(req.body);
   await genreService.createGenre(validatedData);
 
-  new SuccessMsgResponse("Genre Created Successfuly");
+  new SuccessMsgResponse("Genre Created Successfuly").send(res);
 });
 
 export default {
