@@ -33,6 +33,7 @@ export abstract class ApiError extends Error {
         return new AuthFailureResponse(err.message).send(res);
       case ErrorType.INTERNAL:
         return new InternalErrorResponse(err.message).send(res);
+      case ErrorType.NO_DATA:
       case ErrorType.NOT_FOUND:
         return new NotFoundResponse(err.message).send(res);
       case ErrorType.BAD_REQUEST:
@@ -50,19 +51,19 @@ export abstract class ApiError extends Error {
 }
 
 export class AuthFailureError extends ApiError {
-  constructor(message = "Invalid Credentials") {
+  constructor(message = "Invalid credentials") {
     super(ErrorType.UNAUTHORIZED, message);
   }
 }
 
 export class BadRequestError extends ApiError {
-  constructor(message = "Bad Request") {
+  constructor(message = "Bad request") {
     super(ErrorType.BAD_REQUEST, message);
   }
 }
 
 export class InternalError extends ApiError {
-  constructor(message = "Internal Error") {
+  constructor(message = "Internal rrror") {
     super(ErrorType.INTERNAL, message);
   }
 }
@@ -74,7 +75,13 @@ export class BadTokenError extends ApiError {
 }
 
 export class TokenExpireError extends ApiError {
-  constructor(messgae = "Token is Expired") {
+  constructor(messgae = "Token is expired") {
     super(ErrorType.TOKEN_EXPIRED, messgae);
+  }
+}
+
+export class NoDataError extends ApiError {
+  constructor(messgae = "Data not found") {
+    super(ErrorType.NO_DATA, messgae);
   }
 }

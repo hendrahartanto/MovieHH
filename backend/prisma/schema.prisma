@@ -52,15 +52,15 @@ model Genre {
 }
 
 model GenresOnMovies {
-  movie   Movie  @relation(fields: [moveiId], references: [id])
-  moveiId String @db.Uuid
+  movie   Movie  @relation(fields: [movieId], references: [id])
+  movieId String @db.Uuid
   genre   Genre  @relation(fields: [genreId], references: [id])
   genreId String @db.Uuid
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@id([moveiId, genreId])
+  @@id([movieId, genreId])
 }
 
 model Theater {
