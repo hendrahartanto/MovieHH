@@ -5,6 +5,21 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return prisma.showTime.create({ data: newShowTimeData });
 };
 
+const getShowTimeByDate = async (date: string) => {
+  const startOfDay = new Date(`${date}T00:00:00.000Z`);
+  const endOfDay = new Date(`${date}T23:59:59.999Z`);
+
+  return prisma.showTime.findMany({
+    where: {
+      startTime: { gte: startOfDay, lte: endOfDay },
+    },
+    include: {
+      movie: true,
+      theater: true,
+    },
+  });
+};
+
 const getOverlappingShowTime = async (
   theaterId: string,
   startTime: Date,
@@ -21,5 +36,6 @@ const getOverlappingShowTime = async (
 
 export default {
   createShowTime,
+  getShowTimeByDate,
   getOverlappingShowTime,
 };
