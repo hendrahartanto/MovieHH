@@ -14,6 +14,17 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   if (newShowTimeData.startTime > newShowTimeData.endTime)
     throw new BadRequestError("Start time must be before end time");
 
+  const overlappingShowTime = await showTimeRepository.getOverlappingShowTime(
+    newShowTimeData.theaterId,
+    newShowTimeData.startTime,
+    newShowTimeData.endTime
+  );
+
+  if (overlappingShowTime)
+    throw new BadRequestError(
+      "Showtime overlap with existing schedule in given theater"
+    );
+
   return showTimeRepository.createShowTime(newShowTimeData);
 };
 
