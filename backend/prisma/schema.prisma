@@ -52,7 +52,7 @@ model Genre {
 }
 
 model GenresOnMovies {
-  movie   Movie  @relation(fields: [movieId], references: [id])
+  movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId String @db.Uuid
   genre   Genre  @relation(fields: [genreId], references: [id])
   genreId String @db.Uuid

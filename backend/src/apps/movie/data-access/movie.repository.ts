@@ -40,13 +40,21 @@ const updateGenres = async (movieId: string, genreIds: string[]) => {
     );
 };
 
+const deleteMovie = async (movieId: string) => {
+  return prisma.movie.delete({ where: { id: movieId } });
+};
+
 const getMovieById = async (movieId: string) => {
-  return prisma.movie.findUnique({ where: { id: movieId } });
+  return prisma.movie.findUnique({
+    where: { id: movieId },
+    include: { genres: { include: { genre: true } } },
+  });
 };
 
 export default {
   createMovie,
   updateMovie,
   updateGenres,
+  deleteMovie,
   getMovieById,
 };

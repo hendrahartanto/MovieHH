@@ -22,7 +22,15 @@ const updateMovie = async (
   return movieRepository.getMovieById(movieId);
 };
 
+const deleteMovie = async (movieId: string) => {
+  const existingMovie = await movieRepository.getMovieById(movieId);
+  if (!existingMovie) throw new NoDataError("Movie not found");
+
+  return movieRepository.deleteMovie(movieId);
+};
+
 export default {
   createMovie,
   updateMovie,
+  deleteMovie,
 };
