@@ -10,7 +10,13 @@ const createMovie = asyncHandler(async (req, res) => {
   const validatedData = createMovieSchema.parse(req.body);
   await movieService.createMovie(validatedData);
 
-  new SuccessMsgResponse("Create Movie Successful").send(res);
+  new SuccessMsgResponse("Create movie successful").send(res);
+});
+
+const getMovies = asyncHandler(async (req, res) => {
+  const movies = await movieService.getMovies();
+
+  new SuccessResponse("Get movies successful", movies).send(res);
 });
 
 const updateMovie = asyncHandler(async (req, res) => {
@@ -32,4 +38,5 @@ export default {
   createMovie,
   updateMovie,
   deleteMovie,
+  getMovies,
 };

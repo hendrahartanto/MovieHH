@@ -18,6 +18,19 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
   });
 };
 
+const getMovies = async () => {
+  return prisma.movie.findMany({
+    include: { genres: { include: { genre: true } } },
+  });
+};
+
+const getMovieById = async (movieId: string) => {
+  return prisma.movie.findUnique({
+    where: { id: movieId },
+    include: { genres: { include: { genre: true } } },
+  });
+};
+
 const updateMovie = async (
   movieId: string,
   data: { title: string; description: string; posterUrl: string | null }
@@ -44,17 +57,11 @@ const deleteMovie = async (movieId: string) => {
   return prisma.movie.delete({ where: { id: movieId } });
 };
 
-const getMovieById = async (movieId: string) => {
-  return prisma.movie.findUnique({
-    where: { id: movieId },
-    include: { genres: { include: { genre: true } } },
-  });
-};
-
 export default {
   createMovie,
+  getMovies,
+  getMovieById,
   updateMovie,
   updateGenres,
   deleteMovie,
-  getMovieById,
 };

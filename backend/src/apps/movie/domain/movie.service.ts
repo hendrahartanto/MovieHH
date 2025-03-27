@@ -8,6 +8,10 @@ const createMovie = async (createMovieData: CreateMovieDTO) => {
   return movieRepository.createMovie(createMovieData);
 };
 
+const getMovies = async () => {
+  return movieRepository.getMovies();
+};
+
 const updateMovie = async (
   movieId: string,
   updateMovieData: UpdateMovieDTO
@@ -31,6 +35,7 @@ const deleteMovie = async (movieId: string) => {
 
 export default {
   createMovie,
+  getMovies,
   updateMovie,
   deleteMovie,
 };
