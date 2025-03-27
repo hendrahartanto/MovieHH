@@ -5,7 +5,7 @@ import showTimeService from "../domain/show-time.service";
 
 const createShowTime = asyncHandler(async (req, res) => {
   const validatedData = createShowTimeSchema.parse(req.body);
-  const newShowTime = showTimeService.createShowTime(validatedData);
+  const newShowTime = await showTimeService.createShowTime(validatedData);
 
   new SuccessResponse("Create show time successful", newShowTime).send(res);
 });
