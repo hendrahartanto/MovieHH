@@ -17,8 +17,8 @@ You can create the initial admin using seed data. Only admins should be able to 
 
 Movie Management
 ==================
-- Admins should be able to add, update, and delete movies.
-- Each movie should have a title, description, and poster image.
+- [DONE] Admins should be able to add, update, and delete movies.
+- [DONE] Each movie should have a title, description, and poster image.
 - Movies should be categorized by genre.
 - Movies should have showtimes.
 
