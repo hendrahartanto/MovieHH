@@ -18,7 +18,7 @@ const updateMovie = asyncHandler(async (req, res) => {
   const validatedData = createMovieSchema.parse(req.body);
 
   const updatedMovie = await movieService.updateMovie(movieId, validatedData);
-  new SuccessResponse("Update movie successful", updateMovie).send(res);
+  new SuccessResponse("Update movie successful", updatedMovie).send(res);
 });
 
 export default {
