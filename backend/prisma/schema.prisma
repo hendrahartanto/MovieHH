@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(uuid()) @db.Uuid
-  email       String        @unique
-  name        String
-  role        Role          @default(USER)
-  password    String
-  reservation Reservation[]
+  id           String        @id @default(uuid()) @db.Uuid
+  email        String        @unique
+  name         String
+  role         Role          @default(USER)
+  password     String
+  reservations Reservation[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -36,7 +36,7 @@ model Movie {
   description String
   posterUrl   String?
   genres      GenresOnMovies[]
-  showTime    ShowTime[]
+  showTimes   ShowTime[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -64,33 +64,44 @@ model GenresOnMovies {
 }
 
 model Theater {
-  id       String     @id @default(uuid()) @db.Uuid
-  name     String
-  seat     Seat[]
-  showTime ShowTime[]
+  id        String     @id @default(uuid()) @db.Uuid
+  name      String
+  seats     Seat[]
+  showTimes ShowTime[]
 }
 
 model Seat {
-  id          String        @id @default(uuid()) @db.Uuid
-  seatNumber  String
-  seatRow     String
-  theater     Theater       @relation(fields: [theaterId], references: [id])
-  theaterId   String        @db.Uuid
-  reservation Reservation[]
+  id           String             @id @default(uuid()) @db.Uuid
+  seatNumber   String
+  seatRow      String
+  theater      Theater            @relation(fields: [theaterId], references: [id])
+  theaterId    String             @db.Uuid
+  reservations Reservation[]
+  showTimes    SeatsOnShowTimes[]
 }
 
 model ShowTime {
-  id         String        @id @default(uuid()) @db.Uuid
-  movie      Movie         @relation(fields: [movieId], references: [id])
-  movieId    String        @db.Uuid
-  theater    Theater       @relation(fields: [theaterId], references: [id])
-  theaterId  String        @db.Uuid
-  startTime  DateTime
-  endTime    DateTime
-  reservatio Reservation[]
+  id           String             @id @default(uuid()) @db.Uuid
+  movie        Movie              @relation(fields: [movieId], references: [id])
+  movieId      String             @db.Uuid
+  theater      Theater            @relation(fields: [theaterId], references: [id])
+  theaterId    String             @db.Uuid
+  startTime    DateTime
+  endTime      DateTime
+  reservations Reservation[]
+  seats        SeatsOnShowTimes[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SeatsOnShowTimes {
+  seat       Seat     @relation(fields: [seatId], references: [id])
+  seatId     String   @db.Uuid
+  showTime   ShowTime @relation(fields: [showTimeId], references: [id])
+  showTimeId String   @db.Uuid
+
+  @@id([seatId, showTimeId])
 }
 
 model Reservation {
