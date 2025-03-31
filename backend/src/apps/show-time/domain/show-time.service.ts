@@ -12,6 +12,8 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
 
   //TODO: bikin validasi existing theater
 
+  //TODO: setiap bikin showtime, akan generate mapping seatid dan showtime yang baru
+
   if (newShowTimeData.startTime > newShowTimeData.endTime)
     throw new BadRequestError("Start time must be before end time");
 
