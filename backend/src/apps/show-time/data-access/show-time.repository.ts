@@ -1,4 +1,5 @@
 import prisma from "../../../db";
+import { CreateShowTimeSeatsDTO } from "../domain/dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "../domain/dto/create-show-time.dto";
 
 const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
@@ -34,8 +35,13 @@ const getOverlappingShowTime = async (
   });
 };
 
+const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[]) => {
+  return prisma.seatsOnShowTimes.createMany({ data: mappingDatas });
+};
+
 export default {
   createShowTime,
   getShowTimeByDate,
   getOverlappingShowTime,
+  createShowTimeSeats,
 };
