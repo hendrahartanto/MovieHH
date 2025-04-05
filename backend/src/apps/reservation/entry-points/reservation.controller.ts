@@ -7,7 +7,7 @@ const reserve = asyncHandler(async (req, res) => {
   const validatedData = createReservationSchema.parse(req.body);
   const newReservation = reservationService.reserve(validatedData);
 
-  new SuccessResponse("Reserve succesful", newReservation).send(res);
+  new SuccessResponse("Reserve succesful", { newReservation }).send(res);
 });
 
 export default {

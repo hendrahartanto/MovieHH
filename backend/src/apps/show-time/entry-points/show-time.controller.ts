@@ -8,7 +8,7 @@ const createShowTime = asyncHandler(async (req, res) => {
   const validatedData = createShowTimeSchema.parse(req.body);
   const newShowTime = await showTimeService.createShowTime(validatedData);
 
-  new SuccessResponse("Create show time successful", newShowTime).send(res);
+  new SuccessResponse("Create show time successful", { newShowTime }).send(res);
 });
 
 const getShowTimeByDate = asyncHandler(async (req, res) => {
@@ -18,7 +18,17 @@ const getShowTimeByDate = asyncHandler(async (req, res) => {
   new SuccessResponse("Get showtimes successful", showTimes).send(res);
 });
 
+const getShowTimeSeats = asyncHandler(async (req, res) => {
+  const showTimeId = req.params.showTimeId;
+  const showTimeSeats = await showTimeService.getShowTimeSeats(showTimeId);
+
+  new SuccessResponse("Get showtime seats successful", { showTimeSeats }).send(
+    res
+  );
+});
+
 export default {
   createShowTime,
   getShowTimeByDate,
+  getShowTimeSeats,
 };

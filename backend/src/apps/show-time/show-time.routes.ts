@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post("/", showTimeController.createShowTime);
 router.get("/", showTimeController.getShowTimeByDate);
+router.get("/:showTimeId/seats", showTimeController.getShowTimeSeats);
 
 export default router;

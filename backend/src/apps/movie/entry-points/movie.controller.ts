@@ -16,7 +16,7 @@ const createMovie = asyncHandler(async (req, res) => {
 const getMovies = asyncHandler(async (req, res) => {
   const movies = await movieService.getMovies();
 
-  new SuccessResponse("Get movies successful", movies).send(res);
+  new SuccessResponse("Get movies successful", { movies }).send(res);
 });
 
 const updateMovie = asyncHandler(async (req, res) => {
@@ -31,7 +31,7 @@ const deleteMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
 
   const deletedMovie = await movieService.deleteMovie(movieId);
-  new SuccessResponse("Delete movie successful", deletedMovie).send(res);
+  new SuccessResponse("Delete movie successful", { deletedMovie }).send(res);
 });
 
 export default {

@@ -39,9 +39,17 @@ const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[]) => {
   return prisma.seatsOnShowTimes.createMany({ data: mappingDatas });
 };
 
+const getShowTimeSeats = async (showTimeId: string) => {
+  return prisma.seatsOnShowTimes.findMany({
+    where: { showTimeId },
+    include: { seat: true },
+  });
+};
+
 export default {
   createShowTime,
   getShowTimeByDate,
   getOverlappingShowTime,
   createShowTimeSeats,
+  getShowTimeSeats,
 };

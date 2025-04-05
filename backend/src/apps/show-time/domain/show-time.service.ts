@@ -51,7 +51,12 @@ const getShowTimeByDate = async (query: GetShowTimesByDateDTO) => {
   return showTimeRepository.getShowTimeByDate(query.date);
 };
 
+const getShowTimeSeats = async (showTimeId: string) => {
+  return showTimeRepository.getShowTimeSeats(showTimeId);
+};
+
 export default {
   createShowTime,
   getShowTimeByDate,
+  getShowTimeSeats,
 };
