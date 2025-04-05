@@ -96,10 +96,11 @@ model ShowTime {
 }
 
 model SeatsOnShowTimes {
-  seat       Seat     @relation(fields: [seatId], references: [id])
-  seatId     String   @db.Uuid
-  showTime   ShowTime @relation(fields: [showTimeId], references: [id])
-  showTimeId String   @db.Uuid
+  seat       Seat       @relation(fields: [seatId], references: [id])
+  seatId     String     @db.Uuid
+  showTime   ShowTime   @relation(fields: [showTimeId], references: [id])
+  showTimeId String     @db.Uuid
+  status     SeatStatus @default(AVAILABLE)
 
   @@id([seatId, showTimeId])
 }
@@ -120,4 +121,9 @@ enum ReservationStatus {
   PENDING
   CONFIRMED
   CANCELED
+}
+
+enum SeatStatus {
+  AVAILABLE
+  RESERVED
 }

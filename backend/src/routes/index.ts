@@ -9,10 +9,10 @@ import theater from "../apps/theater/theater.routes";
 const router = express.Router();
 
 router.use("/auth", auth);
-router.use("/movie", movie);
-router.use("/genre", genre);
-router.use("/show-time", showTime);
-router.use("/reservation", reservation);
-router.use("/theater", theater);
+router.use("/movies", movie);
+router.use("/genres", genre);
+router.use("/show-times", showTime);
+router.use("/reservations", reservation);
+router.use("/theaters", theater);
 
 export default router;

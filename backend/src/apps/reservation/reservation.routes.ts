@@ -3,6 +3,6 @@ import reservationController from "./entry-points/reservation.controller";
 
 const router = express.Router();
 
-router.post("/reservations", reservationController.reserve);
+router.post("/", reservationController.reserve);
 
 export default router;

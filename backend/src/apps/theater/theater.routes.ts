@@ -3,6 +3,6 @@ import theaterController from "./entry-points/theater.controller";
 
 const router = express.Router();
 
-router.post("/theatersl", theaterController.createTheater);
+router.post("/", theaterController.createTheater);
 
 export default router;
