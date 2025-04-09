@@ -46,10 +46,37 @@ const getShowTimeSeats = async (showTimeId: string) => {
   });
 };
 
+const getShowTimeSeat = async (showTimeId: string, seatId: string) => {
+  return prisma.seatsOnShowTimes.findUnique({
+    where: {
+      seatId_showTimeId: {
+        seatId,
+        showTimeId,
+      },
+    },
+    include: {
+      seat: true,
+    },
+  });
+};
+
+const updateSeatStatus = (
+  showTimeId: string,
+  seatId: string,
+  status: "RESERVED" | "AVAILABLE"
+) => {
+  return prisma.seatsOnShowTimes.update({
+    where: { seatId_showTimeId: { seatId, showTimeId } },
+    data: { status },
+  });
+};
+
 export default {
   createShowTime,
   getShowTimeByDate,
   getOverlappingShowTime,
   createShowTimeSeats,
   getShowTimeSeats,
+  getShowTimeSeat,
+  updateSeatStatus,
 };

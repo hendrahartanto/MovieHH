@@ -5,7 +5,7 @@ import reservationService from "../domain/reservation.service";
 
 const reserve = asyncHandler(async (req, res) => {
   const validatedData = createReservationSchema.parse(req.body);
-  const newReservation = reservationService.reserve(validatedData);
+  const newReservation = await reservationService.reserve(validatedData);
 
   new SuccessResponse("Reserve succesful", { newReservation }).send(res);
 });
