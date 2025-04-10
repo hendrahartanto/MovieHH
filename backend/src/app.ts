@@ -1,9 +1,15 @@
 import express, { NextFunction, Request, Response } from "express";
-import { ApiError, ErrorType, InternalError } from "./core/api-error";
+import {
+  ApiError,
+  BadRequestError,
+  ErrorType,
+  InternalError,
+} from "./core/api-error";
 import loggerMiddleware from "./middlewares/logger.middleware";
 import logger from "./core/utils/logger";
 import routes from "./routes/index";
 import cookieParser from "cookie-parser";
+import { ZodError } from "zod";
 
 const app = express();
 
@@ -27,6 +33,24 @@ app.use("/", routes);
 
 //error middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  // hanlde zod error (bad request error)
+  if (err instanceof ZodError) {
+    const formatted = err.errors.map((e) => ({
+      path: e.path.join("."),
+      message: e.message,
+    }));
+
+    const errorMessage = formatted
+      .map((e) => `${e.path}: ${e.message}`)
+      .join(", ");
+
+    ApiError.handle(new BadRequestError(errorMessage), res);
+    logger.error(
+      `400 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return;
+  }
+
   if (err instanceof ApiError) {
     // handle error agar bisa kirim response balik ke frontend
     ApiError.handle(err, res);
@@ -38,7 +62,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(
       `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
     );
-    logger.error(err);
+    // logger.error(err);
     ApiError.handle(new InternalError(), res);
   }
 });

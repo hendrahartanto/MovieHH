@@ -1,10 +1,16 @@
 import prisma from "../../../db";
-import { CreateReservationDTO } from "../domain/dto/create-reservation.dto";
+import {
+  CreateReservationDTO,
+  ReservationCreateInput,
+} from "../domain/dto/create-reservation.dto";
 
-const reserve = (reserveData: CreateReservationDTO) => {
-  return prisma.reservation.create({ data: reserveData });
+const reserveMany = (data: ReservationCreateInput[]) => {
+  return prisma.reservation.createMany({
+    data,
+    skipDuplicates: true,
+  });
 };
 
 export default {
-  reserve,
+  reserveMany,
 };
