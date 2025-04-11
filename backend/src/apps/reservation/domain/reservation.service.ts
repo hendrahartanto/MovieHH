@@ -7,12 +7,18 @@ import {
   ReservationCreateInput,
 } from "./dto/create-reservation.dto";
 
-const reserve = async (newReservationData: CreateReservationDTO) => {
-  const { showTimeId, seatIds, userId, count } = newReservationData;
+const reserve = async (
+  newReservationData: CreateReservationDTO,
+  userId: string
+) => {
+  const { showTimeId, seatIds, count } = newReservationData;
 
   if (seatIds.length !== count) {
     throw new BadRequestError("Number of selected seats must match the count");
   }
+
+  const showTime = await showTimeRepository.getShowTimeById(showTimeId);
+  if (!showTime) throw new NoDataError("Showtime not found");
 
   const seats = await Promise.all(
     seatIds.map((seatId) =>

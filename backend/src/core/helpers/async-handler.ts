@@ -1,12 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 
-type AsyncFunction = (
-  req: Request,
+type AsyncFunction<TReq extends Request = Request> = (
+  req: TReq,
   res: Response,
   next: NextFunction
 ) => Promise<any>;
 
-export default (execution: AsyncFunction) =>
+const asyncHandler =
+  <TReq extends Request = Request>(execution: AsyncFunction<TReq>) =>
   (req: Request, res: Response, next: NextFunction) => {
-    execution(req, res, next).catch(next);
+    execution(req as TReq, res, next).catch(next);
   };
+
+export default asyncHandler;

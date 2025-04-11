@@ -63,7 +63,7 @@ export class BadRequestError extends ApiError {
 }
 
 export class InternalError extends ApiError {
-  constructor(message = "Internal rrror") {
+  constructor(message = "Internal error") {
     super(ErrorType.INTERNAL, message);
   }
 }
@@ -77,6 +77,12 @@ export class BadTokenError extends ApiError {
 export class TokenExpireError extends ApiError {
   constructor(messgae = "Token is expired") {
     super(ErrorType.TOKEN_EXPIRED, messgae);
+  }
+}
+
+export class AccessTokenError extends ApiError {
+  constructor(message = "Invalid access token") {
+    super(ErrorType.ACCESS_TOKEN, message);
   }
 }
 

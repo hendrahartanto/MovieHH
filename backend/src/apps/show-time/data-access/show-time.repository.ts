@@ -35,6 +35,10 @@ const getOverlappingShowTime = async (
   });
 };
 
+const getShowTimeById = async (showTimeId: string) => {
+  return prisma.showTime.findUnique({ where: { id: showTimeId } });
+};
+
 const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[]) => {
   return prisma.seatsOnShowTimes.createMany({ data: mappingDatas });
 };
@@ -74,6 +78,7 @@ const updateSeatStatus = (
 export default {
   createShowTime,
   getShowTimeByDate,
+  getShowTimeById,
   getOverlappingShowTime,
   createShowTimeSeats,
   getShowTimeSeats,

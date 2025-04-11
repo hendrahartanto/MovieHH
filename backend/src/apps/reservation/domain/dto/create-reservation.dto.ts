@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const createReservationSchema = z.object({
-  userId: z.string().uuid("Invalid user id format"),
   showTimeId: z.string().uuid("Invalid show time id format"),
   seatIds: z
     .array(z.string().uuid("Invalid seat id format"))
