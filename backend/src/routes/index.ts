@@ -10,9 +10,9 @@ const router = express.Router();
 
 router.use("/auth", auth);
 router.use("/movies", movie);
-router.use("/genres", genre);
 router.use("/show-times", showTime);
 router.use("/reservations", reservation);
 router.use("/theaters", theater);
+router.use("/genres", genre);
 
 export default router;
