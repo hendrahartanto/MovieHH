@@ -4,7 +4,9 @@ import { authenticate } from "../../middlewares/auth.middleware";
 
 const router = express.Router();
 
+//-------------------------------//
 router.use(authenticate);
+//-------------------------------//
 
 router.post("/", reservationController.reserve);
 

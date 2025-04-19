@@ -5,10 +5,6 @@ import { Role } from "@prisma/client";
 
 const router = express.Router();
 
-//-------------------------------//
-router.use(authenticate);
-//-------------------------------//
-
 router.post("/", authorize(Role.ADMIN), showTimeController.createShowTime);
 router.get("/", showTimeController.getShowTimeByDate);
 router.get("/:showTimeId/seats", showTimeController.getShowTimeSeats);
