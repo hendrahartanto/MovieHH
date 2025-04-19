@@ -6,13 +6,13 @@ import reservationService from "../domain/reservation.service";
 
 const reserve = asyncHandler<ProtectedRequest>(async (req, res) => {
   const validatedData = createReservationSchema.parse(req.body);
-  const { userId } = req.user;
-  const newReservation = await reservationService.reserve(
-    validatedData,
-    userId
-  );
+  // const { userId } = req.user;
+  // const newReservation = await reservationService.reserve(
+  // validatedData,
+  // userId
+  // );
 
-  new SuccessResponse("Reserve succesful", { newReservation }).send(res);
+  // new SuccessResponse("Reserve succesful", { newReservation }).send(res);
 });
 
 export default {
