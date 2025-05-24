@@ -10,6 +10,28 @@ const createTheater = asyncHandler(async (req, res) => {
   new SuccessResponse("Create theater successful", { newTheater }).send(res);
 });
 
+const updateTheater = asyncHandler(async (req, res) => {
+  const { theaterId } = req.params;
+  const validatedData = createTheaterSchema.parse(req.body);
+
+  const updatedTheater = await theaterService.updateTheater(
+    theaterId,
+    validatedData
+  );
+  new SuccessResponse("Update theater successful", updatedTheater).send(res);
+});
+
+const deleteTheater = asyncHandler(async (req, res) => {
+  const { theaterId } = req.params;
+
+  const deletedTheater = await theaterService.deleteTheater(theaterId);
+  new SuccessResponse("Delete theater successful", { deletedTheater }).send(
+    res
+  );
+});
+
 export default {
   createTheater,
+  updateTheater,
+  deleteTheater,
 };

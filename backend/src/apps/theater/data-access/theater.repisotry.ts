@@ -12,7 +12,20 @@ const getTheaterById = async (theaterId: string) => {
   });
 };
 
+const updateTheater = async (theaterId: string, data: { name: string }) => {
+  return prisma.theater.update({
+    where: { id: theaterId },
+    data,
+  });
+};
+
+const deleteTheater = async (theaterId: string) => {
+  return prisma.theater.delete({ where: { id: theaterId } });
+};
+
 export default {
   createTheater,
   getTheaterById,
+  updateTheater,
+  deleteTheater,
 };
