@@ -1,6 +1,5 @@
 import { BadRequestError, NoDataError } from "../../../core/api-error";
 import movieRepository from "../../movie/data-access/movie.repository";
-import { CreateSeatDTO } from "../../seat/domain/dto/create-seat.dto";
 import theaterRepisotry from "../../theater/data-access/theater.repisotry";
 import showTimeRepository from "../data-access/show-time.repository";
 import { CreateShowTimeSeatsDTO } from "./dto/create-show-time-seats.dto.ts";
