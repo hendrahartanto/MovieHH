@@ -11,6 +11,8 @@ import routes from "./routes/index";
 import cookieParser from "cookie-parser";
 import { ZodError } from "zod";
 
+const environment = process.env.NODE_ENV || "development";
+
 const app = express();
 
 //to be able to receive cookies from request
@@ -62,7 +64,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(
       `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
     );
-    // logger.error(err);
+    if (environment === "development") {
+      res.status(500).send(err);
+      return;
+    }
     ApiError.handle(new InternalError(), res);
   }
 });

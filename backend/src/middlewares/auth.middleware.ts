@@ -26,7 +26,9 @@ export const authenticate = asyncHandler(
 
       return next();
     } catch (e) {
-      if (e instanceof TokenExpiredError) throw new AccessTokenError(e.message);
+      if (e instanceof TokenExpiredError) {
+        throw new AccessTokenError(e.message);
+      }
       throw e;
     }
   }
