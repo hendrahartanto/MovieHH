@@ -74,7 +74,7 @@ model Seat {
   id           String             @id @default(uuid()) @db.Uuid
   seatNumber   String
   seatRow      String
-  theater      Theater            @relation(fields: [theaterId], references: [id])
+  theater      Theater            @relation(fields: [theaterId], references: [id], onDelete: Cascade)
   theaterId    String             @db.Uuid
   reservations Reservation[]
   showTimes    SeatsOnShowTimes[]
@@ -84,7 +84,7 @@ model ShowTime {
   id           String             @id @default(uuid()) @db.Uuid
   movie        Movie              @relation(fields: [movieId], references: [id])
   movieId      String             @db.Uuid
-  theater      Theater            @relation(fields: [theaterId], references: [id])
+  theater      Theater            @relation(fields: [theaterId], references: [id], onDelete: Cascade)
   theaterId    String             @db.Uuid
   startTime    DateTime
   endTime      DateTime
