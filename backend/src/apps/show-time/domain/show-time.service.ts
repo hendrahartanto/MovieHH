@@ -51,6 +51,9 @@ const getShowTimeByDate = async (query: GetShowTimesByDateDTO) => {
 };
 
 const getShowTimeSeats = async (showTimeId: string) => {
+  const existingShowTime = await showTimeRepository.getShowTimeById(showTimeId);
+  if (!existingShowTime) throw new BadRequestError("Showtime not found");
+
   return showTimeRepository.getShowTimeSeats(showTimeId);
 };
 
