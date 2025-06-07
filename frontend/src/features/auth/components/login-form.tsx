@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -13,13 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
-
-const inputLoginSchema = z.object({
-  email: z.string().min(1, "Email is requried").email("Invalid email format"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type InputLoginSchema = z.infer<typeof inputLoginSchema>;
+import { inputLoginSchema, InputLoginSchema } from "@/lib/auth";
 
 interface LoginFormProps {
   onSuccess: () => void;

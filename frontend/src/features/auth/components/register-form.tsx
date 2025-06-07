@@ -16,21 +16,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { paths } from "@/config/paths";
+import { inputRegisterSchema, InputRegisterSchema } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router";
-import { z } from "zod";
-
-const inputRegisterSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email format"),
-  name: z.string().min(1, "Name is required"),
-  password: z.string().min(1, "Password is required"),
-  role: z.enum(["USER", "ADMIN"], {
-    errorMap: () => ({ message: "Role must be either regular or admin" }),
-  }),
-});
-
-type InputRegisterSchema = z.infer<typeof inputRegisterSchema>;
 
 interface RegisterFormProps {
   onSuccess: () => void;
