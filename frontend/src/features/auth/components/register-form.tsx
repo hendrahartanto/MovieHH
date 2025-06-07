@@ -32,10 +32,13 @@ const inputRegisterSchema = z.object({
 
 type InputRegisterSchema = z.infer<typeof inputRegisterSchema>;
 
-export const RegisterForm = () => {
+interface RegisterFormProps {
+  onSuccess: () => void;
+}
+
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const form = useForm<InputRegisterSchema>({
     resolver: zodResolver(inputRegisterSchema),
-    //TODO: add default values mayybe (?)
     defaultValues: {
       email: "",
       name: "",

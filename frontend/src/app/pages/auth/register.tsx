@@ -9,7 +9,9 @@ const LoginPage = () => {
 
   return (
     <AuthLayout>
-      <RegisterForm />
+      <RegisterForm
+        onSuccess={() => navigate(`${redirectTo ? `${redirectTo}` : ""}`)} //TODO: default back location not implemented
+      />
     </AuthLayout>
   );
 };

@@ -21,7 +21,11 @@ const inputLoginSchema = z.object({
 
 type InputLoginSchema = z.infer<typeof inputLoginSchema>;
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  onSuccess: () => void;
+}
+
+export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const form = useForm<InputLoginSchema>({
     resolver: zodResolver(inputLoginSchema),
     defaultValues: {
