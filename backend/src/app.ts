@@ -10,10 +10,19 @@ import logger from "./core/utils/logger";
 import routes from "./routes/index";
 import cookieParser from "cookie-parser";
 import { ZodError } from "zod";
+import cors from "cors";
 
 const environment = process.env.NODE_ENV || "development";
 
 const app = express();
+
+// Enable CORS
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 //to be able to receive cookies from request
 app.use(cookieParser());
