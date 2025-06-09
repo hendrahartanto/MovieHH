@@ -1,10 +1,13 @@
-import express from "express";
 import asyncHandler from "../../../core/helpers/async-handler";
 import { createUserSchema } from "../domain/dto/create-user.dto";
 import authService from "../domain/auth.service";
 import { SuccessResponse } from "../../../core/api-response";
 import { loginUserSchema } from "../domain/dto/login-user.dto";
-import { TokenExpireError } from "../../../core/api-error";
+import {
+  AuthFailureError,
+  BadTokenError,
+  TokenExpireError,
+} from "../../../core/api-error";
 
 const register = asyncHandler(async (req, res) => {
   const validatedData = createUserSchema.parse(req.body);
@@ -31,7 +34,9 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-  console.log(req.cookies);
+  if (req.cookies.refreshToken == undefined)
+    throw new BadTokenError("User is not authenticated");
+
   const accessToken = await authService.refreshAccessToken(
     req.cookies.refreshToken
   );

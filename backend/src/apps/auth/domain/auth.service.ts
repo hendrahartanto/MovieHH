@@ -2,6 +2,7 @@ import {
   AuthFailureError,
   BadRequestError,
   BadTokenError,
+  TokenExpireError,
 } from "../../../core/api-error";
 import { SuccessResponse } from "../../../core/api-response";
 import userRepository from "../../user/data-access/user.repository";
@@ -13,6 +14,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../../../core/utils/jwt";
+import { TokenExpiredError } from "jsonwebtoken";
 
 const register = async (registerUserData: CreateUserDTO) => {
   const passwordHash = await bcrypt.hash(registerUserData.password, 10);
@@ -40,14 +42,16 @@ const login = async (loginUserData: LoginUserDTO) => {
 };
 
 const refreshAccessToken = async (refreshToken: string) => {
-  const decoded: any = verifyRefreshToken(refreshToken);
-  const user = await userRepository.getUserById(decoded.userId);
+  try {
+    const decoded: any = verifyRefreshToken(refreshToken);
+    const user = await userRepository.getUserById(decoded.userId);
+    if (!user) throw new BadTokenError();
 
-  if (!user) throw new BadTokenError();
-
-  const newAccessTooken = generateAccessToken(user.id);
-
-  return newAccessTooken;
+    const newAccessTooken = generateAccessToken(user.id);
+    return newAccessTooken;
+  } catch (error) {
+    throw new TokenExpireError("Session expired");
+  }
 };
 
 export default {
