@@ -29,8 +29,8 @@ export type Movie = {
   title: string;
   description: string;
   posterUrl: string;
-  //genres
-  //showTimes
+  genres: Genre[];
+  showtime: Showtime[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -38,7 +38,7 @@ export type Movie = {
 export type Genre = {
   id: string;
   name: string;
-  //movies
+  movie: Movie[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -46,8 +46,8 @@ export type Genre = {
 export type Theater = {
   id: string;
   name: string;
-  //seats
-  //showTimes
+  seats: Seat[];
+  showtimes: Showtime[];
 };
 
 export type Seat = {
@@ -66,7 +66,7 @@ export type Showtime = {
   startTime: Date;
   endTime: Date;
   //reservations
-  //seats
+  seats: Seat[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -84,4 +84,9 @@ export type Reservation = {
   seat: Seat;
   status: ReservationStatus;
   createAt: Date;
+};
+
+export type AuthResponse = {
+  token: string;
+  user: User;
 };

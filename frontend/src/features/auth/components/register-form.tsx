@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { paths } from "@/config/paths";
-import { inputRegisterSchema, InputRegisterSchema } from "@/lib/auth";
+import { RegisterInput, registerInputSchmea } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router";
@@ -26,8 +26,8 @@ interface RegisterFormProps {
 }
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
-  const form = useForm<InputRegisterSchema>({
-    resolver: zodResolver(inputRegisterSchema),
+  const form = useForm<RegisterInput>({
+    resolver: zodResolver(registerInputSchmea),
     defaultValues: {
       email: "",
       name: "",

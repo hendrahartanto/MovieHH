@@ -12,15 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
-import { inputLoginSchema, InputLoginSchema } from "@/lib/auth";
+import { LoginInput, loginInputSchema } from "@/lib/auth";
 
 interface LoginFormProps {
   onSuccess: () => void;
 }
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
-  const form = useForm<InputLoginSchema>({
-    resolver: zodResolver(inputLoginSchema),
+  const form = useForm<LoginInput>({
+    resolver: zodResolver(loginInputSchema),
     defaultValues: {
       email: "",
       password: "",
