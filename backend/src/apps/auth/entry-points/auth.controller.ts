@@ -41,7 +41,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     req.cookies.refreshToken
   );
 
-  if (!accessToken) new TokenExpireError();
+  if (!accessToken) throw new TokenExpireError();
 
   new SuccessResponse("Refresh Access Token Successful", {
     token: accessToken,
