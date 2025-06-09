@@ -65,10 +65,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ApiError) {
     // handle error agar bisa kirim response balik ke frontend
     ApiError.handle(err, res);
-    if (err.type === ErrorType.INTERNAL)
-      logger.error(
-        `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
-      );
+    logger.error(
+      `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
   } else {
     logger.error(
       `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
