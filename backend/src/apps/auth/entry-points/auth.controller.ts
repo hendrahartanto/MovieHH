@@ -1,7 +1,10 @@
 import asyncHandler from "../../../core/helpers/async-handler";
 import { createUserSchema } from "../domain/dto/create-user.dto";
 import authService from "../domain/auth.service";
-import { SuccessResponse } from "../../../core/api-response";
+import {
+  SuccessMsgResponse,
+  SuccessResponse,
+} from "../../../core/api-response";
 import { loginUserSchema } from "../domain/dto/login-user.dto";
 import {
   AuthFailureError,
@@ -35,7 +38,7 @@ const login = asyncHandler(async (req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   if (req.cookies.refreshToken == undefined)
-    throw new BadTokenError("User is not authenticated");
+    throw new BadTokenError("User is not authenticated"); //TODO: masih ragu ini benar atau ngga
 
   const accessToken = await authService.refreshAccessToken(
     req.cookies.refreshToken
@@ -48,8 +51,21 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const logout = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) throw new BadTokenError("Refresh token not found");
+
+  res.clearCookie("refreshToken", {
+    sameSite: "strict",
+    path: "/auth/refresh",
+  });
+
+  new SuccessMsgResponse("Logout successful").send(res);
+});
+
 export default {
   register,
   login,
   refreshAccessToken,
+  logout,
 };
