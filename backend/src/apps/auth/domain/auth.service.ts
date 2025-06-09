@@ -4,7 +4,6 @@ import {
   BadTokenError,
   TokenExpireError,
 } from "../../../core/api-error";
-import { SuccessResponse } from "../../../core/api-response";
 import userRepository from "../../user/data-access/user.repository";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import bcrypt from "bcrypt";
@@ -14,18 +13,24 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../../../core/utils/jwt";
-import { TokenExpiredError } from "jsonwebtoken";
 
 const register = async (registerUserData: CreateUserDTO) => {
   const passwordHash = await bcrypt.hash(registerUserData.password, 10);
 
-  const user = await userRepository.getUserByEmail(registerUserData.email);
-  if (user) throw new BadRequestError("Email is already taken");
+  const existingUser = await userRepository.getUserByEmail(
+    registerUserData.email
+  );
+  if (existingUser) throw new BadRequestError("Email is already taken");
 
-  return userRepository.createUser({
+  const user = await userRepository.createUser({
     ...registerUserData,
     password: passwordHash,
   });
+
+  const accessToken = generateAccessToken(user.id);
+  const refreshToken = generateAccessToken(user.id);
+
+  return { user, accessToken, refreshToken };
 };
 
 const login = async (loginUserData: LoginUserDTO) => {

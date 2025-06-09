@@ -14,9 +14,21 @@ import {
 
 const register = asyncHandler(async (req, res) => {
   const validatedData = createUserSchema.parse(req.body);
-  const user = await authService.register(validatedData);
+  const { user, accessToken, refreshToken } = await authService.register(
+    validatedData
+  );
 
-  new SuccessResponse("Register Successful", { user }).send(res);
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+    path: "/auth/refresh",
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), //30 days
+  });
+
+  new SuccessResponse("Register Successful", { user, token: accessToken }).send(
+    res
+  );
 });
 
 const login = asyncHandler(async (req, res) => {
