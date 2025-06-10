@@ -1,3 +1,8 @@
+export type ApiResponse<T> = {
+  message: string;
+  data: T;
+};
+
 enum Role {
   USER,
   ADMIN,
@@ -86,7 +91,7 @@ export type Reservation = {
   createAt: Date;
 };
 
-export type AuthResponse = {
+export type AuthResponse = ApiResponse<{
   token: string;
   user: User;
-};
+}>;

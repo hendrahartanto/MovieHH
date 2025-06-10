@@ -12,13 +12,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
-import { LoginInput, loginInputSchema } from "@/lib/auth";
+import { LoginInput, loginInputSchema, useLogin } from "@/lib/auth";
 
 interface LoginFormProps {
   onSuccess: () => void;
 }
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
+  const login = useLogin();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginInputSchema),
     defaultValues: {
@@ -27,13 +30,14 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
     },
   });
 
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
+  const handleSubmit = (data: LoginInput) => {
+    login.mutate(data, { onSuccess }); //TODO: handle on error (optional)
+  };
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => {})}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="flex flex-col gap-4">
             <p className="text-xl mb-2 font-bold">Login</p>
             <FormField

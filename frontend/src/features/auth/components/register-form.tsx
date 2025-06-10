@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { paths } from "@/config/paths";
-import { RegisterInput, registerInputSchmea } from "@/lib/auth";
+import { RegisterInput, registerInputSchmea, useRegister } from "@/lib/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router";
@@ -26,6 +26,10 @@ interface RegisterFormProps {
 }
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const register = useRegister();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
+
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerInputSchmea),
     defaultValues: {
@@ -35,13 +39,14 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     },
   });
 
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
+  const handleSubmit = (data: RegisterInput) => {
+    register.mutate(data, { onSuccess }); //TODO: handle on error (optional)
+  };
 
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => {})}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="flex flex-col gap-4">
             <p className="text-xl mb-2 font-bold">Register</p>
             <FormField
