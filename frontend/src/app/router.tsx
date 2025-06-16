@@ -3,6 +3,7 @@ import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import { AppRoot } from "./pages/root";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
@@ -23,6 +24,16 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.auth.register.path,
       lazy: () => import("./pages/auth/register").then(convert(queryClient)),
+    },
+    {
+      path: paths.home.path,
+      element: <AppRoot />,
+      children: [
+        {
+          index: true,
+          lazy: () => import("./pages/home").then(convert(queryClient)),
+        },
+      ],
     },
     {
       path: "*",
