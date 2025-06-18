@@ -6,11 +6,7 @@ import {
   SuccessResponse,
 } from "../../../core/api-response";
 import { loginUserSchema } from "../domain/dto/login-user.dto";
-import {
-  AuthFailureError,
-  BadTokenError,
-  TokenExpireError,
-} from "../../../core/api-error";
+import { BadTokenError, TokenExpireError } from "../../../core/api-error";
 import { ProtectedRequest } from "../../../types/app-requests";
 import { verifyAccessToken } from "../../../core/utils/jwt";
 import userRepository from "../../user/data-access/user.repository";
@@ -52,9 +48,6 @@ const login = asyncHandler(async (req, res) => {
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-  console.log("cookies dari refresh token");
-  console.log(req.cookies);
-
   if (req.cookies.refreshToken == undefined)
     throw new BadTokenError("User is not authenticated"); //TODO: masih ragu ini benar atau ngga
 
@@ -70,9 +63,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const logout = asyncHandler(async (req, res) => {
-  console.log("cookies dari logout");
-  console.log(req.cookies);
-
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) throw new BadTokenError("Refresh token not found");
 
@@ -85,8 +75,25 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 const me = asyncHandler<ProtectedRequest>(async (req, res) => {
-  const user = req.user;
-  return new SuccessResponse("Get current user successful", { user }).send(res);
+  const authHeader = req.headers.authorization;
+  let token: string | null = null;
+  let data = null;
+  try {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      token = authHeader.split(" ")[1];
+    }
+    if (!token) {
+      const refreshToken = req.cookies.refreshToken;
+      token = await authService.refreshAccessToken(refreshToken);
+    }
+    const decoded = verifyAccessToken(token) as { userId: string };
+    const user = await userRepository.getUserById(decoded.userId);
+    if (user) data = { user };
+
+    return new SuccessResponse("Get current user successful", data).send(res);
+  } catch (error: any) {
+    return new SuccessResponse("Get curretn user successful", null).send(res);
+  }
 });
 
 export default {
