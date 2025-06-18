@@ -19,7 +19,9 @@ export const AuthLayout = ({ children }: LayoutProps) => {
         replace: true,
       });
     }
-  }, [user.data, navigate, redirectTo]);
+  }, [user.data]);
+
+  if (user) return;
 
   return (
     <div className="flex min-h-screen flex-col justify-center">
