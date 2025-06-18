@@ -5,26 +5,37 @@
 @plugin "tailwindcss-animate";
 
 :root {
-  --background: hsl(215, 0%, 100%);
-  --foreground: hsl(215, 0%, 10%);
-  --card: hsl(215, 0%, 100%);
-  --card-foreground: hsl(215, 0%, 15%);
-  --popover: hsl(215, 0%, 100%);
-  --popover-foreground: hsl(215, 95%, 10%);
-  --primary: hsl(215, 100%, 54.3%);
-  --primary-foreground: hsl(0, 0%, 100%); 
-  --secondary: hsl(215, 10%, 90%);
-  --secondary-foreground: hsl(0, 0%, 0%);
-  --muted: hsl(177, 10%, 95%);
-  --muted-foreground: hsl(215, 0%, 40%);
-  --accent: hsl(177, 10%, 90%);
-  --accent-foreground: hsl(215, 0%, 15%);
-  --destructive: hsl(0, 50%, 50%);
-  --destructive-foreground: hsl(0, 50%, 50%);
-  --border: hsl(215, 20%, 82%);
-  --input: hsl(215, 20%, 50%);
-  --ring: hsl(215, 100%, 54.3%);
-  --radius: 0.3rem;
+  /* Gradient background */
+  --gradient: linear-gradient(to top left, #D38312, #A83279);
+
+  --background: hsl(37, 54.6%, 3.6%);
+  --foreground: hsl(37, 8.4%, 97.25%);
+
+  --muted: hsl(37, 42%, 13.5%);
+  --muted-foreground: hsl(37, 8.4%, 54.5%);
+
+  --popover: hsl(37, 48.2%, 5.85%);
+  --popover-foreground: hsl(37, 8.4%, 97.25%);
+
+  --card: hsl(37, 48.2%, 5.85%);
+  --card-foreground: hsl(37, 8.4%, 97.25%);
+
+  --border: hsl(37, 42%, 13.5%);
+  --input: hsl(37, 42%, 13.5%);
+
+  --primary: hsl(37, 84%, 45%);
+  --primary-foreground: hsl(37, 8.4%, 97.25%);
+
+  --secondary: hsl(37, 42%, 13.5%);
+  --secondary-foreground: hsl(37, 8.4%, 97.25%);
+
+  --accent: hsl(37, 42%, 13.5%);
+  --accent-foreground: hsl(37, 8.4%, 97.25%);
+
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(37, 8.4%, 97.25%);
+
+  --ring: hsl(37, 84%, 45%);
 }
 
 .dark {

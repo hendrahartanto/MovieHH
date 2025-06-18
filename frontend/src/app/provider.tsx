@@ -1,5 +1,4 @@
 import { MainErrorFallback } from "@/components/errors/main";
-import { AuthLoader } from "@/lib/auth";
 import { queryConfig } from "@/lib/react-query";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
