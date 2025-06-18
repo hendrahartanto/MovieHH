@@ -58,8 +58,13 @@ const refreshTokenIfNeeded = async (error: any) => {
     } catch (error) {
       processQueue(error, null);
 
-      const redirectTo = window.location.pathname;
-      window.location.href = paths.auth.login.getHref(redirectTo);
+      const currentPath = window.location.pathname;
+      const isOnLoginPage = currentPath.startsWith(paths.auth.login.path);
+
+      if (!isOnLoginPage) {
+        const redirectTo = currentPath;
+        window.location.href = paths.auth.login.getHref(redirectTo);
+      }
 
       return Promise.reject(error);
     } finally {

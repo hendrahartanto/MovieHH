@@ -6,7 +6,11 @@ import {
   SuccessResponse,
 } from "../../../core/api-response";
 import { loginUserSchema } from "../domain/dto/login-user.dto";
-import { BadTokenError, TokenExpireError } from "../../../core/api-error";
+import {
+  AuthFailureError,
+  BadTokenError,
+  TokenExpireError,
+} from "../../../core/api-error";
 import { ProtectedRequest } from "../../../types/app-requests";
 import { verifyAccessToken } from "../../../core/utils/jwt";
 import userRepository from "../../user/data-access/user.repository";
@@ -81,19 +85,8 @@ const logout = asyncHandler(async (req, res) => {
 });
 
 const me = asyncHandler<ProtectedRequest>(async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return new SuccessResponse("Get current user successful", null).send(res);
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  const decoded = verifyAccessToken(token) as { userId: string };
-  //isi dari decoded ini adalah {userId, iat, exp}
-
-  const user = await userRepository.getUserById(decoded.userId);
-
-  return new SuccessResponse("Get current user successful", null).send(res);
+  const user = req.user;
+  return new SuccessResponse("Get current user successful", { user }).send(res);
 });
 
 export default {
