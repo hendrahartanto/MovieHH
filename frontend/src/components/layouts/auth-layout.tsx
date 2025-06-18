@@ -21,7 +21,7 @@ export const AuthLayout = ({ children }: LayoutProps) => {
     }
   }, [user.data]);
 
-  if (user) return;
+  if (user.data) return null;
 
   return (
     <div className="flex min-h-screen flex-col justify-center">
