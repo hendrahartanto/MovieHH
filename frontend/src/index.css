@@ -92,6 +92,12 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+.layout-middle{
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 90%;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
