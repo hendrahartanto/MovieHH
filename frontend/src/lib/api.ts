@@ -1,12 +1,9 @@
+import { ROLES } from "./authorization";
+
 export type ApiResponse<T> = {
   message: string;
   data: T;
 };
-
-enum Role {
-  USER,
-  ADMIN,
-}
 
 enum ReservationStatus {
   PENDING,
@@ -23,7 +20,7 @@ export type User = {
   id: string;
   email: string;
   name: string;
-  role: Role;
+  role: ROLES;
   password: string;
   createdAt: Date;
   updatedAt: Date;
