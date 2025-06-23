@@ -27,7 +27,7 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="fixed top-0 left-0 right-0 z-50 flex bg-gradient-to-b from-background to-transparent border-b-[0.5px]">
         <div className="container mx-auto py-5 flex justify-between items-center">
           <div className="left">MovieHH</div>
-          <div className="right">
+          <div className="right items-center flex gap-2">
             {navItems.map((item, index) => (
               <Link key={index} to={item.to}>
                 {item.name}
