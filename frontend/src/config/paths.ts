@@ -16,6 +16,17 @@ export const paths = {
     },
   },
 
+  admin: {
+    root: {
+      path: "/admin",
+      getHref: () => "/admin",
+    },
+    dashboard: {
+      path: "",
+      getHref: () => "/admin",
+    },
+  },
+
   home: {
     path: "/",
     getHref: () => "/",
