@@ -10,6 +10,7 @@ import {
   PanelLeftOpen,
   PanelLeftClose,
 } from "lucide-react";
+import { paths } from "@/config/paths";
 
 interface SidebarItem {
   name: string;
@@ -21,7 +22,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const sidebarItems: SidebarItem[] = [
-    { name: "Dashboard", to: "/", icon: <Home className="w-5 h-5" /> },
+    {
+      name: "Dashboard",
+      to: paths.admin.dashboard.getHref(),
+      icon: <Home className="w-5 h-5" />,
+    },
     { name: "Movies", to: "/movies", icon: <Film className="w-5 h-5" /> },
     { name: "Cinemas", to: "/cinemas", icon: <MapPin className="w-5 h-5" /> },
     { name: "Favorites", to: "/favorites", icon: <Star className="w-5 h-5" /> },
@@ -149,8 +154,8 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
-      <div className="flex-1 bg-background">
-        <div className="p-6">{children}</div>
+      <div className="flex-1 bg-background h-screen">
+        <div className="p-6 max-h-full overflow-auto">{children}</div>
       </div>
     </div>
   );
