@@ -77,7 +77,6 @@ const logout = asyncHandler(async (req, res) => {
 const me = asyncHandler<ProtectedRequest>(async (req, res) => {
   const authHeader = req.headers.authorization;
   let token: string | null = null;
-  let data = null;
   try {
     if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.split(" ")[1];
@@ -88,9 +87,8 @@ const me = asyncHandler<ProtectedRequest>(async (req, res) => {
     }
     const decoded = verifyAccessToken(token) as { userId: string };
     const user = await userRepository.getUserById(decoded.userId);
-    if (user) data = { user };
 
-    return new SuccessResponse("Get current user successful", data).send(res);
+    return new SuccessResponse("Get current user successful", user).send(res);
   } catch (error: any) {
     return new SuccessResponse("Get curretn user successful", null).send(res);
   }
