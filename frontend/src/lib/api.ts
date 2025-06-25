@@ -16,6 +16,13 @@ enum SeatStatus {
   RESERVED,
 }
 
+export type Pagination = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
+
 export type User = {
   id: string;
   email: string;
