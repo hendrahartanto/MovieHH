@@ -8,8 +8,8 @@ const createMovie = async (createMovieData: CreateMovieDTO) => {
   return movieRepository.createMovie(createMovieData);
 };
 
-const getMovies = async () => {
-  return movieRepository.getMovies();
+const getMovies = async (page: number, limit: number) => {
+  return movieRepository.getMovies(page, limit);
 };
 
 const updateMovie = async (

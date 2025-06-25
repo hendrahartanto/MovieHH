@@ -18,10 +18,23 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
   });
 };
 
-const getMovies = async () => {
-  return prisma.movie.findMany({
-    include: { genres: { include: { genre: true } } },
-  });
+const getMovies = async (page: number, limit: number) => {
+  const [movies, total] = await Promise.all([
+    prisma.movie.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        genres: {
+          include: {
+            genre: true,
+          },
+        },
+      },
+    }),
+    prisma.movie.count(),
+  ]);
+
+  return { movies, total };
 };
 
 const getMovieById = async (movieId: string) => {

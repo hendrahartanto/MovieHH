@@ -14,9 +14,20 @@ const createMovie = asyncHandler(async (req, res) => {
 });
 
 const getMovies = asyncHandler(async (req, res) => {
-  const movies = await movieService.getMovies();
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
 
-  new SuccessResponse("Get movies successful", { movies }).send(res);
+  const { movies, total } = await movieService.getMovies(page, limit);
+
+  new SuccessResponse("Get movies successful", {
+    movies,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
 });
 
 const updateMovie = asyncHandler(async (req, res) => {
