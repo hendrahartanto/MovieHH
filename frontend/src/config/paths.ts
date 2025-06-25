@@ -27,11 +27,11 @@ export const paths = {
     },
     movies: {
       path: "movies",
-      getHref: () => "/app/movies",
+      getHref: () => "/admin/movies",
     },
     cinemas: {
       path: "cinemas",
-      getHref: () => "/app/cinmeas",
+      getHref: () => "/admin/cinemas",
     },
   },
 
