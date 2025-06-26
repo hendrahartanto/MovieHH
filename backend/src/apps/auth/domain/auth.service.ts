@@ -28,7 +28,7 @@ const register = async (registerUserData: CreateUserDTO) => {
   });
 
   const accessToken = generateAccessToken(user.id);
-  const refreshToken = generateAccessToken(user.id);
+  const refreshToken = generateRefreshToken(user.id);
 
   return { user, accessToken, refreshToken };
 };
