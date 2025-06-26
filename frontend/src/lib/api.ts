@@ -39,7 +39,7 @@ export type Movie = {
   description: string;
   posterUrl: string;
   genres: Genre[];
-  showtime: Showtime[];
+  showTimes: Showtime[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -56,7 +56,7 @@ export type Theater = {
   id: string;
   name: string;
   seats: Seat[];
-  showtimes: Showtime[];
+  showTimes: Showtime[];
 };
 
 export type Seat = {

@@ -1,11 +1,11 @@
-import { Movie, Pagination } from "@/lib/api";
+import { ApiResponse, Movie, Pagination } from "@/lib/api";
 import { api } from "@/lib/api-client";
 import { QueryConfig } from "@/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getMovies = (
   page = 1
-): Promise<{ movies: Movie[]; pagination: Pagination }> => {
+): Promise<ApiResponse<{ movies: Movie[]; pagination: Pagination }>> => {
   return api.get("/movies", {
     params: {
       page,

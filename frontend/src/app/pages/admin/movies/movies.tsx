@@ -31,8 +31,10 @@ const MoviesPage = () => {
   console.log(moviesQuery.data?.data);
 
   return (
-    <SidebarContentLayout title="Movies">
-      <div>This is movies page</div>
+    <SidebarContentLayout
+      title="Movies"
+      subtitle="Manage your movie collection"
+    >
       <MoviesList />
     </SidebarContentLayout>
   );

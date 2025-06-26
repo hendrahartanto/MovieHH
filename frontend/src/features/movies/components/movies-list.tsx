@@ -27,11 +27,11 @@ export const MoviesList = () => {
     return <MovieTableSkeleton />;
   }
 
-  const movies = moviesQuery.data?.movies;
-  const pagination = moviesQuery.data?.pagination;
+  const movies = moviesQuery.data?.data.movies;
+  const pagination = moviesQuery.data?.data.pagination;
 
   console.log("MOVIES LIST");
-  console.log(moviesQuery.data);
+  console.log(movies);
 
   if (!movies || movies.length === 0) {
     return <EmptyMoviesState />;
@@ -40,7 +40,7 @@ export const MoviesList = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Movies</h1>
           <p className="text-muted-foreground">Manage your movie collection</p>
@@ -48,7 +48,7 @@ export const MoviesList = () => {
         <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 font-medium">
           Add Movie
         </button>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
@@ -133,9 +133,9 @@ export const MoviesList = () => {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm text-foreground font-medium">
-                        {movie.showtime.length}
+                        {movie.showTimes.length}
                         <span className="text-muted-foreground ml-1">
-                          {movie.showtime.length === 1
+                          {movie.showTimes.length === 1
                             ? "showtime"
                             : "showtimes"}
                         </span>

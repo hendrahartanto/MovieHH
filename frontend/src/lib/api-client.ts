@@ -12,6 +12,8 @@ export const rawApi = Axios.create({
 
 const authRequestInterceptor = (config: InternalAxiosRequestConfig) => {
   const token = getAccessToken();
+  console.log("access token");
+  console.log(token);
 
   if (config.headers) config.headers.Accept = "application/json"; //TODO: cari tau maksud ini
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -78,8 +80,12 @@ const refreshTokenIfNeeded = async (error: any) => {
 api.interceptors.request.use(authRequestInterceptor);
 api.interceptors.response.use((response) => {
   console.log("interceptor");
+  console.log("response");
   console.log(response);
+  console.log("response data");
   console.log(response.data);
+  console.log("response data data");
+  console.log(response.data.data);
 
   return response.data;
 }, refreshTokenIfNeeded);
