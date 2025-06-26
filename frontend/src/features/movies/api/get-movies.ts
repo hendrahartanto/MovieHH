@@ -5,7 +5,7 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getMovies = (
   page = 1
-): Promise<{ data: Movie[]; pagination: Pagination }> => {
+): Promise<{ movies: Movie[]; pagination: Pagination }> => {
   return api.get("/movies", {
     params: {
       page,

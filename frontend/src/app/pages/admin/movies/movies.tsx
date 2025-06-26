@@ -3,6 +3,7 @@ import {
   getMoviesQueryOptions,
   useMovies,
 } from "@/features/movies/api/get-movies";
+import { MoviesList } from "@/features/movies/components/movies-list";
 import { QueryClient } from "@tanstack/react-query";
 import { LoaderFunctionArgs, useSearchParams } from "react-router";
 
@@ -32,6 +33,7 @@ const MoviesPage = () => {
   return (
     <SidebarContentLayout title="Movies">
       <div>This is movies page</div>
+      <MoviesList />
     </SidebarContentLayout>
   );
 };

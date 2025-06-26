@@ -76,7 +76,10 @@ const refreshTokenIfNeeded = async (error: any) => {
 };
 
 api.interceptors.request.use(authRequestInterceptor);
-api.interceptors.response.use(
-  (response) => response.data,
-  refreshTokenIfNeeded
-);
+api.interceptors.response.use((response) => {
+  console.log("interceptor");
+  console.log(response);
+  console.log(response.data);
+
+  return response.data;
+}, refreshTokenIfNeeded);
