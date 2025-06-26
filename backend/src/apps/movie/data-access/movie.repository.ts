@@ -19,7 +19,7 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
 };
 
 const getMovies = async (page: number, limit: number) => {
-  const [movies, total] = await Promise.all([
+  const [moviesRaw, total] = await Promise.all([
     prisma.movie.findMany({
       skip: (page - 1) * limit,
       take: limit,
@@ -29,10 +29,16 @@ const getMovies = async (page: number, limit: number) => {
             genre: true,
           },
         },
+        showTimes: true,
       },
     }),
     prisma.movie.count(),
   ]);
+
+  const movies = moviesRaw.map((movie) => ({
+    ...movie,
+    genres: movie.genres.map((g) => g.genre), // ← ini kuncinya
+  }));
 
   return { movies, total };
 };
