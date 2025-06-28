@@ -25,7 +25,6 @@ interface SidebarItem {
 export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
   const user = useUser();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const sidebarItems: SidebarItem[] = [
     {
@@ -51,23 +50,15 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     setIsCollapsed(!isCollapsed);
   };
 
-  const handleLogoutClick = () => {
-    setIsLogoutModalOpen(true);
-  };
-
-  const handleLogoutCancel = () => {
-    setIsLogoutModalOpen(false);
-  };
-
   return (
     <>
-      <Modal
+      {/* <Modal
         isOpen={isLogoutModalOpen}
         onClose={handleLogoutCancel}
         title="Confirm Logout"
       >
         <ConfirmLogout onCancel={handleLogoutCancel} />
-      </Modal>
+      </Modal> */}
       <div className="flex min-h-screen bg-background">
         <div
           className={`${
@@ -169,30 +160,34 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
 
             {!isCollapsed && (
               <div className="mt-3">
-                <button
-                  onClick={handleLogoutClick}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 group relative overflow-hidden border border-transparent hover:border-destructive/20"
-                >
-                  <div className="relative z-10 flex items-center gap-3 w-full">
-                    <div className="transition-transform duration-200 group-hover:scale-110">
-                      <LogOut className="w-5 h-5" />
-                    </div>
-                    <span className="font-medium">Logout</span>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-destructive/5 to-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
-                </button>
+                <ConfirmLogout
+                  triggerButton={
+                    <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 group relative overflow-hidden border border-transparent hover:border-destructive/20">
+                      <div className="relative z-10 flex items-center gap-3 w-full">
+                        <div className="transition-transform duration-200 group-hover:scale-110">
+                          <LogOut className="w-5 h-5" />
+                        </div>
+                        <span className="font-medium">Logout</span>
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-destructive/5 to-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
+                    </button>
+                  }
+                />
               </div>
             )}
 
             {isCollapsed && (
               <div className="mt-3 flex justify-center">
-                <button
-                  onClick={handleLogoutClick}
-                  className="p-3 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 group border border-transparent hover:border-destructive/20"
-                  aria-label="Logout"
-                >
-                  <LogOut className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
-                </button>
+                <ConfirmLogout
+                  triggerButton={
+                    <button
+                      className="p-3 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 group border border-transparent hover:border-destructive/20"
+                      aria-label="Logout"
+                    >
+                      <LogOut className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
+                    </button>
+                  }
+                />
               </div>
             )}
           </nav>

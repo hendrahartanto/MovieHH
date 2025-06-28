@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useUser } from "@/lib/auth";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
 import { Button } from "../ui/button";
 import { ConfirmLogout } from "@/features/auth/components/confirm-logout";
-import { Modal } from "../ui/modal";
 
 interface NavbarItem {
   name: string;
@@ -13,15 +12,6 @@ interface NavbarItem {
 
 export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
   const user = useUser();
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-
-  const handleLogoutClick = () => {
-    setIsLogoutModalOpen(true);
-  };
-
-  const handleLogoutCancel = () => {
-    setIsLogoutModalOpen(false);
-  };
 
   const navItems = [
     { name: "Movies", to: paths.home.getHref() },
@@ -30,32 +20,23 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
   ].filter(Boolean) as NavbarItem[];
 
   return (
-    <>
-      <Modal
-        isOpen={isLogoutModalOpen}
-        onClose={handleLogoutCancel}
-        title="Confirm Logout"
-      >
-        <ConfirmLogout onCancel={handleLogoutCancel} />
-      </Modal>
-      <div className="flex flex-col">
-        <div className="fixed top-0 left-0 right-0 z-50 flex bg-gradient-to-b from-background to-transparent border-b-[0.5px]">
-          <div className="container mx-auto py-5 flex justify-between items-center">
-            <div className="left">MovieHH</div>
-            <div className="right items-center flex gap-2">
-              {navItems.map((item, index) => (
-                <Link key={index} to={item.to}>
-                  {item.name}
-                </Link>
-              ))}
-              {user.data && (
-                <Button onClick={handleLogoutClick}>Log out</Button>
-              )}
-            </div>
+    <div className="flex flex-col">
+      <div className="fixed top-0 left-0 right-0 z-50 flex bg-gradient-to-b from-background to-transparent border-b-[0.5px]">
+        <div className="container mx-auto py-5 flex justify-between items-center">
+          <div className="left">MovieHH</div>
+          <div className="right items-center flex gap-2">
+            {navItems.map((item, index) => (
+              <Link key={index} to={item.to}>
+                {item.name}
+              </Link>
+            ))}
+            {user.data && (
+              <ConfirmLogout triggerButton={<Button>Logout</Button>} />
+            )}
           </div>
         </div>
-        <div className="flex-grow">{children}</div>
       </div>
-    </>
+      <div className="flex-grow">{children}</div>
+    </div>
   );
 };

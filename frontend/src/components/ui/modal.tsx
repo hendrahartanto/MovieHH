@@ -1,29 +1,43 @@
-import { type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { useDisclosure } from "@/hooks/user-disclosure";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 export type ModalType = "create" | "delete" | "update" | null;
 
 interface Props {
   title?: string;
-  isOpen: boolean;
-  onClose: () => void;
   children: ReactNode;
+  triggerButton: React.ReactElement;
+  isDone: boolean;
 }
 
-export const Modal = ({ isOpen, onClose, children, title }: Props) => {
+export const Modal = ({ triggerButton, children, title, isDone }: Props) => {
+  const { close, open, isOpen } = useDisclosure();
+
+  useEffect(() => {
+    if (isDone) {
+      close();
+    }
+  }, [isDone, close]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          close();
+        } else {
+          open();
+        }
+      }}
+    >
+      <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         {title && (
           <DialogHeader>

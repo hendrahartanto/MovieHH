@@ -1,67 +1,81 @@
+import { Modal } from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { paths } from "@/config/paths";
 import { useLogout } from "@/lib/auth";
 import { AlertTriangle, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 
 interface ConfirmLogoutInterface {
-  onCancel: () => void;
+  triggerButton: React.ReactElement;
 }
 
-export const ConfirmLogout = ({ onCancel }: ConfirmLogoutInterface) => {
+export const ConfirmLogout = ({ triggerButton }: ConfirmLogoutInterface) => {
   const navigate = useNavigate();
+
   const logout = useLogout({
     onSuccess: () => {
-      onCancel();
       navigate(paths.auth.login.getHref(location.pathname));
     },
   });
+
   const handleLogoutConfirm = () => {
     logout.mutate({});
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3 p-4 bg-destructive/5 border border-destructive/20 rounded-lg">
-        <div className="flex-shrink-0">
-          <AlertTriangle className="w-5 h-5 text-destructive" />
-        </div>
-        <div>
-          <p className="text-sm font-medium text-foreground">
-            Are you sure you want to logout?
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            You will be redirected to the login page and will need to sign in
-            again.
-          </p>
-        </div>
-      </div>
+    <Modal
+      title="Confirm logout"
+      triggerButton={triggerButton}
+      isDone={logout.isSuccess}
+    >
+      <div className="space-y-4">
+        <Alert
+          variant="destructive"
+          className="bg-destructive/5 border-destructive/20"
+        >
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription className="space-y-1">
+            <p className="font-medium text-foreground">
+              Are you sure you want to logout?
+            </p>
+            <p className="text-xs text-muted-foreground">
+              You will be redirected to the login page and will need to sign in
+              again.
+            </p>
+          </AlertDescription>
+        </Alert>
 
-      <div className="flex gap-3 justify-end pt-2">
-        <button
-          onClick={onCancel}
-          disabled={logout.isPending}
-          className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground bg-secondary hover:bg-secondary/80 border border-border rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleLogoutConfirm}
-          disabled={logout.isPending}
-          className="px-4 py-2 text-sm font-medium text-destructive-foreground bg-destructive hover:bg-destructive/90 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-        >
-          {logout.isPending ? (
-            <>
-              <div className="w-4 h-4 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
-              Logging out...
-            </>
-          ) : (
-            <>
-              <LogOut className="w-4 h-4" />
-              Logout
-            </>
-          )}
-        </button>
+        <div className="flex gap-3 justify-end pt-2">
+          <Button
+            variant="outline"
+            onClick={() => {}} //TODO: tutup modal
+            disabled={logout.isPending}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </Button>
+
+          <Button
+            variant="destructive"
+            onClick={handleLogoutConfirm}
+            disabled={logout.isPending}
+            className="flex items-center gap-2"
+          >
+            {logout.isPending ? (
+              <>
+                <div className="w-4 h-4 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
+                Logging out...
+              </>
+            ) : (
+              <>
+                <LogOut className="w-4 h-4" />
+                Logout
+              </>
+            )}
+          </Button>
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
