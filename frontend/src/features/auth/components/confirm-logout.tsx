@@ -5,6 +5,7 @@ import { paths } from "@/config/paths";
 import { useLogout } from "@/lib/auth";
 import { AlertTriangle, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 
 interface ConfirmLogoutInterface {
   triggerButton: React.ReactElement;
@@ -12,12 +13,19 @@ interface ConfirmLogoutInterface {
 
 export const ConfirmLogout = ({ triggerButton }: ConfirmLogoutInterface) => {
   const navigate = useNavigate();
+  const [isClose, setIsClose] = useState(false);
 
   const logout = useLogout({
     onSuccess: () => {
       navigate(paths.auth.login.getHref(location.pathname));
     },
   });
+
+  useEffect(() => {
+    if (isClose) {
+      setIsClose(false);
+    }
+  }, [isClose]);
 
   const handleLogoutConfirm = () => {
     logout.mutate({});
@@ -27,7 +35,7 @@ export const ConfirmLogout = ({ triggerButton }: ConfirmLogoutInterface) => {
     <Modal
       title="Confirm logout"
       triggerButton={triggerButton}
-      isDone={logout.isSuccess}
+      isDone={logout.isSuccess || isClose}
     >
       <div className="space-y-4">
         <Alert
@@ -49,7 +57,9 @@ export const ConfirmLogout = ({ triggerButton }: ConfirmLogoutInterface) => {
         <div className="flex gap-3 justify-end pt-2">
           <Button
             variant="outline"
-            onClick={() => {}} //TODO: tutup modal
+            onClick={() => {
+              setIsClose(true);
+            }} //TODO: tutup modal
             disabled={logout.isPending}
             className="text-muted-foreground hover:text-foreground"
           >
