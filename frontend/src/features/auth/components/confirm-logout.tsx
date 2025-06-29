@@ -59,7 +59,7 @@ export const ConfirmLogout = ({ triggerButton }: ConfirmLogoutInterface) => {
             variant="outline"
             onClick={() => {
               setIsClose(true);
-            }} //TODO: tutup modal
+            }}
             disabled={logout.isPending}
             className="text-muted-foreground hover:text-foreground"
           >

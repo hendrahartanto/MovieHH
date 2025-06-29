@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useDisclosure } from "@/hooks/user-disclosure";
+import { useDisclosure } from "@/hooks/use-disclosure";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 
 export type ModalType = "create" | "delete" | "update" | null;
