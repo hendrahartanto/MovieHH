@@ -8,9 +8,9 @@ import movieService from "../domain/movie.service";
 
 const createMovie = asyncHandler(async (req, res) => {
   const validatedData = createMovieSchema.parse(req.body);
-  const createdMovie = await movieService.createMovie(validatedData);
+  const movie = await movieService.createMovie(validatedData);
 
-  new SuccessResponse("Create movie successful", { createdMovie }).send(res);
+  new SuccessResponse("Create movie successful", { movie }).send(res);
 });
 
 const getMovies = asyncHandler(async (req, res) => {
