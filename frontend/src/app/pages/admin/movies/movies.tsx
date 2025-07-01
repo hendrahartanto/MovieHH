@@ -1,12 +1,9 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
-import {
-  getMoviesQueryOptions,
-  useMovies,
-} from "@/features/movies/api/get-movies";
+import { getMoviesQueryOptions } from "@/features/movies/api/get-movies";
 import { CreateMovie } from "@/features/movies/components/create-movie";
 import { MoviesList } from "@/features/movies/components/movies-list";
 import { QueryClient } from "@tanstack/react-query";
-import { LoaderFunctionArgs, useSearchParams } from "react-router";
+import { LoaderFunctionArgs } from "react-router";
 
 export const clientLoader =
   (queryClient: QueryClient) =>
