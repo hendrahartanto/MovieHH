@@ -7,10 +7,30 @@ import {
   Eye,
   Calendar,
   Tag,
-  Image as ImageIcon,
+  ImageIcon,
   ChevronLeft,
   ChevronRight,
+  Plus,
 } from "lucide-react";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,50 +59,22 @@ export const MoviesList = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      {/* <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Movies</h1>
-          <p className="text-muted-foreground">Manage your movie collection</p>
-        </div>
-        <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 font-medium">
-          Add Movie
-        </button>
-      </div> */}
-
-      {/* Table */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-muted/50 border-b border-border">
-              <tr>
-                <th className="text-left px-6 py-4 font-semibold text-foreground">
-                  Movie
-                </th>
-                <th className="text-left px-6 py-4 font-semibold text-foreground">
-                  Genres
-                </th>
-                <th className="text-left px-6 py-4 font-semibold text-foreground">
-                  Showtimes
-                </th>
-                <th className="text-left px-6 py-4 font-semibold text-foreground">
-                  Created
-                </th>
-                <th className="text-right px-6 py-4 font-semibold text-foreground">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+      <Card className="p-0">
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-6">Movie</TableHead>
+                <TableHead>Genres</TableHead>
+                <TableHead>Showtimes</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead className="text-right pr-6">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {movies.map((movie, index) => (
-                <tr
-                  key={movie.id}
-                  className={`border-b border-border hover:bg-accent/50 transition-colors duration-200 ${
-                    index === movies.length - 1 ? "border-b-0" : ""
-                  }`}
-                >
-                  {/* Movie Info */}
-                  <td className="px-6 py-4">
+                <TableRow key={movie.id}>
+                  <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
                       <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                         {movie.posterUrl ? (
@@ -98,7 +90,7 @@ export const MoviesList = () => {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold text-foreground truncate">
+                        <h3 className="font-semibold truncate">
                           {movie.title}
                         </h3>
                         <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
@@ -106,33 +98,33 @@ export const MoviesList = () => {
                         </p>
                       </div>
                     </div>
-                  </td>
+                  </TableCell>
 
                   {/* Genres */}
-                  <td className="px-6 py-4">
+                  <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {movie.genres.slice(0, 3).map((genre) => (
-                        <span
+                        <Badge
                           key={genre.id}
-                          className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium"
+                          variant="secondary"
+                          className="text-xs"
                         >
-                          <Tag className="w-3 h-3" />
+                          <Tag className="w-3 h-3 mr-1" />
                           {genre.name}
-                        </span>
+                        </Badge>
                       ))}
                       {movie.genres.length > 3 && (
-                        <span className="inline-flex items-center px-2 py-1 bg-muted text-muted-foreground rounded-full text-xs">
+                        <Badge variant="outline" className="text-xs">
                           +{movie.genres.length - 3} more
-                        </span>
+                        </Badge>
                       )}
                     </div>
-                  </td>
+                  </TableCell>
 
-                  {/* Showtimes */}
-                  <td className="px-6 py-4">
+                  <TableCell>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-foreground font-medium">
+                      <span className="text-sm font-medium">
                         {movie.showTimes.length}
                         <span className="text-muted-foreground ml-1">
                           {movie.showTimes.length === 1
@@ -141,10 +133,9 @@ export const MoviesList = () => {
                         </span>
                       </span>
                     </div>
-                  </td>
+                  </TableCell>
 
-                  {/* Created Date */}
-                  <td className="px-6 py-4">
+                  <TableCell>
                     <span className="text-sm text-muted-foreground">
                       {new Date(movie.createdAt).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -152,207 +143,203 @@ export const MoviesList = () => {
                         day: "numeric",
                       })}
                     </span>
-                  </td>
+                  </TableCell>
 
-                  {/* Actions */}
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200"
-                        title="View Details"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button
-                        className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200"
-                        title="Edit Movie"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors duration-200"
-                        title="Delete Movie"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                  <TableCell className="text-right pr-6">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit Movie
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-destructive">
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete Movie
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
 
-        {/* Pagination */}
-        {pagination && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-muted/20">
-            <div className="text-sm text-muted-foreground">
-              Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-              {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
-              of {pagination.total} movies
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={pagination.page <= 1}
-                className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              <div className="flex items-center gap-1">
-                {Array.from(
-                  { length: Math.min(5, pagination.totalPages) },
-                  (_, i) => {
-                    let pageNum;
-                    if (pagination.totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (pagination.page <= 3) {
-                      pageNum = i + 1;
-                    } else if (pagination.page >= pagination.totalPages - 2) {
-                      pageNum = pagination.totalPages - 4 + i;
-                    } else {
-                      pageNum = pagination.page - 2 + i;
-                    }
-
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                          pageNum === pagination.page
-                            ? "bg-primary text-primary-foreground"
-                            : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                        }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  }
-                )}
+          {pagination && (
+            <div className="flex items-center justify-between px-6 py-4 border-t">
+              <div className="text-sm text-muted-foreground">
+                Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
+                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
+                of {pagination.total} movies
               </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  disabled={pagination.page <= 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
 
-              <button
-                onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={pagination.page >= pagination.totalPages}
-                className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+                <div className="flex items-center gap-1">
+                  {Array.from(
+                    { length: Math.min(5, pagination.totalPages) },
+                    (_, i) => {
+                      let pageNum;
+                      if (pagination.totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (pagination.page <= 3) {
+                        pageNum = i + 1;
+                      } else if (pagination.page >= pagination.totalPages - 2) {
+                        pageNum = pagination.totalPages - 4 + i;
+                      } else {
+                        pageNum = pagination.page - 2 + i;
+                      }
+
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={
+                            pageNum === pagination.page ? "default" : "outline"
+                          }
+                          size="sm"
+                          className="w-8 h-8 p-0"
+                          onClick={() => handlePageChange(pageNum)}
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    }
+                  )}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  disabled={pagination.page >= pagination.totalPages}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-// Skeleton Loading Component
 const MovieTableSkeleton = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-32 bg-muted rounded-lg animate-pulse" />
-          <div className="h-4 w-48 bg-muted rounded-lg animate-pulse" />
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-4 w-48" />
         </div>
-        <div className="h-10 w-24 bg-muted rounded-lg animate-pulse" />
+        <Skeleton className="h-10 w-24" />
       </div>
 
-      <div className="bg-card border border-border rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-muted/50 border-b border-border">
-              <tr>
-                <th className="text-left px-6 py-4">
-                  <div className="h-4 w-16 bg-muted rounded animate-pulse" />
-                </th>
-                <th className="text-left px-6 py-4">
-                  <div className="h-4 w-16 bg-muted rounded animate-pulse" />
-                </th>
-                <th className="text-left px-6 py-4">
-                  <div className="h-4 w-20 bg-muted rounded animate-pulse" />
-                </th>
-                <th className="text-left px-6 py-4">
-                  <div className="h-4 w-16 bg-muted rounded animate-pulse" />
-                </th>
-                <th className="text-right px-6 py-4">
-                  <div className="h-4 w-16 bg-muted rounded animate-pulse ml-auto" />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="pl-6">
+                  <Skeleton className="h-4 w-16" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-4 w-16" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-4 w-20" />
+                </TableHead>
+                <TableHead>
+                  <Skeleton className="h-4 w-16" />
+                </TableHead>
+                <TableHead className="text-right pr-6">
+                  <Skeleton className="h-4 w-16 ml-auto" />
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {Array.from({ length: 5 }).map((_, index) => (
-                <tr key={index} className="border-b border-border">
-                  <td className="px-6 py-4">
+                <TableRow key={index}>
+                  <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-16 bg-muted rounded-lg animate-pulse" />
+                      <Skeleton className="w-12 h-16 rounded-lg" />
                       <div className="space-y-2 flex-1">
-                        <div className="h-4 w-32 bg-muted rounded animate-pulse" />
-                        <div className="h-3 w-48 bg-muted rounded animate-pulse" />
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-48" />
                       </div>
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
+                  </TableCell>
+                  <TableCell>
                     <div className="flex gap-1">
-                      <div className="h-6 w-16 bg-muted rounded-full animate-pulse" />
-                      <div className="h-6 w-12 bg-muted rounded-full animate-pulse" />
+                      <Skeleton className="h-6 w-16 rounded-full" />
+                      <Skeleton className="h-6 w-12 rounded-full" />
                     </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="h-4 w-20 bg-muted rounded animate-pulse" />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="h-4 w-16 bg-muted rounded animate-pulse" />
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="w-8 h-8 bg-muted rounded-lg animate-pulse" />
-                      <div className="w-8 h-8 bg-muted rounded-lg animate-pulse" />
-                      <div className="w-8 h-8 bg-muted rounded-lg animate-pulse" />
-                    </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-20" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-16" />
+                  </TableCell>
+                  <TableCell className="text-right pr-6">
+                    <Skeleton className="w-8 h-8 ml-auto" />
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-// Empty State Component
 const EmptyMoviesState = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Movies</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Movies</h1>
           <p className="text-muted-foreground">Manage your movie collection</p>
         </div>
-        <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 font-medium">
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
           Add Movie
-        </button>
+        </Button>
       </div>
 
-      <div className="bg-card border border-border rounded-xl">
-        <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
+      <Card>
+        <CardContent className="flex flex-col items-center justify-center py-16 px-6 text-center">
           <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
             <ImageIcon className="w-8 h-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            No movies found
-          </h3>
+          <CardTitle className="mb-2">No movies found</CardTitle>
           <p className="text-muted-foreground mb-6 max-w-md">
             Get started by adding your first movie to the collection. You can
             manage genres, showtimes, and more.
           </p>
-          <button className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors duration-200 font-medium">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
             Add Your First Movie
-          </button>
-        </div>
-      </div>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };
