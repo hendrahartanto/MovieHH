@@ -10,10 +10,10 @@ import {
   PanelLeftOpen,
   PanelLeftClose,
   LogOut,
+  Tags,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
-import { Modal } from "../ui/modal";
 import { ConfirmLogout } from "@/features/auth/components/confirm-logout";
 
 interface SidebarItem {
@@ -36,6 +36,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Movies",
       to: paths.admin.movies.getHref(),
       icon: <Film className="w-5 h-5" />,
+    },
+    {
+      name: "Genres",
+      to: paths.admin.genres.getHref(),
+      icon: <Tags className="w-5 h-5" />,
     },
     {
       name: "Cinemas",

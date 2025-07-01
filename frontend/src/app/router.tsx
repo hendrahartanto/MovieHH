@@ -56,6 +56,11 @@ const createAppRouter = (queryClient: QueryClient) =>
             import("./pages/admin/movies/movies").then(convert(queryClient)),
         },
         {
+          path: paths.admin.genres.path,
+          lazy: () =>
+            import("./pages/admin/genres/genres").then(convert(queryClient)),
+        },
+        {
           path: paths.admin.cinemas.path,
           lazy: () =>
             import("./pages/admin/cinemas/cinemas").then(convert(queryClient)),

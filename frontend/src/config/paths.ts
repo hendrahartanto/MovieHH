@@ -29,6 +29,10 @@ export const paths = {
       path: "movies",
       getHref: () => "/admin/movies",
     },
+    genres: {
+      path: "genres",
+      getHref: () => "/admin/genres",
+    },
     cinemas: {
       path: "cinemas",
       getHref: () => "/admin/cinemas",

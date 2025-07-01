@@ -36,8 +36,12 @@ const MoviesPage = () => {
       title="Movies"
       subtitle="Manage your movie collection"
     >
-      <CreateMovie />
-      <MoviesList />
+      <div className="flex justify-end">
+        <CreateMovie />
+      </div>
+      <div className="mt-4">
+        <MoviesList />
+      </div>
     </SidebarContentLayout>
   );
 };
