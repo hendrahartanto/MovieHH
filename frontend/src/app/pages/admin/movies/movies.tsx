@@ -24,13 +24,6 @@ export const clientLoader =
   };
 
 const MoviesPage = () => {
-  const [searchParams] = useSearchParams();
-  const moviesQuery = useMovies({
-    page: +(searchParams.get("page") || 1),
-  });
-
-  console.log(moviesQuery.data?.data);
-
   return (
     <SidebarContentLayout
       title="Movies"
