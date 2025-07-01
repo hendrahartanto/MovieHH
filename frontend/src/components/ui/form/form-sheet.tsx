@@ -21,7 +21,7 @@ type FormDrawerProps = {
   size?: "sm" | "default" | "lg" | "xl";
 };
 
-export const FormDrawer = ({
+export const FormSheet = ({
   title,
   description,
   children,
@@ -38,7 +38,6 @@ export const FormDrawer = ({
     }
   }, [isDone, close]);
 
-  // Map size to width classes
   const sizeClasses = {
     sm: "w-80",
     default: "w-96",
@@ -75,7 +74,7 @@ export const FormDrawer = ({
             <div className="mt-2 h-px bg-gradient-to-r from-primary/50 to-transparent" />
           </SheetHeader>
           <div className="flex-1 py-6 overflow-y-auto">
-            <div className="text-card-foreground">{children}</div>
+            <div className="text-card-foreground px-4">{children}</div>
           </div>
         </div>
         <SheetFooter className="flex-shrink-0 border-t border-border pt-4">

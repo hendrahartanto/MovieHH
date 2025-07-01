@@ -3,6 +3,7 @@ import {
   getMoviesQueryOptions,
   useMovies,
 } from "@/features/movies/api/get-movies";
+import { CreateMovie } from "@/features/movies/components/create-movie";
 import { MoviesList } from "@/features/movies/components/movies-list";
 import { QueryClient } from "@tanstack/react-query";
 import { LoaderFunctionArgs, useSearchParams } from "react-router";
@@ -35,6 +36,7 @@ const MoviesPage = () => {
       title="Movies"
       subtitle="Manage your movie collection"
     >
+      <CreateMovie />
       <MoviesList />
     </SidebarContentLayout>
   );

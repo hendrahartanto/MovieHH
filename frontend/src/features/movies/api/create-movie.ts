@@ -1,6 +1,9 @@
 import { ApiResponse, Movie } from "@/lib/api";
 import { api } from "@/lib/api-client";
+import { MutationConfig } from "@/lib/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
+import { getMoviesQueryOptions } from "./get-movies";
 
 export const createMovieInputSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -19,34 +22,25 @@ export const createMovie = ({
   return api.post("/movies", data);
 };
 
-//REFERENCE:
-// export const createDiscussion = ({
-//   data,
-// }: {
-//   data: CreateDiscussionInput;
-// }): Promise<Discussion> => {
-//   return api.post(`/discussions`, data);
-// };
+type UseCreateMovieOptions = {
+  mutationConfig?: MutationConfig<typeof createMovie>;
+};
 
-// type UseCreateDiscussionOptions = {
-//   mutationConfig?: MutationConfig<typeof createDiscussion>;
-// };
+export const useCreateMovie = ({
+  mutationConfig,
+}: UseCreateMovieOptions = {}) => {
+  const queryClient = useQueryClient();
 
-// export const useCreateDiscussion = ({
-//   mutationConfig,
-// }: UseCreateDiscussionOptions = {}) => {
-//   const queryClient = useQueryClient();
+  const { onSuccess, ...restConfig } = mutationConfig || {};
 
-//   const { onSuccess, ...restConfig } = mutationConfig || {};
-
-//   return useMutation({
-//     onSuccess: (...args) => {
-//       queryClient.invalidateQueries({
-//         queryKey: getDiscussionsQueryOptions().queryKey,
-//       });
-//       onSuccess?.(...args);
-//     },
-//     ...restConfig,
-//     mutationFn: createDiscussion,
-//   });
-// };
+  return useMutation({
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({
+        queryKey: getMoviesQueryOptions().queryKey,
+      });
+      onSuccess?.(...args);
+    },
+    ...restConfig,
+    mutationFn: createMovie,
+  });
+};
