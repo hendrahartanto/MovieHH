@@ -14,9 +14,20 @@ const createGenre = asyncHandler(async (req, res) => {
 });
 
 const getGenres = asyncHandler(async (req, res) => {
-  const genres = await genreService.getGenres();
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
 
-  new SuccessResponse("Get Genres Successful", { genres }).send(res);
+  const { genres, total } = await genreService.getGenres(page, limit);
+
+  new SuccessResponse("Get Genres Successful", {
+    genres,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
 });
 
 const updateGenre = asyncHandler(async (req, res) => {

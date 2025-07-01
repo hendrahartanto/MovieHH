@@ -12,8 +12,8 @@ const createGenre = async (createGenreData: CreateGenreDTO) => {
   return genreRepository.createGenre(createGenreData);
 };
 
-const getGenres = async () => {
-  return genreRepository.getGenres();
+const getGenres = async (page: number, limit: number) => {
+  return genreRepository.getGenres(page, limit);
 };
 
 const updateGenre = async (genreId: string, data: { name: string }) => {

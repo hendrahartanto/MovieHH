@@ -8,8 +8,16 @@ const createGenre = async (newGenreData: CreateGenreDTO) => {
   });
 };
 
-const getGenres = async () => {
-  return prisma.genre.findMany();
+const getGenres = async (page: number, limit: number) => {
+  const [genres, total] = await Promise.all([
+    prisma.genre.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.genre.count(),
+  ]);
+
+  return { genres, total };
 };
 
 const udpateGenre = async (genreId: string, data: { name: string }) => {

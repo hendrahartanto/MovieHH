@@ -1,7 +1,4 @@
-import {
-  SuccessMsgResponse,
-  SuccessResponse,
-} from "../../../core/api-response";
+import { SuccessResponse } from "../../../core/api-response";
 import asyncHandler from "../../../core/helpers/async-handler";
 import { createMovieSchema } from "../domain/dto/create-movie.dto";
 import movieService from "../domain/movie.service";

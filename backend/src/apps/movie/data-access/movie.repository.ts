@@ -1,6 +1,5 @@
 import prisma from "../../../db";
 import { CreateMovieDTO } from "../domain/dto/create-movie.dto";
-import { UpdateMovieDTO } from "../domain/dto/update-movie.dto";
 
 const createMovie = async (newMovieData: CreateMovieDTO) => {
   return prisma.movie.create({
