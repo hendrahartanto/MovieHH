@@ -1,6 +1,6 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { getGenreQueryOptions } from "@/features/genres/api/get-genres";
-import { GenresList } from "@/features/genres/components/genres.list";
+import { GenresList } from "@/features/genres/components/genres-list";
 import { QueryClient } from "@tanstack/react-query";
 import { LoaderFunctionArgs } from "react-router";
 
@@ -21,8 +21,7 @@ export const clientLoader =
 
 const GenresPage = () => {
   return (
-    <SidebarContentLayout title="Genres">
-      <div>This is genres page</div>
+    <SidebarContentLayout title="Genres" subtitle="Manage genres list">
       <GenresList />
     </SidebarContentLayout>
   );

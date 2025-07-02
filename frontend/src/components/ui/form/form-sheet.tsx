@@ -59,7 +59,7 @@ export const FormSheet = ({
       <SheetTrigger asChild>{triggerButton}</SheetTrigger>
       <SheetContent
         side="right"
-        className={`${sizeClasses[size]} flex flex-col justify-between`}
+        className={`${sizeClasses[size]} flex flex-col justify-between overflow-auto`} //TODO: styling scroll bar
       >
         <div className="flex flex-col">
           <SheetHeader>
