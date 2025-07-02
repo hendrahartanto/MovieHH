@@ -7,6 +7,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  SubmitButton,
+  SubmitButtonType,
+} from "@/components/ui/form/submit-button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -115,9 +119,12 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <SubmitButton
+              isPending={register.isPending}
+              type={SubmitButtonType.REGISTER}
+            >
               Register
-            </Button>
+            </SubmitButton>
           </div>
           <div className="w-full mt-2 text-sm">
             Already have an account?{" "}

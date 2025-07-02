@@ -6,6 +6,10 @@ import { useLogout } from "@/lib/auth";
 import { AlertTriangle, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import {
+  SubmitButton,
+  SubmitButtonType,
+} from "@/components/ui/form/submit-button";
 
 interface ConfirmLogoutInterface {
   triggerButton: React.ReactElement;
@@ -65,25 +69,18 @@ export const ConfirmLogout = ({ triggerButton }: ConfirmLogoutInterface) => {
           >
             Cancel
           </Button>
-
-          <Button
-            variant="destructive"
+          <SubmitButton
+            isPending={logout.isPending}
+            type={SubmitButtonType.LOGOUT}
+            className="gap-2"
+            variant={"destructive"}
             onClick={handleLogoutConfirm}
-            disabled={logout.isPending}
-            className="flex items-center gap-2"
           >
-            {logout.isPending ? (
-              <>
-                <div className="w-4 h-4 border-2 border-destructive-foreground/30 border-t-destructive-foreground rounded-full animate-spin" />
-                Logging out...
-              </>
-            ) : (
-              <>
-                <LogOut className="w-4 h-4" />
-                Logout
-              </>
-            )}
-          </Button>
+            <>
+              <LogOut className="w-4 h-4" />
+              Logout
+            </>
+          </SubmitButton>
         </div>
       </div>
     </Modal>

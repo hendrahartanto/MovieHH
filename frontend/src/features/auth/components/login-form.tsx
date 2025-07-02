@@ -9,10 +9,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Link, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
 import { LoginInput, loginInputSchema, useLogin } from "@/lib/auth";
+import {
+  SubmitButton,
+  SubmitButtonType,
+} from "@/components/ui/form/submit-button";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -66,9 +69,12 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 </FormItem>
               )}
             ></FormField>
-            <Button type="submit" className="w-full">
+            <SubmitButton
+              type={SubmitButtonType.LOGIN}
+              isPending={login.isPending}
+            >
               Login
-            </Button>
+            </SubmitButton>
           </div>
           <div className="w-full mt-2 text-sm">
             Don't have an account?{" "}

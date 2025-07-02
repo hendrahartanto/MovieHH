@@ -21,8 +21,12 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Film } from "lucide-react";
+import {
+  SubmitButton,
+  SubmitButtonType,
+} from "@/components/ui/form/submit-button";
 
-// Mock genres - replace with actual genres query
+//TODO: Mock genres - replace with actual genres query
 const MOCK_GENRES = [
   { id: "1", name: "Action" },
   { id: "2", name: "Comedy" },
@@ -69,24 +73,13 @@ export const CreateMovie = () => {
           </Button>
         }
         submitButton={
-          <Button
-            type="submit"
+          <SubmitButton
+            type={SubmitButtonType.CREATE}
             form="create-movie-form"
-            disabled={createMovie.isPending}
-            className="flex items-center gap-2"
+            isPending={createMovie.isPending}
           >
-            {createMovie.isPending ? (
-              <>
-                <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Film className="w-4 h-4" />
-                Create Movie
-              </>
-            )}
-          </Button>
+            Create Movie
+          </SubmitButton>
         }
         size="lg"
       >
@@ -111,7 +104,7 @@ export const CreateMovie = () => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className="text-destructive text-sm" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -135,7 +128,7 @@ export const CreateMovie = () => {
                   <FormDescription className="text-muted-foreground text-sm">
                     Provide a brief description of the movie plot.
                   </FormDescription>
-                  <FormMessage className="text-destructive text-sm" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -159,7 +152,7 @@ export const CreateMovie = () => {
                   <FormDescription className="text-muted-foreground text-sm">
                     Optional: URL to the movie poster image.
                   </FormDescription>
-                  <FormMessage className="text-destructive text-sm" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -214,7 +207,7 @@ export const CreateMovie = () => {
                       />
                     ))}
                   </div>
-                  <FormMessage className="text-destructive text-sm" />
+                  <FormMessage />
                 </FormItem>
               )}
             />
