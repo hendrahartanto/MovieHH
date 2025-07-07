@@ -1,9 +1,18 @@
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { FormSheet } from "@/components/ui/form/form-sheet";
 import {
   SubmitButton,
   SubmitButtonType,
 } from "@/components/ui/form/submit-button";
+import { Input } from "@/components/ui/input";
 import {
   CreateGenreInput,
   createGenreInputSchema,
@@ -19,12 +28,16 @@ export const CreateGenre = () => {
     mutationConfig: {
       onSuccess: () => {
         // TODO: add toast notification
+        form.reset();
       },
     },
   });
 
   const form = useForm<CreateGenreInput>({
     resolver: zodResolver(createGenreInputSchema),
+    defaultValues: {
+      name: "",
+    },
   });
 
   const onSubmit = (data: CreateGenreInput) => {
@@ -44,15 +57,31 @@ export const CreateGenre = () => {
         }
         submitButton={
           <SubmitButton
+            form="create-genre-form"
             type={SubmitButtonType.CREATE}
-            form="create-movie-form"
             isPending={createGenre.isPending}
           >
             Create Genre
           </SubmitButton>
         }
       >
-        <div>sesusatu</div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} id="create-genre-form">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Genre name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter genre name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
       </FormSheet>
     </Authorization>
   );

@@ -1,10 +1,16 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { GenresList } from "@/features/genres/components/genres-list";
+import { CreateGenre } from "./create-genre";
 
 const GenresPage = () => {
   return (
     <SidebarContentLayout title="Genres" subtitle="Manage genres list">
-      <GenresList />
+      <div className="flex justify-end">
+        <CreateGenre />
+      </div>
+      <div className="mt-4">
+        <GenresList />
+      </div>
     </SidebarContentLayout>
   );
 };
