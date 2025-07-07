@@ -94,15 +94,9 @@ export const CreateMovie = () => {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-foreground font-medium">
-                    Movie Title
-                  </FormLabel>
+                  <FormLabel>Movie Title</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter movie title"
-                      className="bg-input border-border text-foreground placeholder:text-muted-foreground"
-                      {...field}
-                    />
+                    <Input placeholder="Enter movie title" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -114,18 +108,15 @@ export const CreateMovie = () => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-foreground font-medium">
-                    Description
-                  </FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter movie description"
-                      className="bg-input border-border text-foreground placeholder:text-muted-foreground resize-none"
                       rows={4}
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-muted-foreground text-sm">
+                  <FormDescription>
                     Provide a brief description of the movie plot.
                   </FormDescription>
                   <FormMessage />
@@ -138,18 +129,15 @@ export const CreateMovie = () => {
               name="posterUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-foreground font-medium">
-                    Poster URL
-                  </FormLabel>
+                  <FormLabel>Poster URL</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="https://example.com/poster.jpg"
-                      className="bg-input border-border text-foreground placeholder:text-muted-foreground"
                       {...field}
                       value={field.value || ""}
                     />
                   </FormControl>
-                  <FormDescription className="text-muted-foreground text-sm">
+                  <FormDescription>
                     Optional: URL to the movie poster image.
                   </FormDescription>
                   <FormMessage />
@@ -162,10 +150,8 @@ export const CreateMovie = () => {
               name="genreIds"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-foreground font-medium">
-                    Genres
-                  </FormLabel>
-                  <FormDescription className="text-muted-foreground text-sm">
+                  <FormLabel>Genres</FormLabel>
+                  <FormDescription>
                     Select at least one genre that applies to this movie.
                   </FormDescription>
                   <div className="grid grid-cols-2 gap-3 mt-3">
