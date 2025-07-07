@@ -53,7 +53,8 @@ export const SubmitButton = ({
           <div
             className={cn(
               "w-4 h-4 border-2 rounded-full animate-spin mr-2",
-              type === SubmitButtonType.LOGOUT
+              type === SubmitButtonType.LOGOUT ||
+                type === SubmitButtonType.DELETE
                 ? "border-destructive-foreground/30 border-t-destructive-foreground"
                 : "border-primary-foreground/30 border-t-primary-foreground"
             )}

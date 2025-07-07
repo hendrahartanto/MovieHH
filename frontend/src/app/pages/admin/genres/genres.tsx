@@ -1,6 +1,6 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { GenresList } from "@/features/genres/components/genres-list";
-import { CreateGenre } from "./create-genre";
+import { CreateGenre } from "../../../../features/genres/components/create-genre";
 
 const GenresPage = () => {
   return (
