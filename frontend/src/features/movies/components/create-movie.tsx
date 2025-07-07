@@ -197,18 +197,17 @@ export const CreateMovie = () => {
                                     <FormControl>
                                       <Checkbox
                                         checked={field.value?.includes(
-                                          genre.name
+                                          genre.id
                                         )}
                                         onCheckedChange={(checked) => {
                                           return checked
                                             ? field.onChange([
                                                 ...(field.value || []),
-                                                genre.name,
+                                                genre.id,
                                               ])
                                             : field.onChange(
                                                 field.value?.filter(
-                                                  (value) =>
-                                                    value !== genre.name
+                                                  (id) => id !== genre.id
                                                 )
                                               );
                                         }}

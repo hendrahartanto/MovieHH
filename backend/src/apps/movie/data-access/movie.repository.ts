@@ -51,7 +51,7 @@ const getMovieById = async (movieId: string) => {
 
 const updateMovie = async (
   movieId: string,
-  data: { title: string; description: string; posterUrl: string | null }
+  data: { title: string; description: string; posterUrl?: string }
 ) => {
   return prisma.movie.update({
     where: { id: movieId },

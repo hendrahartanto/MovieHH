@@ -1,6 +1,7 @@
 import { SuccessResponse } from "../../../core/api-response";
 import asyncHandler from "../../../core/helpers/async-handler";
 import { createMovieSchema } from "../domain/dto/create-movie.dto";
+import { updateMovieSchema } from "../domain/dto/update-movie.dto";
 import movieService from "../domain/movie.service";
 
 const createMovie = asyncHandler(async (req, res) => {
@@ -29,7 +30,7 @@ const getMovies = asyncHandler(async (req, res) => {
 
 const updateMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
-  const validatedData = createMovieSchema.parse(req.body);
+  const validatedData = updateMovieSchema.parse(req.body);
 
   const updatedMovie = await movieService.updateMovie(movieId, validatedData);
   new SuccessResponse("Update movie successful", { updatedMovie }).send(res);
