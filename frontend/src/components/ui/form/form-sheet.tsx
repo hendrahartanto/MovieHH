@@ -10,6 +10,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useDisclosure } from "@/hooks/use-disclosure";
+import { ScrollArea } from "../scroll-area";
 
 type FormDrawerProps = {
   isDone: boolean;
@@ -59,25 +60,21 @@ export const FormSheet = ({
       <SheetTrigger asChild>{triggerButton}</SheetTrigger>
       <SheetContent
         side="right"
-        className={`${sizeClasses[size]} flex flex-col justify-between overflow-auto`} //TODO: styling scroll bar
+        className={`${sizeClasses[size]} flex flex-col justify-between`} //TODO: styling scroll bar
       >
-        <div className="flex flex-col">
-          <SheetHeader>
-            <SheetTitle className="text-foreground text-xl font-semibold">
-              {title}
-            </SheetTitle>
-            {description && (
-              <p className="text-sm text-muted-foreground mt-1">
-                {description}
-              </p>
-            )}
-            <div className="mt-2 h-px bg-gradient-to-r from-primary/50 to-transparent" />
-          </SheetHeader>
-          <div className="flex-1 py-6 overflow-y-auto">
-            <div className="text-card-foreground px-4">{children}</div>
-          </div>
-        </div>
-        <SheetFooter className="flex-shrink-0 border-t border-border pt-4">
+        <SheetHeader className="shrink-0">
+          <SheetTitle className="text-foreground text-xl font-semibold">
+            {title}
+          </SheetTitle>
+          {description && (
+            <p className="text-sm text-muted-foreground mt-1">{description}</p>
+          )}
+          <div className="mt-2 h-px bg-gradient-to-r from-primary/50 to-transparent" />
+        </SheetHeader>
+        <ScrollArea className="flex-1 px-4 overflow-y-auto">
+          {children}
+        </ScrollArea>
+        <SheetFooter className="shrink-0 border-t border-border pt-4">
           <div className="flex gap-3 justify-end w-full">
             <SheetClose asChild>
               <Button
