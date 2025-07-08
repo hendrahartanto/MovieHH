@@ -48,12 +48,23 @@ async function main() {
   // 2. Seed movie + genre linkage
   const movie = await seedMovieWithGenres([genres[0].id, genres[3].id]); // Action + Sci-Fi
 
-  // 3. Seed theater (using service, includes seats)
-  const theater = await theaterService.createTheater({
-    name: "Cinema XXI Mega Mall",
+  // 3. Seed location
+  const location = await prisma.location.upsert({
+    where: { name: "Mega Mall" },
+    update: {},
+    create: {
+      name: "Mega Mall",
+      address: "Jl. Mega Kuningan, Jakarta Selatan",
+    },
   });
 
-  // 4. Seed showtime (using service, includes SeatsOnShowTimes)
+  // 4. Seed theater (using service, includes seats)
+  const theater = await theaterService.createTheater({
+    name: "Cinema XXI Mega Mall",
+    locationId: location.id,
+  });
+
+  // 5. Seed showtime (using service, includes SeatsOnShowTimes)
   const now = new Date();
   const showTimeStart = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
   const showTimeEnd = new Date(showTimeStart.getTime() + 2 * 60 * 60 * 1000); // +2 hours

@@ -291,34 +291,17 @@ const MovieTableSkeleton = () => {
 
 const EmptyMoviesState = () => {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Movies</h1>
-          <p className="text-muted-foreground">Manage your movie collection</p>
+    <Card>
+      <CardContent className="flex flex-col items-center justify-center py-16 px-6 text-center">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+          <ImageIcon className="w-8 h-8 text-muted-foreground" />
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Movie
-        </Button>
-      </div>
-
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 px-6 text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-            <ImageIcon className="w-8 h-8 text-muted-foreground" />
-          </div>
-          <CardTitle className="mb-2">No movies found</CardTitle>
-          <p className="text-muted-foreground mb-6 max-w-md">
-            Get started by adding your first movie to the collection. You can
-            manage genres, showtimes, and more.
-          </p>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Your First Movie
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+        <CardTitle className="mb-2">No movies found</CardTitle>
+        <p className="text-muted-foreground mb-6 max-w-md">
+          Get started by adding your first movie to the collection. You can
+          manage genres, showtimes, and more.
+        </p>
+      </CardContent>
+    </Card>
   );
 };

@@ -220,34 +220,17 @@ const GenreTableSkeleton = () => {
 
 const EmptyGenresState = () => {
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Genres</h1>
-          <p className="text-muted-foreground">Manage your music genres</p>
+    <Card>
+      <CardContent className="flex flex-col items-center justify-center py-16 px-6 text-center">
+        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+          <Music className="w-8 h-8 text-muted-foreground" />
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Genre
-        </Button>
-      </div>
-
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-16 px-6 text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-            <Music className="w-8 h-8 text-muted-foreground" />
-          </div>
-          <CardTitle className="mb-2">No genres found</CardTitle>
-          <p className="text-muted-foreground mb-6 max-w-md">
-            Get started by adding your first genre to the collection. You can
-            organize your music library with custom genres.
-          </p>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Your First Genre
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+        <CardTitle className="mb-2">No genres found</CardTitle>
+        <p className="text-muted-foreground mb-6 max-w-md">
+          Get started by adding your first genre to the collection. You can
+          organize your music library with custom genres.
+        </p>
+      </CardContent>
+    </Card>
   );
 };
