@@ -6,6 +6,7 @@ import { Role } from "@prisma/client";
 const router = express.Router();
 
 router.get("/", movieController.getMovies);
+router.get("/:movieId", movieController.getMovie);
 router.post(
   "/",
   authenticate,

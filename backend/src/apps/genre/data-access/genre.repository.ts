@@ -24,6 +24,10 @@ const getGenres = async () => {
   return prisma.genre.findMany();
 };
 
+const getGenreById = async (genreId: string) => {
+  return prisma.genre.findUnique({ where: { id: genreId } });
+};
+
 const udpateGenre = async (genreId: string, data: { name: string }) => {
   return prisma.genre.update({
     where: { id: genreId },
@@ -43,6 +47,7 @@ export default {
   createGenre,
   getGenresPaginated,
   getGenres,
+  getGenreById,
   udpateGenre,
   deleteGenre,
   getGenreByName,

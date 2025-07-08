@@ -30,8 +30,8 @@ const getMovies = asyncHandler(async (req, res) => {
 
 const getMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
+  const movie = await movieService.getMovie(movieId);
 
-  const movie = movieService.getMovie(movieId);
   new SuccessResponse("Get movie successful", { movie }).send(res);
 });
 

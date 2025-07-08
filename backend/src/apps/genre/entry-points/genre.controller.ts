@@ -35,6 +35,13 @@ const getGenres = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const getGenre = asyncHandler(async (req, res) => {
+  const { genreId } = req.params;
+  const genre = await genreService.getGenre(genreId);
+
+  new SuccessResponse("Get genre successful", { genre }).send(res);
+});
+
 const updateGenre = asyncHandler(async (req, res) => {
   const { genreId } = req.params;
   const validatedData = createGenreSchema.parse(req.body);
@@ -52,6 +59,7 @@ const deleteGenre = asyncHandler(async (req, res) => {
 
 export default {
   createGenre,
+  getGenre,
   getGenres,
   updateGenre,
   deleteGenre,

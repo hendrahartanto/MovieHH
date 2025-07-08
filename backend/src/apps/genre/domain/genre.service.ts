@@ -20,6 +20,13 @@ const getGenres = async () => {
   return genreRepository.getGenres();
 };
 
+const getGenre = async (genreId: string) => {
+  const genre = genreRepository.getGenreById(genreId);
+  if (!genre) throw new BadRequestError("Genre not found");
+
+  return genre;
+};
+
 const updateGenre = async (genreId: string, data: { name: string }) => {
   return genreRepository.udpateGenre(genreId, data);
 };
@@ -31,6 +38,7 @@ const deleteGenre = async (genreId: string) => {
 export default {
   createGenre,
   getGenres,
+  getGenre,
   getGenresPaginated,
   updateGenre,
   deleteGenre,
