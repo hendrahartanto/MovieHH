@@ -28,6 +28,13 @@ const getMovies = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const getMovie = asyncHandler(async (req, res) => {
+  const { movieId } = req.params;
+
+  const movie = movieService.getMovie(movieId);
+  new SuccessResponse("Get movie successful", { movie }).send(res);
+});
+
 const updateMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
   const validatedData = updateMovieSchema.parse(req.body);
@@ -48,4 +55,5 @@ export default {
   updateMovie,
   deleteMovie,
   getMovies,
+  getMovie,
 };

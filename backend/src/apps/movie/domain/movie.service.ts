@@ -1,4 +1,4 @@
-import { NoDataError } from "../../../core/api-error";
+import { BadRequestError, NoDataError } from "../../../core/api-error";
 import movieRepository from "../data-access/movie.repository";
 import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { UpdateMovieDTO } from "./dto/update-movie.dto";
@@ -10,6 +10,13 @@ const createMovie = async (createMovieData: CreateMovieDTO) => {
 
 const getMovies = async (page: number, limit: number) => {
   return movieRepository.getMovies(page, limit);
+};
+
+const getMovie = async (movieId: string) => {
+  const movie = movieRepository.getMovieById(movieId);
+  if (!movie) throw new BadRequestError("Movie not found");
+
+  return movie;
 };
 
 const updateMovie = async (
@@ -36,6 +43,7 @@ const deleteMovie = async (movieId: string) => {
 export default {
   createMovie,
   getMovies,
+  getMovie,
   updateMovie,
   deleteMovie,
 };
