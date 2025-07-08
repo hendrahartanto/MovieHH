@@ -21,6 +21,34 @@ const updateTheater = asyncHandler(async (req, res) => {
   new SuccessResponse("Update theater successful", updatedTheater).send(res);
 });
 
+const getTheaters = asyncHandler(async (req, res) => {
+  const all = req.query.all === "true";
+  if (all) {
+    const theaters = await theaterService.getTheaters();
+    return new SuccessResponse("Get all theaters successful", {
+      theaters,
+    }).send(res);
+  }
+
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+
+  const { theaters, total } = await theaterService.getTheatersPaginated(
+    page,
+    limit
+  );
+
+  new SuccessResponse("Get theaters Successful", {
+    theaters,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
+});
+
 const deleteTheater = asyncHandler(async (req, res) => {
   const { theaterId } = req.params;
 
@@ -34,4 +62,5 @@ export default {
   createTheater,
   updateTheater,
   deleteTheater,
+  getTheaters,
 };

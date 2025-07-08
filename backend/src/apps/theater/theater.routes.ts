@@ -10,6 +10,7 @@ router.use(authenticate, authorize(Role.ADMIN));
 //-------------------------------//
 
 router.post("/", theaterController.createTheater);
+router.get("/", theaterController.getTheaters);
 router.put("/:theaterId", theaterController.updateTheater);
 router.delete("/:theaterId", theaterController.deleteTheater);
 

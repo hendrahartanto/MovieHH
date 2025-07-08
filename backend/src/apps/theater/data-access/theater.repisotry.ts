@@ -12,6 +12,26 @@ const getTheaterById = async (theaterId: string) => {
   });
 };
 
+const getTheatersPaginated = async (page: number, limit: number) => {
+  const [theaters, total] = await Promise.all([
+    prisma.theater.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        seats: true,
+        showTimes: true,
+      },
+    }),
+    prisma.genre.count(),
+  ]);
+
+  return { theaters, total };
+};
+
+const getTheaters = async () => {
+  return prisma.theater.findMany();
+};
+
 const updateTheater = async (theaterId: string, data: { name: string }) => {
   return prisma.theater.update({
     where: { id: theaterId },
@@ -26,6 +46,8 @@ const deleteTheater = async (theaterId: string) => {
 export default {
   createTheater,
   getTheaterById,
+  getTheatersPaginated,
+  getTheaters,
   updateTheater,
   deleteTheater,
 };

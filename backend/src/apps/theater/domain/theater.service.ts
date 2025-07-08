@@ -22,6 +22,14 @@ const createTheater = async (newTheaterData: CreateTheaterDTO) => {
   return theater;
 };
 
+const getTheatersPaginated = async (page: number, limit: number) => {
+  return theaterRepisotry.getTheatersPaginated(page, limit);
+};
+
+const getTheaters = async () => {
+  return theaterRepisotry.getTheaters();
+};
+
 const updateTheater = async (
   theaterId: string,
   updateTheaterData: UpdateTheaterDTO
@@ -43,4 +51,6 @@ export default {
   createTheater,
   updateTheater,
   deleteTheater,
+  getTheatersPaginated,
+  getTheaters,
 };
