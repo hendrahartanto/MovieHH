@@ -15,7 +15,7 @@ export const getGenres = ({
   });
 };
 
-export const getGenreQueryOptions = ({
+export const getGenresQueryOptions = ({
   page,
   all,
 }: { page?: number; all?: boolean } = {}) => {
@@ -28,9 +28,9 @@ export const getGenreQueryOptions = ({
 type UseGenresOptions = {
   page?: number;
   all?: boolean;
-  queryConfig?: QueryConfig<typeof getGenreQueryOptions>;
+  queryConfig?: QueryConfig<typeof getGenresQueryOptions>;
 };
 
 export const useGenres = ({ page, all, queryConfig }: UseGenresOptions) => {
-  return useQuery({ ...getGenreQueryOptions({ page, all }), ...queryConfig });
+  return useQuery({ ...getGenresQueryOptions({ page, all }), ...queryConfig });
 };

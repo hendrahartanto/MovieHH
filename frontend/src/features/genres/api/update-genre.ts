@@ -3,8 +3,7 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
-import { getGenreQueryOptions } from "./get-genres";
-
+import { getGenresQueryOptions } from "./get-genres";
 export const updateGenreInputSchema = z.object({
   name: z.string().min(1, "Name is required"),
 });
@@ -32,7 +31,7 @@ export const useUpdateGenre = ({ mutationConfig }: UseUpdateGenreOptions) => {
   return useMutation({
     onSuccess: (data, ...args) => {
       queryClient.invalidateQueries({
-        queryKey: getGenreQueryOptions().queryKey,
+        queryKey: getGenresQueryOptions().queryKey,
       });
       onSuccess?.(data, ...args);
     },

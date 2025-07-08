@@ -1,7 +1,7 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getGenreQueryOptions } from "./get-genres";
+import { getGenresQueryOptions } from "./get-genres";
 
 export const deleteGenre = ({ genreId }: { genreId: string }) => {
   return api.delete(`/genres/${genreId}`);
@@ -19,7 +19,7 @@ export const useDeleteGenre = ({ mutationConfig }: UseDeleteGenreOptions) => {
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: getGenreQueryOptions().queryKey,
+        queryKey: getGenresQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },

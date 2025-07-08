@@ -80,6 +80,14 @@ export type Showtime = {
   updatedAt: Date;
 };
 
+export type Location = {
+  id: string;
+  name: string;
+  address: string;
+  theaters: Theater[];
+  createdAt: Date;
+};
+
 export type SeatsOnShowtimes = {
   seat: Seat;
   showtime: Showtime;

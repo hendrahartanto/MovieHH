@@ -33,7 +33,6 @@ export const UpdateGenre = ({ genre }: UpdateGenreProps) => {
     mutationConfig: {
       onSuccess: () => {
         // TODO: add toast notification
-        form.reset();
       },
     },
   });
