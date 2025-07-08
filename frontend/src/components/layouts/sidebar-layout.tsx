@@ -11,6 +11,7 @@ import {
   PanelLeftClose,
   LogOut,
   Tags,
+  Map,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
@@ -41,6 +42,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Genres",
       to: paths.admin.genres.getHref(),
       icon: <Tags className="w-5 h-5" />,
+    },
+    {
+      name: "Locations",
+      to: paths.admin.locations.getHref(),
+      icon: <Map className="w-5 h-5" />,
     },
     {
       name: "Cinemas",
