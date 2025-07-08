@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router";
 import { useGenres } from "../api/get-genres";
 import {
   Edit,
-  Trash2,
   Eye,
   Tag,
   ChevronLeft,

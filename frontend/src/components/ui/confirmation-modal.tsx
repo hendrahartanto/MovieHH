@@ -20,7 +20,6 @@ export type ConfirmationDialogProps = {
   title: string;
   body?: string;
   cancelButtonText?: string;
-  icon?: "danger" | "info";
   isDone?: boolean;
 };
 
@@ -30,7 +29,6 @@ export const ConfirmationDialog = ({
   title,
   body = "",
   cancelButtonText = "Cancel",
-  icon = "danger",
   isDone = false,
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure();
@@ -68,14 +66,7 @@ export const ConfirmationDialog = ({
         >
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription className="space-y-1">
-            {/* <p className="font-medium text-foreground">
-              Are you sure you want to logout?
-            </p>
-            <p className="text-xs text-muted-foreground">
-              You will be redirected to the login page and will need to sign in
-              again.
-            </p> */}
-            <p className="text-xs text-muted-foreground">{body}</p>
+            <p className="font-medium text-foreground">{body}</p>
           </AlertDescription>
         </Alert>
 

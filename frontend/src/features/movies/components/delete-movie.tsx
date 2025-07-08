@@ -20,7 +20,6 @@ export const DeleteMovie = ({ movieId }: { movieId: string }) => {
   return (
     <Authorization allowedRoles={[ROLES.ADMIN]}>
       <ConfirmationDialog
-        icon="danger"
         title="Delete movie"
         body="Are you sure you want to delete this movie?"
         triggerButton={

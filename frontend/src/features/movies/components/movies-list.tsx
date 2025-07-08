@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router";
 import { useMovies } from "../api/get-movies";
 import {
   Edit,
-  Trash2,
   Eye,
   Calendar,
   Tag,
@@ -66,7 +65,7 @@ export const MoviesList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {movies.map((movie, index) => (
+              {movies.map((movie) => (
                 <TableRow key={movie.id}>
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
