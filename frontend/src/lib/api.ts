@@ -56,7 +56,9 @@ export type Theater = {
   id: string;
   name: string;
   seats: Seat[];
+  location: Location;
   showTimes: Showtime[];
+  createdAt: Date;
 };
 
 export type Seat = {

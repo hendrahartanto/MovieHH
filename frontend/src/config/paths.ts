@@ -37,9 +37,9 @@ export const paths = {
       path: "locations",
       getHref: () => "/admin/locations",
     },
-    cinemas: {
-      path: "cinemas",
-      getHref: () => "/admin/cinemas",
+    theaters: {
+      path: "theaters",
+      getHref: () => "/admin/theaters",
     },
   },
 

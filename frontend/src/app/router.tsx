@@ -68,9 +68,11 @@ const createAppRouter = (queryClient: QueryClient) =>
             ),
         },
         {
-          path: paths.admin.cinemas.path,
+          path: paths.admin.theaters.path,
           lazy: () =>
-            import("./pages/admin/cinemas/cinemas").then(convert(queryClient)),
+            import("./pages/admin/theaters/theaters").then(
+              convert(queryClient)
+            ),
         },
       ],
     },

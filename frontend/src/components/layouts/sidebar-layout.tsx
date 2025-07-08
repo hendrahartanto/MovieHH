@@ -49,8 +49,8 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       icon: <Map className="w-5 h-5" />,
     },
     {
-      name: "Cinemas",
-      to: paths.admin.cinemas.getHref(),
+      name: "Theaters",
+      to: paths.admin.theaters.getHref(),
       icon: <MapPin className="w-5 h-5" />,
     },
     { name: "Favorites", to: "/favorites", icon: <Star className="w-5 h-5" /> },
