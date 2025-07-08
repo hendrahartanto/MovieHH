@@ -24,6 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteMovie } from "./delete-movie";
+import { UpdateMovie } from "./update-movie";
 
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -153,19 +154,7 @@ export const MoviesList = () => {
                         <span className="sr-only">View Details</span>
                       </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => {
-                          // Handle edit movie
-                          console.log("Edit movie:", movie.id);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span className="sr-only">Edit Movie</span>
-                      </Button>
-
+                      <UpdateMovie movie={movie} />
                       <DeleteMovie movieId={movie.id} />
                     </div>
                   </TableCell>

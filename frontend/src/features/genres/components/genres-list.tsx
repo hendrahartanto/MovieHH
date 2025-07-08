@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteGenre } from "./delete-genre";
+import { UpdateGenre } from "./update-genre";
 
 export const GenresList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -91,7 +92,6 @@ export const GenresList = () => {
                         size="sm"
                         className="h-8 w-8 p-0"
                         onClick={() => {
-                          // Handle view details
                           console.log("View details for genre:", genre.name);
                         }}
                       >
@@ -99,18 +99,7 @@ export const GenresList = () => {
                         <span className="sr-only">View Details</span>
                       </Button>
 
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => {
-                          // Handle edit genre
-                          console.log("Edit genre:", genre.name);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span className="sr-only">Edit Genre</span>
-                      </Button>
+                      <UpdateGenre genre={genre} />
                       <DeleteGenre genreId={genre.id} />
                     </div>
                   </TableCell>
