@@ -1,14 +1,6 @@
 import { useSearchParams } from "react-router";
 import { useGenres } from "../api/get-genres";
-import {
-  Edit,
-  Eye,
-  Tag,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  Music,
-} from "lucide-react";
+import { Eye, Tag, ChevronLeft, ChevronRight, Music } from "lucide-react";
 
 import {
   Table,
