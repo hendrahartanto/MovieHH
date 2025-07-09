@@ -41,6 +41,10 @@ export const paths = {
       path: "theaters",
       getHref: () => "/admin/theaters",
     },
+    showtimes: {
+      path: "showtimes",
+      getHref: () => "/admin/showtimes",
+    },
   },
 
   home: {

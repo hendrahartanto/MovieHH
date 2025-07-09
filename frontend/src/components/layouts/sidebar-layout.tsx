@@ -4,8 +4,6 @@ import {
   Film,
   MapPin,
   Home,
-  Star,
-  Clock,
   User,
   PanelLeftOpen,
   PanelLeftClose,
@@ -53,8 +51,6 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       to: paths.admin.theaters.getHref(),
       icon: <MapPin className="w-5 h-5" />,
     },
-    { name: "Favorites", to: "/favorites", icon: <Star className="w-5 h-5" /> },
-    { name: "History", to: "/history", icon: <Clock className="w-5 h-5" /> },
   ];
 
   const toggleSidebar = () => {
