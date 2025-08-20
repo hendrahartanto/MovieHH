@@ -22,7 +22,7 @@ const register = asyncHandler(async (req, res) => {
     secure: false,
     sameSite: "strict",
     path: "/auth",
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), //30 days
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
   });
 
   new SuccessResponse("Register Successful", { user, token: accessToken }).send(
@@ -41,7 +41,7 @@ const login = asyncHandler(async (req, res) => {
     secure: false,
     sameSite: "strict",
     path: "/auth",
-    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), //30 days
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
   });
 
   new SuccessResponse("Login Success", { user, token: accessToken }).send(res);

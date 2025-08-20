@@ -30,6 +30,7 @@ export abstract class ApiError extends Error {
       case ErrorType.BAD_TOKEN:
       case ErrorType.TOKEN_EXPIRED:
       case ErrorType.UNAUTHORIZED:
+      case ErrorType.ACCESS_TOKEN:
         return new AuthFailureResponse(err.message).send(res);
       case ErrorType.INTERNAL:
         return new InternalErrorResponse(err.message).send(res);
