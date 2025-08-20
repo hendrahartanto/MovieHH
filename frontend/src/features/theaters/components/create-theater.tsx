@@ -31,6 +31,7 @@ import {
   SubmitButtonType,
 } from "@/components/ui/form/submit-button";
 import { useLocations } from "@/features/locations/api/get-locations";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 export const CreateTheater = () => {
   const { data: locationsData, isLoading: isLoadingLocations } = useLocations({
@@ -39,8 +40,12 @@ export const CreateTheater = () => {
 
   const createTheater = useCreateTheater({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
         form.reset();
       },
     },

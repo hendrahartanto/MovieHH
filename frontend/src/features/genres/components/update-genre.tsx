@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Genre } from "@/lib/api";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 interface UpdateGenreProps {
   genre: Genre;
@@ -31,8 +32,12 @@ interface UpdateGenreProps {
 export const UpdateGenre = ({ genre }: UpdateGenreProps) => {
   const updateGenre = useUpdateGenre({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
       },
     },
   });

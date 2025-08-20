@@ -1,6 +1,7 @@
 import Axios, { InternalAxiosRequestConfig } from "axios";
 import { getAccessToken, setAccessToken } from "./token-store";
 import { paths } from "@/config/paths";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 export const api = Axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
@@ -72,6 +73,13 @@ const refreshTokenIfNeeded = async (error: any) => {
     } finally {
       isRefreshing = false;
     }
+  } else {
+    const message = error.response?.data?.message || error.message;
+    useNotifications.getState().addNotification({
+      type: "error",
+      title: "Error",
+      message,
+    });
   }
 
   return Promise.reject(error);
@@ -79,13 +87,5 @@ const refreshTokenIfNeeded = async (error: any) => {
 
 api.interceptors.request.use(authRequestInterceptor);
 api.interceptors.response.use((response) => {
-  console.log("interceptor");
-  console.log("response");
-  console.log(response);
-  console.log("response data");
-  console.log(response.data);
-  console.log("response data data");
-  console.log(response.data.data);
-
   return response.data;
 }, refreshTokenIfNeeded);

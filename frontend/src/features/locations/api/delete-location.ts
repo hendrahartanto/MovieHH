@@ -2,8 +2,13 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getLocationsQueryOptions } from "./get-locations";
+import { ApiResponse } from "@/lib/api";
 
-export const deleteLocation = ({ locationId }: { locationId: string }) => {
+export const deleteLocation = ({
+  locationId,
+}: {
+  locationId: string;
+}): Promise<ApiResponse<{ deletedLocation: Location }>> => {
   return api.delete(`/locations/${locationId}`);
 };
 

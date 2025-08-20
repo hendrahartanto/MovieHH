@@ -13,6 +13,7 @@ import {
   SubmitButtonType,
 } from "@/components/ui/form/submit-button";
 import { Input } from "@/components/ui/input";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 import {
   CreateGenreInput,
   createGenreInputSchema,
@@ -26,8 +27,12 @@ import { useForm } from "react-hook-form";
 export const CreateGenre = () => {
   const createGenre = useCreateGenre({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
         form.reset();
       },
     },

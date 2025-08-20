@@ -29,6 +29,7 @@ import { useMemo, useState } from "react";
 import { useGenres } from "@/features/genres/api/get-genres";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Movie } from "@/lib/api";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 interface UpdateMovieProps {
   movie: Movie;
@@ -49,8 +50,12 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
 
   const updateMovie = useUpdateMovie({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
       },
     },
   });

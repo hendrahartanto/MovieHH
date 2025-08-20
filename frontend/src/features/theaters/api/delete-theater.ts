@@ -2,8 +2,13 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTheatersQueryOptions } from "./get-theaters";
+import { ApiResponse, Theater } from "@/lib/api";
 
-export const deleteTheater = ({ theaterId }: { theaterId: string }) => {
+export const deleteTheater = ({
+  theaterId,
+}: {
+  theaterId: string;
+}): Promise<ApiResponse<{ deletedTheater: Theater }>> => {
   return api.delete(`/theaters/${theaterId}`);
 };
 

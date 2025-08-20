@@ -28,6 +28,7 @@ import {
 import { useMemo, useState } from "react";
 import { useGenres } from "@/features/genres/api/get-genres";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 export const CreateMovie = () => {
   const [genreSearchTerm, setGenreSearchTerm] = useState("");
@@ -44,8 +45,12 @@ export const CreateMovie = () => {
 
   const createMovie = useCreateMovie({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
         form.reset();
       },
     },

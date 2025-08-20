@@ -2,8 +2,13 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMoviesQueryOptions } from "./get-movies";
+import { ApiResponse, Movie } from "@/lib/api";
 
-export const deleteMovie = ({ movieId }: { movieId: string }) => {
+export const deleteMovie = ({
+  movieId,
+}: {
+  movieId: string;
+}): Promise<ApiResponse<{ deletedMovie: Movie }>> => {
   return api.delete(`/movies/${movieId}`);
 };
 

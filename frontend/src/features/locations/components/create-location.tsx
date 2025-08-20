@@ -13,6 +13,7 @@ import {
   SubmitButtonType,
 } from "@/components/ui/form/submit-button";
 import { Input } from "@/components/ui/input";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 import { Textarea } from "@/components/ui/textarea";
 import {
   CreateLocationInput,
@@ -27,8 +28,12 @@ import { useForm } from "react-hook-form";
 export const CreateLocation = () => {
   const createLocation = useCreateLocation({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
         form.reset();
       },
     },

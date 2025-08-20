@@ -7,12 +7,17 @@ import { Authorization, ROLES } from "@/lib/authorization";
 import { Trash2 } from "lucide-react";
 import { useDeleteMovie } from "../api/delete-movie";
 import { Button } from "@/components/ui/button";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 export const DeleteMovie = ({ movieId }: { movieId: string }) => {
   const deleteMovie = useDeleteMovie({
     mutationConfig: {
-      onSuccess: () => {
-        //TODO: add toast
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
       },
     },
   });

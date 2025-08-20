@@ -7,12 +7,17 @@ import { Authorization, ROLES } from "@/lib/authorization";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDeleteGenre } from "../api/delete-genre";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 export const DeleteGenre = ({ genreId }: { genreId: string }) => {
   const deleteGenre = useDeleteGenre({
     mutationConfig: {
-      onSuccess: () => {
-        //TODO: add toast
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
       },
     },
   });

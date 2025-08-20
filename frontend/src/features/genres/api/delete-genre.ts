@@ -2,8 +2,13 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getGenresQueryOptions } from "./get-genres";
+import { ApiResponse, Genre } from "@/lib/api";
 
-export const deleteGenre = ({ genreId }: { genreId: string }) => {
+export const deleteGenre = ({
+  genreId,
+}: {
+  genreId: string;
+}): Promise<ApiResponse<{ deletedGenre: Genre }>> => {
   return api.delete(`/genres/${genreId}`);
 };
 

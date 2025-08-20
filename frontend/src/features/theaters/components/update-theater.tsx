@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/form/submit-button";
 import { useLocations } from "@/features/locations/api/get-locations";
 import { Theater } from "@/lib/api";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 interface UpdateTheaterProps {
   theater: Theater;
@@ -44,8 +45,12 @@ export const UpdateTheater = ({ theater }: UpdateTheaterProps) => {
 
   const updateTheater = useUpdateTheater({
     mutationConfig: {
-      onSuccess: () => {
-        // TODO: add toast notification
+      onSuccess: (response) => {
+        useNotifications.getState().addNotification({
+          type: "success",
+          title: "Success",
+          message: response.message,
+        });
       },
     },
   });
