@@ -2,6 +2,7 @@ import express from "express";
 import movieController from "./entry-points/movie.controller";
 import { authenticate, authorize } from "../../middlewares/auth.middleware";
 import { Role } from "@prisma/client";
+import { upload } from "../../middlewares/upload.middleware";
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ router.post(
   "/",
   authenticate,
   authorize(Role.ADMIN),
+  upload.single("poster"),
   movieController.createMovie
 );
 router.put(

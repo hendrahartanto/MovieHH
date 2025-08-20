@@ -5,7 +5,18 @@ import { updateMovieSchema } from "../domain/dto/update-movie.dto";
 import movieService from "../domain/movie.service";
 
 const createMovie = asyncHandler(async (req, res) => {
-  const validatedData = createMovieSchema.parse(req.body);
+  let posterUrl: string | null = null;
+  if (req.file) posterUrl = `/uploads/${req.file.filename}`;
+
+  let { genreIds, ...rest } = req.body;
+  if (typeof genreIds === "string") genreIds = [genreIds];
+
+  const validatedData = createMovieSchema.parse({
+    ...rest,
+    genreIds,
+    posterUrl,
+  });
+
   const movie = await movieService.createMovie(validatedData);
 
   new SuccessResponse("Create movie successful", { movie }).send(res);

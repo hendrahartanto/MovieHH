@@ -71,7 +71,9 @@ export const MoviesList = () => {
                       <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                         {movie.posterUrl ? (
                           <img
-                            src={movie.posterUrl}
+                            src={`${import.meta.env.VITE_APP_API_URL}${
+                              movie.posterUrl
+                            }`}
                             alt={movie.title}
                             className="w-full h-full object-cover"
                           />

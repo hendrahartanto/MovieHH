@@ -8,7 +8,16 @@ import { getMoviesQueryOptions } from "./get-movies";
 export const createMovieInputSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  posterUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  poster: z
+    .instanceof(File)
+    .refine(
+      (file) =>
+        ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+          file.type
+        ),
+      { message: "Only image files are allowed" }
+    )
+    .optional(),
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
 });
 
@@ -19,7 +28,20 @@ export const createMovie = ({
 }: {
   data: CreateMovieInput;
 }): Promise<ApiResponse<{ movie: Movie }>> => {
-  return api.post("/movies", data);
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  data.genreIds.forEach((id) => formData.append("genreIds", id));
+
+  if (data.poster) {
+    formData.append("poster", data.poster);
+  }
+
+  return api.post("/movies", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 type UseCreateMovieOptions = {

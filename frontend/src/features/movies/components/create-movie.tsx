@@ -61,7 +61,7 @@ export const CreateMovie = () => {
     defaultValues: {
       title: "",
       description: "",
-      posterUrl: "",
+      poster: undefined,
       genreIds: [],
     },
   });
@@ -135,20 +135,17 @@ export const CreateMovie = () => {
 
             <FormField
               control={form.control}
-              name="posterUrl"
+              name="poster"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Poster URL</FormLabel>
+                  <FormLabel>Poster</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="https://example.com/poster.jpg"
-                      {...field}
-                      value={field.value || ""}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Optional: URL to the movie poster image.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -236,23 +233,13 @@ export const CreateMovie = () => {
               />
             )}
 
-            {/* Preview section if poster URL is provided */}
-            {form.watch("posterUrl") && (
-              <div className="space-y-2">
-                <FormLabel className="text-foreground font-medium">
-                  Poster Preview
-                </FormLabel>
-                <div className="border border-border rounded-lg p-4 bg-card">
-                  <img
-                    src={form.watch("posterUrl") || ""}
-                    alt="Movie poster preview"
-                    className="w-32 h-48 object-cover rounded-md mx-auto"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                    }}
-                  />
-                </div>
+            {form.watch("poster") && (
+              <div>
+                <img
+                  src={URL.createObjectURL(form.watch("poster") as File)}
+                  alt="Poster preview"
+                  className="w-32 h-48 object-cover"
+                />
               </div>
             )}
           </form>

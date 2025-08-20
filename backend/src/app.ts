@@ -11,6 +11,7 @@ import routes from "./routes/index";
 import cookieParser from "cookie-parser";
 import { ZodError } from "zod";
 import cors from "cors";
+import path from "path";
 
 const environment = process.env.NODE_ENV || "development";
 
@@ -34,10 +35,8 @@ app.use(express.urlencoded({ extended: true }));
 //logger middleware
 app.use(loggerMiddleware);
 
-//testing
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+//expose folder uploads
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 //routes
 app.use("/", routes);
