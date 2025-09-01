@@ -43,6 +43,28 @@ const deleteTheater = async (theaterId: string) => {
   return prisma.theater.delete({ where: { id: theaterId } });
 };
 
+const searchTheaters = async (query: string, page: number, limit: number) => {
+  const [theaters, total] = await Promise.all([
+    prisma.theater.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        seats: true,
+        showTimes: true,
+      },
+    }),
+    prisma.genre.count(),
+  ]);
+
+  return { theaters, total };
+};
+
 export default {
   createTheater,
   getTheaterById,
@@ -50,4 +72,5 @@ export default {
   getTheaters,
   updateTheater,
   deleteTheater,
+  searchTheaters,
 };

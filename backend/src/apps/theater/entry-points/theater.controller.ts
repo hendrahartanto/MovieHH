@@ -58,9 +58,32 @@ const deleteTheater = asyncHandler(async (req, res) => {
   );
 });
 
+const searchTheaters = asyncHandler(async (req, res) => {
+  const query = (req.query.searchQuery as string) || "";
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+
+  const { theaters, total } = await theaterService.searchTheaters(
+    query,
+    page,
+    limit
+  );
+
+  new SuccessResponse("Search theaters Successful", {
+    theaters,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
+});
+
 export default {
   createTheater,
   updateTheater,
   deleteTheater,
   getTheaters,
+  searchTheaters,
 };

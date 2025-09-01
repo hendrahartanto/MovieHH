@@ -58,6 +58,27 @@ const deleteLocation = async (locationId: string) => {
   });
 };
 
+const searchLocations = async (query: string, page: number, limit: number) => {
+  const [locations, total] = await Promise.all([
+    prisma.location.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        theaters: true,
+      },
+    }),
+    prisma.location.count(),
+  ]);
+
+  return { locations, total };
+};
+
 export default {
   createLocation,
   getLocationsPaginated,
@@ -66,4 +87,5 @@ export default {
   getLocations,
   updateLocation,
   deleteLocation,
+  searchLocations,
 };

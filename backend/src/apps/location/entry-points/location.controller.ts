@@ -70,10 +70,33 @@ const deleteLocation = asyncHandler(async (req, res) => {
   );
 });
 
+const searchLocations = asyncHandler(async (req, res) => {
+  const query = (req.query.searchQuery as string) || "";
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+
+  const { locations, total } = await locationService.searchLocations(
+    query,
+    page,
+    limit
+  );
+
+  new SuccessResponse("Search locations successful", {
+    locations,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
+});
+
 export default {
   createLocation,
   getLocations,
   getLocation,
   updateLocation,
   deleteLocation,
+  searchLocations,
 };

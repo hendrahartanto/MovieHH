@@ -36,6 +36,10 @@ const deleteLocation = async (locationId: string) => {
   return locationRepository.deleteLocation(locationId);
 };
 
+const searchLocations = async (query: string, page: number, limit: number) => {
+  return locationRepository.searchLocations(query, page, limit);
+};
+
 export default {
   createLocation,
   getLocationsPaginated,
@@ -43,4 +47,5 @@ export default {
   getLocation,
   updateLocation,
   deleteLocation,
+  searchLocations,
 };

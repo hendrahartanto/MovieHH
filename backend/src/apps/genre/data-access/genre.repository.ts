@@ -43,6 +43,24 @@ const getGenreByName = async (name: string) => {
   return prisma.genre.findUnique({ where: { name } });
 };
 
+const searchGenres = async (query: string, page: number, limit: number) => {
+  const [genres, total] = await Promise.all([
+    prisma.genre.findMany({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.genre.count(),
+  ]);
+
+  return { genres, total };
+};
+
 export default {
   createGenre,
   getGenresPaginated,
@@ -51,4 +69,5 @@ export default {
   udpateGenre,
   deleteGenre,
   getGenreByName,
+  searchGenres,
 };

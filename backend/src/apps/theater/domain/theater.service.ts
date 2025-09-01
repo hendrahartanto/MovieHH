@@ -47,10 +47,15 @@ const deleteTheater = async (theaterId: string) => {
   return theaterRepisotry.deleteTheater(theaterId);
 };
 
+const searchTheaters = async (query: string, page: number, limit: number) => {
+  return theaterRepisotry.searchTheaters(query, page, limit);
+};
+
 export default {
   createTheater,
   updateTheater,
   deleteTheater,
   getTheatersPaginated,
   getTheaters,
+  searchTheaters,
 };
