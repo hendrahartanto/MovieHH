@@ -36,7 +36,7 @@ const getMovies = async (page: number, limit: number) => {
 
   const movies = moviesRaw.map((movie) => ({
     ...movie,
-    genres: movie.genres.map((g) => g.genre), // ← ini kuncinya
+    genres: movie.genres.map((g) => g.genre),
   }));
 
   return { movies, total };
@@ -75,6 +75,46 @@ const deleteMovie = async (movieId: string) => {
   return prisma.movie.delete({ where: { id: movieId } });
 };
 
+const searchMovies = async (query: string, page: number, limit: number) => {
+  const skip = (page - 1) * limit;
+
+  const [moviesRaw, total] = await Promise.all([
+    prisma.movie.findMany({
+      where: {
+        title: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      skip,
+      take: limit,
+      include: {
+        genres: {
+          include: {
+            genre: true,
+          },
+        },
+        showTimes: true,
+      },
+    }),
+    prisma.movie.count({
+      where: {
+        title: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+    }),
+  ]);
+
+  const movies = moviesRaw.map((movie) => ({
+    ...movie,
+    genres: movie.genres.map((g) => g.genre),
+  }));
+
+  return { movies, total };
+};
+
 export default {
   createMovie,
   getMovies,
@@ -82,4 +122,5 @@ export default {
   updateMovie,
   updateGenres,
   deleteMovie,
+  searchMovies,
 };

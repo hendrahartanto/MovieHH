@@ -61,10 +61,29 @@ const deleteMovie = asyncHandler(async (req, res) => {
   new SuccessResponse("Delete movie successful", { deletedMovie }).send(res);
 });
 
+const searchMovies = asyncHandler(async (req, res) => {
+  const query = (req.query.searchQuery as string) || "";
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+
+  const { movies, total } = await movieService.searchMovies(query, page, limit);
+
+  new SuccessResponse("Search movies successful", {
+    movies,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
+});
+
 export default {
   createMovie,
   updateMovie,
   deleteMovie,
   getMovies,
   getMovie,
+  searchMovies,
 };

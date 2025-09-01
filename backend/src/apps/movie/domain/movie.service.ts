@@ -40,10 +40,15 @@ const deleteMovie = async (movieId: string) => {
   return movieRepository.deleteMovie(movieId);
 };
 
+const searchMovies = async (query: string, page: number, limit: number) => {
+  return movieRepository.searchMovies(query, page, limit);
+};
+
 export default {
   createMovie,
   getMovies,
   getMovie,
   updateMovie,
   deleteMovie,
+  searchMovies,
 };
