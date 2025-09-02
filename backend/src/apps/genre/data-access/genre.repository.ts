@@ -1,4 +1,4 @@
-import { get } from "http";
+import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateGenreDTO } from "../domain/dto/create-genre.dto";
 
@@ -8,13 +8,25 @@ const createGenre = async (newGenreData: CreateGenreDTO) => {
   });
 };
 
-const getGenresPaginated = async (page: number, limit: number) => {
+const getGenresPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  const whereClause: Prisma.GenreWhereInput = {
+    name: {
+      contains: search,
+      mode: "insensitive",
+    },
+  };
+
   const [genres, total] = await Promise.all([
     prisma.genre.findMany({
+      where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
     }),
-    prisma.genre.count(),
+    prisma.genre.count({ where: whereClause }),
   ]);
 
   return { genres, total };
@@ -43,24 +55,6 @@ const getGenreByName = async (name: string) => {
   return prisma.genre.findUnique({ where: { name } });
 };
 
-const searchGenres = async (query: string, page: number, limit: number) => {
-  const [genres, total] = await Promise.all([
-    prisma.genre.findMany({
-      where: {
-        name: {
-          contains: query,
-          mode: "insensitive",
-        },
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-    }),
-    prisma.genre.count(),
-  ]);
-
-  return { genres, total };
-};
-
 export default {
   createGenre,
   getGenresPaginated,
@@ -69,5 +63,4 @@ export default {
   udpateGenre,
   deleteGenre,
   getGenreByName,
-  searchGenres,
 };

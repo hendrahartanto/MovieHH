@@ -22,8 +22,12 @@ const createTheater = async (newTheaterData: CreateTheaterDTO) => {
   return theater;
 };
 
-const getTheatersPaginated = async (page: number, limit: number) => {
-  return theaterRepisotry.getTheatersPaginated(page, limit);
+const getTheatersPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  return theaterRepisotry.getTheatersPaginated(page, limit, search);
 };
 
 const getTheaters = async () => {
@@ -47,15 +51,10 @@ const deleteTheater = async (theaterId: string) => {
   return theaterRepisotry.deleteTheater(theaterId);
 };
 
-const searchTheaters = async (query: string, page: number, limit: number) => {
-  return theaterRepisotry.searchTheaters(query, page, limit);
-};
-
 export default {
   createTheater,
   updateTheater,
   deleteTheater,
   getTheatersPaginated,
   getTheaters,
-  searchTheaters,
 };

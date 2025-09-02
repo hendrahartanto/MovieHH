@@ -12,8 +12,12 @@ const createGenre = async (createGenreData: CreateGenreDTO) => {
   return genreRepository.createGenre(createGenreData);
 };
 
-const getGenresPaginated = async (page: number, limit: number) => {
-  return genreRepository.getGenresPaginated(page, limit);
+const getGenresPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  return genreRepository.getGenresPaginated(page, limit, search);
 };
 
 const getGenres = async () => {
@@ -35,10 +39,6 @@ const deleteGenre = async (genreId: string) => {
   return genreRepository.deleteGenre(genreId);
 };
 
-const searchGeres = async (query: string, page: number, limit: number) => {
-  return genreRepository.searchGenres(query, page, limit);
-};
-
 export default {
   createGenre,
   getGenres,
@@ -47,5 +47,4 @@ export default {
   updateGenre,
   deleteGenre,
   createGenreSchema,
-  searchGeres,
 };

@@ -21,8 +21,13 @@ const getGenres = asyncHandler(async (req, res) => {
 
   const page = parseInt(req.query.page as string) || 1;
   const limit = parseInt(req.query.limit as string) || 10;
+  const search = (req.query.search as string) || "";
 
-  const { genres, total } = await genreService.getGenresPaginated(page, limit);
+  const { genres, total } = await genreService.getGenresPaginated(
+    page,
+    limit,
+    search
+  );
 
   new SuccessResponse("Get Genres Successful", {
     genres,
@@ -57,29 +62,10 @@ const deleteGenre = asyncHandler(async (req, res) => {
   new SuccessResponse("Delete genre successful", { deletedGenre }).send(res);
 });
 
-const searchGenres = asyncHandler(async (req, res) => {
-  const query = (req.query.searchQuery as string) || "";
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-
-  const { genres, total } = await genreService.searchGeres(query, page, limit);
-
-  new SuccessResponse("Search genres successful", {
-    genres,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-    },
-  }).send(res);
-});
-
 export default {
   createGenre,
   getGenre,
   getGenres,
   updateGenre,
   deleteGenre,
-  searchGenres,
 };

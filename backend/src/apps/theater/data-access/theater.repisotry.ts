@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateTheaterDTO } from "../domain/dto/create-theater.dto";
 
@@ -12,9 +13,21 @@ const getTheaterById = async (theaterId: string) => {
   });
 };
 
-const getTheatersPaginated = async (page: number, limit: number) => {
+const getTheatersPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  const whereClause: Prisma.TheaterWhereInput = {
+    name: {
+      contains: search,
+      mode: "insensitive",
+    },
+  };
+
   const [theaters, total] = await Promise.all([
     prisma.theater.findMany({
+      where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -22,7 +35,7 @@ const getTheatersPaginated = async (page: number, limit: number) => {
         showTimes: true,
       },
     }),
-    prisma.genre.count(),
+    prisma.theater.count({ where: whereClause }),
   ]);
 
   return { theaters, total };
@@ -43,28 +56,6 @@ const deleteTheater = async (theaterId: string) => {
   return prisma.theater.delete({ where: { id: theaterId } });
 };
 
-const searchTheaters = async (query: string, page: number, limit: number) => {
-  const [theaters, total] = await Promise.all([
-    prisma.theater.findMany({
-      where: {
-        name: {
-          contains: query,
-          mode: "insensitive",
-        },
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-      include: {
-        seats: true,
-        showTimes: true,
-      },
-    }),
-    prisma.genre.count(),
-  ]);
-
-  return { theaters, total };
-};
-
 export default {
   createTheater,
   getTheaterById,
@@ -72,5 +63,4 @@ export default {
   getTheaters,
   updateTheater,
   deleteTheater,
-  searchTheaters,
 };

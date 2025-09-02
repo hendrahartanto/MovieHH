@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateMovieDTO } from "../domain/dto/create-movie.dto";
 
@@ -18,14 +19,16 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
 };
 
 const getMovies = async (page: number, limit: number, search: string) => {
+  const whereClause: Prisma.MovieWhereInput = {
+    title: {
+      contains: search,
+      mode: "insensitive",
+    },
+  };
+
   const [moviesRaw, total] = await Promise.all([
     prisma.movie.findMany({
-      where: {
-        title: {
-          contains: search,
-          mode: "insensitive",
-        },
-      },
+      where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -38,12 +41,7 @@ const getMovies = async (page: number, limit: number, search: string) => {
       },
     }),
     prisma.movie.count({
-      where: {
-        title: {
-          contains: search,
-          mode: "insensitive",
-        },
-      },
+      where: whereClause,
     }),
   ]);
 

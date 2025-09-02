@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateLocationDTO } from "../domain/dto/create-location.dto";
 import { UpdateLocationDTO } from "../domain/dto/update-location.dto";
@@ -8,16 +9,30 @@ const createLocation = async (newLocationData: CreateLocationDTO) => {
   });
 };
 
-const getLocationsPaginated = async (page: number, limit: number) => {
+const getLocationsPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  const whereClause: Prisma.LocationWhereInput = {
+    name: {
+      contains: search,
+      mode: "insensitive",
+    },
+  };
+
   const [locations, total] = await Promise.all([
     prisma.location.findMany({
+      where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
       include: {
         theaters: true,
       },
     }),
-    prisma.location.count(),
+    prisma.location.count({
+      where: whereClause,
+    }),
   ]);
 
   return { locations, total };
@@ -58,27 +73,6 @@ const deleteLocation = async (locationId: string) => {
   });
 };
 
-const searchLocations = async (query: string, page: number, limit: number) => {
-  const [locations, total] = await Promise.all([
-    prisma.location.findMany({
-      where: {
-        name: {
-          contains: query,
-          mode: "insensitive",
-        },
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-      include: {
-        theaters: true,
-      },
-    }),
-    prisma.location.count(),
-  ]);
-
-  return { locations, total };
-};
-
 export default {
   createLocation,
   getLocationsPaginated,
@@ -87,5 +81,4 @@ export default {
   getLocations,
   updateLocation,
   deleteLocation,
-  searchLocations,
 };

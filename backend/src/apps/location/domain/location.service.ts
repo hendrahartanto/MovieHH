@@ -13,8 +13,12 @@ const createLocation = async (createLocationData: CreateLocationDTO) => {
   return locationRepository.createLocation(createLocationData);
 };
 
-const getLocationsPaginated = async (page: number, limit: number) => {
-  return locationRepository.getLocationsPaginated(page, limit);
+const getLocationsPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  return locationRepository.getLocationsPaginated(page, limit, search);
 };
 
 const getLocations = async () => {
@@ -36,10 +40,6 @@ const deleteLocation = async (locationId: string) => {
   return locationRepository.deleteLocation(locationId);
 };
 
-const searchLocations = async (query: string, page: number, limit: number) => {
-  return locationRepository.searchLocations(query, page, limit);
-};
-
 export default {
   createLocation,
   getLocationsPaginated,
@@ -47,5 +47,4 @@ export default {
   getLocation,
   updateLocation,
   deleteLocation,
-  searchLocations,
 };

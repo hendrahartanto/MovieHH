@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.post("/", locationController.createLocation);
 router.get("/", locationController.getLocations);
-router.get("/search", locationController.searchLocations);
 router.get("/:locationId", locationController.getLocation);
 router.put("/:locationId", locationController.updateLocation);
 router.delete("/:locationId", locationController.deleteLocation);
