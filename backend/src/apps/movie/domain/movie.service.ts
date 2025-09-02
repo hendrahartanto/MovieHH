@@ -8,8 +8,8 @@ const createMovie = async (createMovieData: CreateMovieDTO) => {
   return movieRepository.createMovie(createMovieData);
 };
 
-const getMovies = async (page: number, limit: number) => {
-  return movieRepository.getMovies(page, limit);
+const getMovies = async (page: number, limit: number, search: string) => {
+  return movieRepository.getMovies(page, limit, search);
 };
 
 const getMovie = async (movieId: string) => {
@@ -40,15 +40,10 @@ const deleteMovie = async (movieId: string) => {
   return movieRepository.deleteMovie(movieId);
 };
 
-const searchMovies = async (query: string, page: number, limit: number) => {
-  return movieRepository.searchMovies(query, page, limit);
-};
-
 export default {
   createMovie,
   getMovies,
   getMovie,
   updateMovie,
   deleteMovie,
-  searchMovies,
 };

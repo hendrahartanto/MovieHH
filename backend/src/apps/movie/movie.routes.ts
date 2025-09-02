@@ -7,7 +7,6 @@ import { upload } from "../../middlewares/upload.middleware";
 const router = express.Router();
 
 router.get("/", movieController.getMovies);
-router.get("/search", movieController.searchMovies);
 router.get("/:movieId", movieController.getMovie);
 router.post(
   "/",
