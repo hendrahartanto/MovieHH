@@ -15,14 +15,16 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UpdateLocation } from "./update-location";
 import { DeleteLocation } from "./delete-location";
-// import { DeleteLocation } from "./delete-location";
-// import { UpdateLocation } from "./update-location";
 
 export const LocationsList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const page = +(searchParams.get("page") || 1);
+  const search = searchParams.get("search") || "";
+
   const locationsQuery = useLocations({
-    page: +(searchParams.get("page") || 1),
+    page,
+    search,
   });
 
   const handlePageChange = (page: number) => {
