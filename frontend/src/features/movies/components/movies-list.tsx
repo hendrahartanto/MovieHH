@@ -27,8 +27,12 @@ import { UpdateMovie } from "./update-movie";
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const page = +(searchParams.get("page") || 1);
+  const search = searchParams.get("search") || "";
+
   const moviesQuery = useMovies({
-    page: +(searchParams.get("page") || 1),
+    page,
+    search,
   });
 
   const handlePageChange = (page: number) => {
