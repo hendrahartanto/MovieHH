@@ -13,8 +13,6 @@ export const rawApi = Axios.create({
 
 const authRequestInterceptor = (config: InternalAxiosRequestConfig) => {
   const token = getAccessToken();
-  console.log("access token");
-  console.log(token);
 
   if (config.headers) config.headers.Accept = "application/json"; //TODO: cari tau maksud ini
   if (token) config.headers.Authorization = `Bearer ${token}`;

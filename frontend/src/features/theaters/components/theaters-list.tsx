@@ -40,9 +40,6 @@ export const TheatersList = () => {
   const theaters = theatersQuery.data?.data.theaters;
   const pagination = theatersQuery.data?.data.pagination;
 
-  console.log("THEATERS LIST");
-  console.log(theaters);
-
   if (!theaters || theaters.length === 0) {
     return <EmptyTheatersState />;
   }

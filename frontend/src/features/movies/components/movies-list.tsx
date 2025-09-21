@@ -42,9 +42,6 @@ export const MoviesList = () => {
   const movies = moviesQuery.data?.data.movies;
   const pagination = moviesQuery.data?.data.pagination;
 
-  console.log("MOVIES LIST");
-  console.log(movies);
-
   if (!movies || movies.length === 0) {
     return <EmptyMoviesState />;
   }
