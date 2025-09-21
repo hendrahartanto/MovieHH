@@ -25,8 +25,12 @@ import { DeleteTheater } from "./delete-theater";
 export const TheatersList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const page = +(searchParams.get("page") || 1);
+  const search = searchParams.get("search") || "";
+
   const theatersQuery = useTheaters({
-    page: +(searchParams.get("page") || 1),
+    page,
+    search,
   });
 
   const handlePageChange = (page: number) => {
