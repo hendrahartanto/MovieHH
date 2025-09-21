@@ -19,8 +19,12 @@ import { UpdateGenre } from "./update-genre";
 export const GenresList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const page = +(searchParams.get("page") || 1);
+  const search = searchParams.get("search") || "";
+
   const genresQuery = useGenres({
-    page: +(searchParams.get("page") || 1),
+    page,
+    search,
   });
 
   const handlePageChange = (page: number) => {
