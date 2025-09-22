@@ -109,6 +109,7 @@ model ShowTime {
   reservations Reservation[]
   seats        SeatsOnShowTimes[]
   SeatHold     SeatHold[]
+  price        Decimal
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -146,6 +147,8 @@ model Reservation {
   seat       Seat              @relation(fields: [seatId], references: [id])
   seatId     String            @db.Uuid
   status     ReservationStatus @default(PENDING)
+  totalPrice Decimal
+  expiresAt  DateTime
   createAt   DateTime          @default(now())
 }
 
@@ -153,6 +156,7 @@ enum ReservationStatus {
   PENDING
   CONFIRMED
   CANCELED
+  EXPIRED
 }
 
 enum SeatStatus {

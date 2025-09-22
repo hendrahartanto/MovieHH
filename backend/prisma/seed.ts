@@ -74,6 +74,7 @@ async function main() {
     theaterId: theater.id,
     startTime: showTimeStart,
     endTime: showTimeEnd,
+    price: 60000,
   });
 
   console.log("✅ Seeding complete.");

@@ -15,6 +15,7 @@ export const createShowTimeSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: "Invalid endTime format",
     }),
+  price: z.number(),
 });
 
 export type CreateShowTimeDTO = z.infer<typeof createShowTimeSchema>;
