@@ -8,6 +8,6 @@ const router = express.Router();
 router.use(authenticate);
 //-------------------------------//
 
-router.post("/", reservationController.reserve);
+router.post("/hold", reservationController.createReservationHold);
 
 export default router;

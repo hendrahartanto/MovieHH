@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createReservationSchema = z.object({
+export const createReservationHoldSchema = z.object({
   showTimeId: z.string().uuid("Invalid show time id format"),
   seatIds: z
     .array(z.string().uuid("Invalid seat id format"))
@@ -12,13 +12,6 @@ export const createReservationSchema = z.object({
   count: z.number().int().positive("Count must be greater than 0"),
 });
 
-export type CreateReservationDTO = z.infer<typeof createReservationSchema>;
-
-export type ReservationCreateInput = {
-  userId: string;
-  showTimeId: string;
-  seatId: string;
-  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "EXPIRED";
-  expiresAt: Date;
-  totalPrice: number;
-};
+export type CreateReservationHoldDTO = z.infer<
+  typeof createReservationHoldSchema
+>;

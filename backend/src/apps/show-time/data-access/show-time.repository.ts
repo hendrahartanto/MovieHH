@@ -1,3 +1,4 @@
+import { Prisma, PrismaClient } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateShowTimeSeatsDTO } from "../domain/dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "../domain/dto/create-show-time.dto";
@@ -67,7 +68,7 @@ const getShowTimeSeat = async (showTimeId: string, seatId: string) => {
 const updateSeatStatus = (
   showTimeId: string,
   seatId: string,
-  status: "RESERVED" | "AVAILABLE"
+  status: "RESERVED" | "AVAILABLE" | "HOLD"
 ) => {
   return prisma.seatsOnShowTimes.update({
     where: { seatId_showTimeId: { seatId, showTimeId } },
@@ -75,6 +76,17 @@ const updateSeatStatus = (
   });
 };
 
+const updateManySeatStatus = async (
+  showTimeId: string,
+  seatIds: string[],
+  status: "RESERVED" | "AVAILABLE" | "HOLD",
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.seatsOnShowTimes.updateMany({
+    where: { showTimeId, seatId: { in: seatIds } },
+    data: { status },
+  });
+};
 export default {
   createShowTime,
   getShowTimeByDate,
@@ -84,4 +96,5 @@ export default {
   getShowTimeSeats,
   getShowTimeSeat,
   updateSeatStatus,
+  updateManySeatStatus,
 };
