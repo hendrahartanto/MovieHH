@@ -28,8 +28,12 @@ const createReservationHold = async (
     );
     if (seats.some((seat) => !seat))
       throw new NoDataError("One or more seats not found");
-    if (seats.some((seat) => seat!.status !== "AVAILABLE"))
+    if (seats.some((seat) => seat!.status === "RESERVED"))
       throw new BadRequestError("One or more seats already reserved");
+    if (seats.some((seat) => seat!.status === "HOLD"))
+      throw new BadRequestError(
+        "Some seats are currently on hold by another user"
+      );
 
     const totalPrice = seats.length * showTime.price.toNumber();
     const expiresAt = new Date(
