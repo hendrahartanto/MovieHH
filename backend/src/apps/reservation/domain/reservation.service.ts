@@ -3,16 +3,15 @@ import prisma from "../../../db";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import reservationRepository from "../data-access/reservation.repository";
 import { CreateReservationHoldDTO } from "./dto/create-reservation-hold.dto";
-import {
-  CreateReservationDTO,
-  ReservationCreateInput,
-} from "./dto/create-reservation.dto";
+import { CreateReservationDTO } from "./dto/create-reservation.dto";
 
 const createReservationHold = async (
   newReservationHoldData: CreateReservationHoldDTO,
   userId: string
 ) => {
   const { showTimeId, seatIds, count } = newReservationHoldData;
+  const RESERVATION_HOLD_MINUTES =
+    Number(process.env.RESERVATION_HOLD_MINUTES) || 10;
 
   if (seatIds.length !== count) {
     throw new BadRequestError("Number of selected seats must match the count");
@@ -33,23 +32,24 @@ const createReservationHold = async (
       throw new BadRequestError("One or more seats already reserved");
 
     const totalPrice = seats.length * showTime.price.toNumber();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-    const reservationsData: ReservationCreateInput[] = seatIds.map(
-      (seatId) => ({
-        userId,
-        showTimeId,
-        seatId,
-        status: "PENDING",
-        expiresAt,
-        totalPrice,
-      })
+    const expiresAt = new Date(
+      Date.now() + RESERVATION_HOLD_MINUTES * 60 * 1000
     );
 
     const reservations = await reservationRepository.reserveMany(
-      reservationsData,
+      {
+        user: { connect: { id: userId } },
+        showTime: { connect: { id: showTimeId } },
+        status: "PENDING",
+        expiresAt,
+        totalPrice,
+        reservationDetails: {
+          create: seatIds.map((seatId) => ({ seatId })),
+        },
+      },
       tx
     );
+
     await showTimeRepository.updateManySeatStatus(
       showTimeId,
       seatIds,

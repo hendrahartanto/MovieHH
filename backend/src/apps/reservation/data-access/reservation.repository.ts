@@ -1,19 +1,14 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import prisma from "../../../db";
-import { ReservationCreateInput } from "../domain/dto/create-reservation.dto";
 
 const reserveMany = async (
-  data: ReservationCreateInput[],
+  data: Prisma.ReservationCreateInput,
   tx: PrismaClient | Prisma.TransactionClient = prisma
 ) => {
-  const reservations = await Promise.all(
-    data.map((reservation) =>
-      tx.reservation.create({
-        data: reservation,
-      })
-    )
-  );
-  return reservations;
+  return tx.reservation.create({
+    data,
+    include: { reservationDetails: true },
+  });
 };
 
 const updateStatus = async (
@@ -30,7 +25,7 @@ const updateStatus = async (
 const getReservationById = async (reservationId: string) => {
   return prisma.reservation.findUnique({
     where: { id: reservationId },
-    include: { seat: true, showTime: true },
+    include: { showTime: true, reservationDetails: true },
   });
 };
 

@@ -1,3 +1,4 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 
 export const createReservationSchema = z.object({
@@ -13,12 +14,3 @@ export const createReservationSchema = z.object({
 });
 
 export type CreateReservationDTO = z.infer<typeof createReservationSchema>;
-
-export type ReservationCreateInput = {
-  userId: string;
-  showTimeId: string;
-  seatId: string;
-  status: "PENDING" | "CONFIRMED" | "CANCELLED" | "EXPIRED";
-  expiresAt: Date;
-  totalPrice: number;
-};
