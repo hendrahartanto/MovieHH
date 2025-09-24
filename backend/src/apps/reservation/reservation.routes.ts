@@ -9,5 +9,6 @@ router.use(authenticate);
 //-------------------------------//
 
 router.post("/hold", reservationController.createReservationHold);
+router.post("/payment", reservationController.createReservationPayment);
 
 export default router;
