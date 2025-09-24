@@ -21,11 +21,11 @@ const createReservationHold = asyncHandler<ProtectedRequest>(
 
 const createReservationPayment = asyncHandler<ProtectedRequest>(
   async (req, res) => {
-    const { reserationId } = req.body;
+    const { reservationId } = req.body;
     const userId = req.user.id;
 
     const paymentToken = await reservationService.createPaymentToken(
-      reserationId,
+      reservationId,
       userId
     );
 
