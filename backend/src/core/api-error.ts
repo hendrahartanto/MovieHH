@@ -92,3 +92,9 @@ export class NoDataError extends ApiError {
     super(ErrorType.NO_DATA, messgae);
   }
 }
+
+export class ForbiddenError extends ApiError {
+  constructor(message = "You do not have permission to access this resource") {
+    super(ErrorType.FORBIDDEN, message);
+  }
+}
