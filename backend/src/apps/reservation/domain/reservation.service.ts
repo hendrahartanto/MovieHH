@@ -1,4 +1,6 @@
+import { SnapTransactionParameters } from "midtrans-client";
 import { BadRequestError, NoDataError } from "../../../core/api-error";
+import { midtransSnap } from "../../../core/midtrans";
 import prisma from "../../../db";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
@@ -78,6 +80,50 @@ const createReservationHold = async (
   });
 };
 
+const createPaymentToken = async (reservationId: string, userId: string) => {
+  const RESERVATION_HOLD_MINUTES =
+    Number(process.env.RESERVATION_HOLD_MINUTES) || 10;
+
+  const reservation = await reservationRepository.getReservationById(
+    reservationId
+  );
+  if (!reservation) throw new NoDataError("Reservation not found");
+  if (reservation.userId !== userId)
+    throw new BadRequestError("Unauthorized access to reservation");
+
+  const parameter = {
+    transaction_details: {
+      order_id: `order-${reservation.id}-${Date.now()}`,
+      gross_amount: Number(reservation.totalPrice),
+    },
+    customer_details: {
+      first_name: reservation.user.name,
+      email: reservation.user.email,
+    },
+    item_details: reservation.reservationDetails.map((detail) => ({
+      id: detail.seatId,
+      price: reservation.showTime.price.toNumber(),
+      quantity: 1,
+      name: `Seat ${detail.seatId}`,
+    })),
+    credit_card: {
+      secure: true,
+    },
+    expiry: {
+      start_time: new Date().toISOString().slice(0, 19) + " +0700",
+      unit: "minute",
+      duration: RESERVATION_HOLD_MINUTES,
+    },
+  };
+
+  const transaction = await midtransSnap.createTransaction(parameter);
+
+  return {
+    token: transaction.token,
+    redirectUrl: transaction.redirect_url,
+  };
+};
+
 const reserve = async (
   newReservationData: CreateReservationDTO,
   userId: string
@@ -115,5 +161,6 @@ const reserve = async (
 
 export default {
   createReservationHold,
+  createPaymentToken,
   reserve,
 };

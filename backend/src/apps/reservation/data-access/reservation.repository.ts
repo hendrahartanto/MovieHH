@@ -25,7 +25,7 @@ const updateReservationStatus = async (
 const getReservationById = async (reservationId: string) => {
   return prisma.reservation.findUnique({
     where: { id: reservationId },
-    include: { showTime: true, reservationDetails: true },
+    include: { showTime: true, reservationDetails: true, user: true },
   });
 };
 
