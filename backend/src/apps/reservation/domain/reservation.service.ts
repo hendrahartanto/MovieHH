@@ -1,4 +1,4 @@
-import { SnapTransactionParameters } from "midtrans-client";
+import dayjs from "dayjs";
 import { BadRequestError, NoDataError } from "../../../core/api-error";
 import { midtransSnap } from "../../../core/midtrans";
 import prisma from "../../../db";
@@ -93,7 +93,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
 
   const parameter = {
     transaction_details: {
-      order_id: `order-${reservation.id}-${Date.now()}`,
+      order_id: reservationId,
       gross_amount: Number(reservation.totalPrice),
     },
     customer_details: {
@@ -110,7 +110,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
       secure: true,
     },
     expiry: {
-      start_time: new Date().toISOString().slice(0, 19) + " +0700",
+      start_time: dayjs().format("YYYY-MM-DD HH:mm:ss Z"),
       unit: "minute",
       duration: RESERVATION_HOLD_MINUTES,
     },

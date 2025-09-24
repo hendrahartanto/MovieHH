@@ -29,6 +29,8 @@ const createReservationPayment = asyncHandler<ProtectedRequest>(
       userId
     );
 
+    console.log("test");
+
     new SuccessResponse("Create payment token successful", paymentToken).send(
       res
     );
