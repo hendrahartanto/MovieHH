@@ -104,7 +104,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
       id: detail.seatId,
       price: reservation.showTime.price.toNumber(),
       quantity: 1,
-      name: `Seat ${detail.seatId}`,
+      name: `Seat ${detail.seat.seatRow}${detail.seat.seatNumber}`,
     })),
     credit_card: {
       secure: true,
