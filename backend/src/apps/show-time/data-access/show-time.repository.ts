@@ -87,6 +87,7 @@ const updateManySeatStatus = async (
     data: { status },
   });
 };
+
 export default {
   createShowTime,
   getShowTimeByDate,

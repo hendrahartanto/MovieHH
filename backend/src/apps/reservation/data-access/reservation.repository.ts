@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import prisma from "../../../db";
 
-const reserveMany = async (
+const createReservation = async (
   data: Prisma.ReservationCreateInput,
   tx: PrismaClient | Prisma.TransactionClient = prisma
 ) => {
@@ -11,13 +11,13 @@ const reserveMany = async (
   });
 };
 
-const updateStatus = async (
-  reservationIds: string[],
+const updateReservationStatus = async (
+  reservationId: string,
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "EXPIRED",
   tx = prisma
 ) => {
   return tx.reservation.updateMany({
-    where: { id: { in: reservationIds } },
+    where: { id: reservationId },
     data: { status },
   });
 };
@@ -30,7 +30,7 @@ const getReservationById = async (reservationId: string) => {
 };
 
 export default {
-  reserveMany,
-  updateStatus,
+  createReservation,
+  updateReservationStatus,
   getReservationById,
 };

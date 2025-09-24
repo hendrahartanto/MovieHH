@@ -1,5 +1,6 @@
 import { BadRequestError, NoDataError } from "../../../core/api-error";
 import prisma from "../../../db";
+import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import reservationRepository from "../data-access/reservation.repository";
 import { CreateReservationHoldDTO } from "./dto/create-reservation-hold.dto";
@@ -40,7 +41,7 @@ const createReservationHold = async (
       Date.now() + RESERVATION_HOLD_MINUTES * 60 * 1000
     );
 
-    const reservations = await reservationRepository.reserveMany(
+    const reservation = await reservationRepository.createReservation(
       {
         user: { connect: { id: userId } },
         showTime: { connect: { id: showTimeId } },
@@ -61,7 +62,19 @@ const createReservationHold = async (
       tx
     );
 
-    return reservations;
+    await reservationHoldQueue.add(
+      "releaseReservationHold",
+      {
+        reservationId: reservation.id,
+        showTimeId,
+        seatIds,
+      },
+      {
+        delay: 1000 * 60 * RESERVATION_HOLD_MINUTES,
+      }
+    );
+
+    return reservation;
   });
 };
 
