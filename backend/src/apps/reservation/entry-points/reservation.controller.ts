@@ -29,27 +29,28 @@ const createReservationPayment = asyncHandler<ProtectedRequest>(
       userId
     );
 
-    console.log("test");
-
     new SuccessResponse("Create payment token successful", paymentToken).send(
       res
     );
   }
 );
 
-const reserve = asyncHandler<ProtectedRequest>(async (req, res) => {
-  //TODO: rombak logic
-  // const validatedData = createReservationSchema.parse(req.body);
-  // const userId = req.user.id;
-  // const newReservation = await reservationService.reserve(
-  //   validatedData,
-  //   userId
-  // );
-  // new SuccessResponse("Reserve succesful", { newReservation }).send(res);
+const cancelReservation = asyncHandler<ProtectedRequest>(async (req, res) => {
+  const { reservationId } = req.body;
+  const userId = req.user.id;
+
+  const cancelledReservation = await reservationService.cancelReservation(
+    reservationId,
+    userId
+  );
+
+  new SuccessResponse("Cancel reservation successful", {
+    cancelledReservation,
+  }).send(res);
 });
 
 export default {
   createReservationHold,
   createReservationPayment,
-  reserve,
+  cancelReservation,
 };

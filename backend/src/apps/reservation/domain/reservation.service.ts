@@ -125,43 +125,39 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
   };
 };
 
-const reserve = async (
-  newReservationData: CreateReservationDTO,
-  userId: string
-) => {
-  //TODO: rombak logic untuk confirm reserve ke trigger setelah berhasil bayar
-  // const { showTimeId, seatIds, count } = newReservationData;
-  // if (seatIds.length !== count) {
-  //   throw new BadRequestError("Number of selected seats must match the count");
-  // }
-  // const showTime = await showTimeRepository.getShowTimeById(showTimeId);
-  // if (!showTime) throw new NoDataError("Showtime not found");
-  // const seats = await Promise.all(
-  //   seatIds.map((seatId) =>
-  //     showTimeRepository.getShowTimeSeat(showTimeId, seatId)
-  //   )
-  // );
-  // if (seats.some((seat) => !seat))
-  //   throw new NoDataError("One or more seats not found");
-  // if (seats.some((seat) => seat!.status === "RESERVED"))
-  //   throw new BadRequestError("One or more seats already reserved");
-  // const reservationsData: ReservationCreateInput[] = seatIds.map((seatId) => ({
-  //   userId,
-  //   showTimeId,
-  //   seatId,
-  //   status: "CONFIRMED",
-  // }));
-  // const [reservations] = await prisma.$transaction([
-  //   reservationRepository.reserveMany(reservationsData),
-  //   ...seatIds.map((seatId) =>
-  //     showTimeRepository.updateSeatStatus(showTimeId, seatId, "RESERVED")
-  //   ),
-  // ]);
-  // return reservations;
+const cancelReservation = async (reservationId: string, userId: string) => {
+  const reservation = await reservationRepository.getReservationById(
+    reservationId
+  );
+  if (!reservation) throw new NoDataError("Reservation not found");
+  if (reservation.userId !== userId)
+    throw new BadRequestError("Unauthorized access to reservation");
+  if (reservation.status !== "PENDING")
+    throw new BadRequestError("Reservation status is not valid");
+
+  return prisma.$transaction(async (tx) => {
+    const jobToRemove = await reservationHoldQueue.getJob(reservation.id);
+    if (jobToRemove) {
+      await jobToRemove.remove();
+    }
+
+    const cancelledReservation =
+      await reservationRepository.updateReservationStatus(
+        reservationId,
+        "CANCELLED"
+      );
+    await showTimeRepository.updateManySeatStatus(
+      reservation.showTimeId,
+      reservation.reservationDetails.map((detail) => detail.seatId),
+      "AVAILABLE"
+    );
+
+    return cancelledReservation;
+  });
 };
 
 export default {
   createReservationHold,
   createPaymentToken,
-  reserve,
+  cancelReservation,
 };

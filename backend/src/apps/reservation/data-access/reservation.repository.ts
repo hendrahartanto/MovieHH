@@ -16,7 +16,7 @@ const updateReservationStatus = async (
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "EXPIRED",
   tx = prisma
 ) => {
-  return tx.reservation.updateMany({
+  return tx.reservation.update({
     where: { id: reservationId },
     data: { status },
   });

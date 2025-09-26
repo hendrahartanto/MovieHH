@@ -10,5 +10,6 @@ router.use(authenticate);
 
 router.post("/hold", reservationController.createReservationHold);
 router.post("/payment", reservationController.createReservationPayment);
+router.post("/cancel", reservationController.cancelReservation);
 
 export default router;
