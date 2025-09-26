@@ -26,6 +26,9 @@ const updateMovie = async (
   const existingMovie = await movieRepository.getMovieById(movieId);
   if (!existingMovie) throw new NoDataError("Movie not found");
 
+  if (updateMovieData.posterUrl === "")
+    updateMovieData.posterUrl = existingMovie.posterUrl || undefined;
+
   const { genreIds, ...updateData } = updateMovieData;
   await movieRepository.updateMovie(movieId, updateData);
   await movieRepository.updateGenres(movieId, genreIds);

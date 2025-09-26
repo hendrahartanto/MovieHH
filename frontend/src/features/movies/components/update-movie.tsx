@@ -30,6 +30,7 @@ import { useGenres } from "@/features/genres/api/get-genres";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Movie } from "@/lib/api";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+import { formatImageUrl } from "@/helper/image-helper";
 
 interface UpdateMovieProps {
   movie: Movie;
@@ -65,7 +66,10 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
     defaultValues: {
       title: movie.title,
       description: movie.description || "",
-      posterUrl: movie.posterUrl || "",
+      poster: undefined,
+      director: movie.director || "",
+      writer: movie.writer || "",
+      duration: movie.duration || undefined,
       genreIds: movie.genres?.map((genre) => genre.id) || [],
     },
   });
@@ -120,7 +124,7 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Description (optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter movie description"
@@ -138,19 +142,59 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
 
             <FormField
               control={form.control}
-              name="posterUrl"
+              name="director"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Poster URL</FormLabel>
+                  <FormLabel>Director (optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter director name" {...field} />
+                  </FormControl>
+                  <FormDescription>Who directed this movie?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="writer"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Writer (optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter writer name" {...field} />
+                  </FormControl>
+                  <FormDescription>Who wrote this movie?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Duration (minutes)</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="https://example.com/poster.jpg"
-                      {...field}
-                      value={field.value || ""}
+                      type="number"
+                      min={1}
+                      placeholder="Enter duration in minutes"
+                      value={field.value === 0 ? "0" : String(field.value)}
+                      onChange={(e) => {
+                        let val = e.target.value;
+                        if (val === "") {
+                          field.onChange(0);
+                          return;
+                        }
+                        const num = Number(val);
+                        field.onChange(isNaN(num) ? 0 : num);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
-                    Optional: URL to the movie poster image.
+                    Provide the runtime of the movie in minutes.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -239,24 +283,51 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
               />
             )}
 
-            {form.watch("posterUrl") && (
+            <FormField
+              control={form.control}
+              name="poster"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Poster (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.watch("poster") ? (
               <div className="space-y-2">
                 <FormLabel className="text-foreground font-medium">
                   Poster Preview
                 </FormLabel>
                 <div className="border border-border rounded-lg p-4 bg-card">
                   <img
-                    src={form.watch("posterUrl") || ""}
+                    src={URL.createObjectURL(form.watch("poster") as File)}
                     alt="Movie poster preview"
                     className="w-32 h-48 object-cover rounded-md mx-auto"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                    }}
                   />
                 </div>
               </div>
-            )}
+            ) : movie.posterUrl ? (
+              <div className="space-y-2">
+                <FormLabel className="text-foreground font-medium">
+                  Current Poster
+                </FormLabel>
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <img
+                    src={formatImageUrl(movie.posterUrl)}
+                    alt="Current movie poster"
+                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              </div>
+            ) : null}
           </form>
         </Form>
       </FormSheet>

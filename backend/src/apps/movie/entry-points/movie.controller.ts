@@ -5,7 +5,7 @@ import { updateMovieSchema } from "../domain/dto/update-movie.dto";
 import movieService from "../domain/movie.service";
 
 const createMovie = asyncHandler(async (req, res) => {
-  let posterUrl: string | null = null;
+  let posterUrl: string = "";
   if (req.file) posterUrl = `/uploads/${req.file.filename}`;
 
   let { genreIds, ...rest } = req.body;
@@ -49,7 +49,17 @@ const getMovie = asyncHandler(async (req, res) => {
 
 const updateMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
-  const validatedData = updateMovieSchema.parse(req.body);
+  let posterUrl: string = "";
+  if (req.file) posterUrl = `/uploads/${req.file.filename}`;
+
+  let { genreIds, ...rest } = req.body;
+  if (typeof genreIds === "string") genreIds = [genreIds];
+
+  const validatedData = updateMovieSchema.parse({
+    ...rest,
+    genreIds,
+    posterUrl,
+  });
 
   const updatedMovie = await movieService.updateMovie(movieId, validatedData);
   new SuccessResponse("Update movie successful", { updatedMovie }).send(res);

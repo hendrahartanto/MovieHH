@@ -19,6 +19,7 @@ router.put(
   "/:movieId",
   authenticate,
   authorize(Role.ADMIN),
+  upload.single("poster"),
   movieController.updateMovie
 );
 router.delete(
