@@ -204,14 +204,14 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
           >
             {isCollapsed ? (
               <div className="flex justify-center">
-                <div className="w-6 h-1 bg-gradient-to-r from-orange-500 to-pink-600 rounded-full opacity-60" />
+                <div className="cinema-gradient w-6 h-1" />
               </div>
             ) : (
               <>
                 <div className="text-xs text-muted-foreground text-center">
                   © 2025 MovieHH
                 </div>
-                <div className="mt-2 h-1 bg-gradient-to-r from-orange-500 to-pink-600 rounded-full opacity-60" />
+                <div className="mt-2 h-1 cinema-gradient" />
               </>
             )}
           </div>
