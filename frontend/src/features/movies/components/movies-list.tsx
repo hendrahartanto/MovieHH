@@ -23,6 +23,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteMovie } from "./delete-movie";
 import { UpdateMovie } from "./update-movie";
+import { formatImageUrl } from "@/helper/image-helper";
 
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,9 +73,7 @@ export const MoviesList = () => {
                       <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
                         {movie.posterUrl ? (
                           <img
-                            src={`${import.meta.env.VITE_APP_API_URL}${
-                              movie.posterUrl
-                            }`}
+                            src={formatImageUrl(movie.posterUrl)}
                             alt={movie.title}
                             className="w-full h-full object-cover"
                           />

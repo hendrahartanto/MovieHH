@@ -62,6 +62,9 @@ export const CreateMovie = () => {
       title: "",
       description: "",
       poster: undefined,
+      director: "",
+      writer: "",
+      duration: undefined,
       genreIds: [],
     },
   });
@@ -117,7 +120,7 @@ export const CreateMovie = () => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Description (optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Enter movie description"
@@ -135,17 +138,60 @@ export const CreateMovie = () => {
 
             <FormField
               control={form.control}
-              name="poster"
+              name="director"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Poster</FormLabel>
+                  <FormLabel>Director (optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter director name" {...field} />
+                  </FormControl>
+                  <FormDescription>Who directed this movie?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="writer"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Writer (optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter writer name" {...field} />
+                  </FormControl>
+                  <FormDescription>Who wrote this movie?</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Duration (minutes)</FormLabel>
                   <FormControl>
                     <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                      type="number"
+                      min={1}
+                      placeholder="Enter duration in minutes"
+                      value={field.value === 0 ? "0" : String(field.value)}
+                      onChange={(e) => {
+                        let val = e.target.value;
+                        if (val === "") {
+                          field.onChange(0);
+                          return;
+                        }
+                        const num = Number(val);
+                        field.onChange(isNaN(num) ? 0 : num);
+                      }}
                     />
                   </FormControl>
+                  <FormDescription>
+                    Provide the runtime of the movie in minutes.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -233,13 +279,33 @@ export const CreateMovie = () => {
               />
             )}
 
+            <FormField
+              control={form.control}
+              name="poster"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Poster (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => field.onChange(e.target.files?.[0])}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {form.watch("poster") && (
-              <div>
-                <img
-                  src={URL.createObjectURL(form.watch("poster") as File)}
-                  alt="Poster preview"
-                  className="w-32 h-48 object-cover"
-                />
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <img
+                    src={URL.createObjectURL(form.watch("poster") as File)}
+                    alt="Poster preview"
+                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
               </div>
             )}
           </form>

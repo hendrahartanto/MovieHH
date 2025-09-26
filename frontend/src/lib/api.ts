@@ -36,7 +36,10 @@ export type User = {
 export type Movie = {
   id: string;
   title: string;
-  description: string;
+  description?: string;
+  director?: string;
+  writer?: string;
+  duration: number;
   posterUrl: string;
   genres: Genre[];
   showTimes: Showtime[];
