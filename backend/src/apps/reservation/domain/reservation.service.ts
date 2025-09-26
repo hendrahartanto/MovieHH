@@ -72,6 +72,7 @@ const createReservationHold = async (
         seatIds,
       },
       {
+        jobId: reservation.id,
         delay: 1000 * 60 * RESERVATION_HOLD_MINUTES,
       }
     );
