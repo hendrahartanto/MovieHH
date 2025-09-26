@@ -1,7 +1,9 @@
 import { SuccessResponse } from "../../../core/api-response";
 import asyncHandler from "../../../core/helpers/async-handler";
 import { ProtectedRequest } from "../../../types/app-requests";
+import { cancelReservationSchema } from "../domain/dto/cancel-reservation.dto";
 import { createReservationHoldSchema } from "../domain/dto/create-reservation-hold.dto";
+import { createReservationPaymentSchema } from "../domain/dto/create-reservation-payment.dto";
 import reservationService from "../domain/reservation.service";
 
 const createReservationHold = asyncHandler<ProtectedRequest>(
@@ -21,7 +23,8 @@ const createReservationHold = asyncHandler<ProtectedRequest>(
 
 const createReservationPayment = asyncHandler<ProtectedRequest>(
   async (req, res) => {
-    const { reservationId } = req.body;
+    const validatedData = createReservationPaymentSchema.parse(req.body);
+    const { reservationId } = validatedData;
     const userId = req.user.id;
 
     const paymentToken = await reservationService.createPaymentToken(
@@ -36,7 +39,8 @@ const createReservationPayment = asyncHandler<ProtectedRequest>(
 );
 
 const cancelReservation = asyncHandler<ProtectedRequest>(async (req, res) => {
-  const { reservationId } = req.body;
+  const validatedData = cancelReservationSchema.parse(req.body);
+  const { reservationId } = validatedData;
   const userId = req.user.id;
 
   const cancelledReservation = await reservationService.cancelReservation(

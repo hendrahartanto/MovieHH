@@ -6,7 +6,6 @@ import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import reservationRepository from "../data-access/reservation.repository";
 import { CreateReservationHoldDTO } from "./dto/create-reservation-hold.dto";
-import { CreateReservationDTO } from "./dto/create-reservation.dto";
 
 const createReservationHold = async (
   newReservationHoldData: CreateReservationHoldDTO,
