@@ -8,6 +8,9 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
       title: newMovieData.title,
       description: newMovieData.description,
       posterUrl: newMovieData.posterUrl,
+      duration: newMovieData.duration,
+      writer: newMovieData.writer,
+      director: newMovieData.director,
       genres: {
         create: newMovieData.genreIds.map((genreId) => ({
           genre: { connect: { id: genreId } },
@@ -62,7 +65,14 @@ const getMovieById = async (movieId: string) => {
 
 const updateMovie = async (
   movieId: string,
-  data: { title: string; description: string; posterUrl?: string }
+  data: {
+    title: string;
+    description?: string;
+    posterUrl?: string;
+    writer?: string;
+    director?: string;
+    duration: number;
+  }
 ) => {
   return prisma.movie.update({
     where: { id: movieId },
