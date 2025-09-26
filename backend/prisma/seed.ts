@@ -26,6 +26,9 @@ async function seedMovieWithGenres(genreIds: string[]) {
       title: "Galactic Adventures",
       description: "A sci-fi action film about space exploration.",
       posterUrl: "https://example.com/galactic.jpg",
+      duration: 120,
+      director: "Hendra Hartanto",
+      writer: "Hendra Hartanto",
     },
   });
 
