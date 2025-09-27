@@ -37,7 +37,7 @@ const createReservationHold = async (
         "Some seats are currently on hold by another user"
       );
 
-    const totalPrice = seats.length * showTime.price.toNumber();
+    const totalPrice = seats.length * Number(showTime.movieSchedule.price);
     const expiresAt = new Date(
       Date.now() + RESERVATION_HOLD_MINUTES * 60 * 1000
     );
@@ -102,7 +102,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
     },
     item_details: reservation.reservationDetails.map((detail) => ({
       id: detail.seatId,
-      price: reservation.showTime.price.toNumber(),
+      price: Number(reservation.showTime.movieSchedule.price),
       quantity: 1,
       name: `Seat ${detail.seat.seatRow}${detail.seat.seatNumber}`,
     })),

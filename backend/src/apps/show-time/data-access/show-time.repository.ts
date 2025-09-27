@@ -2,6 +2,22 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateShowTimeSeatsDTO } from "../domain/dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "../domain/dto/create-show-time.dto";
+import { CreateMovieScheduleDTO } from "../domain/dto/create-movie-schedule.dto";
+
+const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {
+  return prisma.movieSchedule.create({ data: newMovieScheduleData });
+};
+
+const getMovieScheduleById = (movieScheduleId: string) => {
+  return prisma.movieSchedule.findUnique({
+    where: { id: movieScheduleId },
+    include: {
+      movie: true,
+      showTimes: true,
+      theater: { include: { seats: true } },
+    },
+  });
+};
 
 const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return prisma.showTime.create({ data: newShowTimeData });
@@ -16,20 +32,19 @@ const getShowTimeByDate = async (date: string) => {
       startTime: { gte: startOfDay, lte: endOfDay },
     },
     include: {
-      movie: true,
-      theater: true,
+      movieSchedule: { include: { movie: true, theater: true } },
     },
   });
 };
 
 const getOverlappingShowTime = async (
-  theaterId: string,
+  movieScheduleId: string,
   startTime: Date,
   endTime: Date
 ) => {
   return prisma.showTime.findFirst({
     where: {
-      theaterId,
+      movieScheduleId,
       startTime: { lte: endTime },
       endTime: { gte: startTime },
     },
@@ -37,7 +52,10 @@ const getOverlappingShowTime = async (
 };
 
 const getShowTimeById = async (showTimeId: string) => {
-  return prisma.showTime.findUnique({ where: { id: showTimeId } });
+  return prisma.showTime.findUnique({
+    where: { id: showTimeId },
+    include: { movieSchedule: true },
+  });
 };
 
 const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[]) => {
@@ -89,6 +107,8 @@ const updateManySeatStatus = async (
 };
 
 export default {
+  createMovieSchedule,
+  getMovieScheduleById,
   createShowTime,
   getShowTimeByDate,
   getShowTimeById,

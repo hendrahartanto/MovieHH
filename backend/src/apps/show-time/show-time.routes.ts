@@ -6,6 +6,12 @@ import { Role } from "@prisma/client";
 const router = express.Router();
 
 router.post(
+  "/movie-schedule",
+  authenticate,
+  authorize(Role.ADMIN),
+  showTimeController.createMovieSchedule
+);
+router.post(
   "/",
   authenticate,
   authorize(Role.ADMIN),

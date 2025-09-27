@@ -1,8 +1,7 @@
 import { z } from "zod";
 
 export const createShowTimeSchema = z.object({
-  movieId: z.string().uuid("Invalid movie id format"),
-  theaterId: z.string().uuid("Invalid theater id format"),
+  movieScheduleId: z.string().uuid("Invalid movie schedule id format"),
   startTime: z
     .string()
     .transform((val) => new Date(val))
@@ -15,7 +14,6 @@ export const createShowTimeSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: "Invalid endTime format",
     }),
-  price: z.number(),
 });
 
 export type CreateShowTimeDTO = z.infer<typeof createShowTimeSchema>;

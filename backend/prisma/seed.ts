@@ -72,12 +72,17 @@ async function main() {
   const showTimeStart = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
   const showTimeEnd = new Date(showTimeStart.getTime() + 2 * 60 * 60 * 1000); // +2 hours
 
-  await showTimeService.createShowTime({
+  const movieSchedule = await showTimeService.createMovieSchedule({
+    date: now,
     movieId: movie.id,
+    price: 60000,
     theaterId: theater.id,
+  });
+
+  await showTimeService.createShowTime({
+    movieScheduleId: movieSchedule.id,
     startTime: showTimeStart,
     endTime: showTimeEnd,
-    price: 60000,
   });
 
   console.log("✅ Seeding complete.");

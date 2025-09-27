@@ -26,7 +26,7 @@ const getReservationById = async (reservationId: string) => {
   return prisma.reservation.findUnique({
     where: { id: reservationId },
     include: {
-      showTime: true,
+      showTime: { include: { movieSchedule: true } },
       user: true,
       reservationDetails: { include: { seat: true } },
     },

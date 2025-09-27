@@ -40,7 +40,7 @@ const getMovies = async (page: number, limit: number, search: string) => {
             genre: true,
           },
         },
-        showTimes: true,
+        movieSchedules: { include: { showTimes: true } },
       },
     }),
     prisma.movie.count({
