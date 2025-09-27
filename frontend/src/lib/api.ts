@@ -5,15 +5,17 @@ export type ApiResponse<T> = {
   data: T;
 };
 
-enum ReservationStatus {
-  PENDING,
-  CONFIRMED,
-  CANCELED,
+export enum ReservationStatus {
+  PENDING = "PENDING",
+  CONFIRMED = "CONFIRMED",
+  CANCELLED = "CANCELLED",
+  EXPIRED = "EXPIRED",
 }
 
-enum SeatStatus {
-  AVAILABLE,
-  RESERVED,
+export enum SeatStatus {
+  AVAILABLE = "AVAILABLE",
+  HOLD = "HOLD",
+  RESERVED = "RESERVED",
 }
 
 export type Pagination = {
@@ -42,7 +44,7 @@ export type Movie = {
   duration: number;
   posterUrl: string;
   genres: Genre[];
-  showTimes: Showtime[];
+  movieSchedules: MovieSchedule[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -60,7 +62,7 @@ export type Theater = {
   name: string;
   seats: Seat[];
   location: Location;
-  showTimes: Showtime[];
+  movieSchedules: MovieSchedule[];
   createdAt: Date;
 };
 
@@ -73,13 +75,21 @@ export type Seat = {
   //showTimes
 };
 
-export type Showtime = {
+export type MovieSchedule = {
   id: string;
   movie: Movie;
   theater: Theater;
+  price: number;
+  date: Date;
+  showTimes: Showtime[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Showtime = {
+  id: string;
   startTime: Date;
   endTime: Date;
-  //reservations
   seats: Seat[];
   createdAt: Date;
   updatedAt: Date;
@@ -103,9 +113,17 @@ export type Reservation = {
   id: string;
   user: User;
   showTime: Showtime;
-  seat: Seat;
   status: ReservationStatus;
+  totalPrice: number;
+  expiresAt: Date;
   createAt: Date;
+  reservationDetails: ReservationDetail[];
+};
+
+export type ReservationDetail = {
+  id: string;
+  reservation: Reservation;
+  seat: Seat;
 };
 
 export type AuthResponse = ApiResponse<{

@@ -60,7 +60,7 @@ export const MoviesList = () => {
               <TableRow>
                 <TableHead className="pl-6">Movie</TableHead>
                 <TableHead>Genres</TableHead>
-                <TableHead>Showtimes</TableHead>
+                <TableHead>Schedules</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead className="text-right pr-6">Actions</TableHead>
               </TableRow>
@@ -119,11 +119,11 @@ export const MoviesList = () => {
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm font-medium">
-                        {movie.showTimes.length}
+                        {movie.movieSchedules.length}
                         <span className="text-muted-foreground ml-1">
-                          {movie.showTimes.length === 1
-                            ? "showtime"
-                            : "showtimes"}
+                          {movie.movieSchedules.length === 1
+                            ? "schedule"
+                            : "schedules"}
                         </span>
                       </span>
                     </div>
