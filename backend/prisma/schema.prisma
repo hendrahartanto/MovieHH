@@ -39,10 +39,10 @@ model Movie {
   director    String?
   writer      String?
   genres      GenresOnMovies[]
-  showTimes   ShowTime[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  movieSchedules MovieSchedule[]
 }
 
 model Genre {
@@ -82,11 +82,11 @@ model Theater {
   location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId String   @db.Uuid
 
-  seats     Seat[]
-  showTimes ShowTime[]
+  seats Seat[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  movieSchedules MovieSchedule[]
 }
 
 model Seat {
@@ -99,20 +99,30 @@ model Seat {
   reservationDetails ReservationDetail[]
 }
 
-model ShowTime {
-  id           String             @id @default(uuid()) @db.Uuid
-  movie        Movie              @relation(fields: [movieId], references: [id])
-  movieId      String             @db.Uuid
-  theater      Theater            @relation(fields: [theaterId], references: [id], onDelete: Cascade)
-  theaterId    String             @db.Uuid
-  startTime    DateTime
-  endTime      DateTime
-  reservations Reservation[]
-  seats        SeatsOnShowTimes[]
-  price        Decimal
+model MovieSchedule {
+  id        String     @id @default(uuid()) @db.Uuid
+  movie     Movie      @relation(fields: [movieId], references: [id])
+  movieId   String     @db.Uuid
+  theater   Theater    @relation(fields: [theaterId], references: [id], onDelete: Cascade)
+  theaterId String     @db.Uuid
+  price     Decimal
+  date      DateTime
+  showTimes ShowTime[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ShowTime {
+  id              String             @id @default(uuid()) @db.Uuid
+  movieSchedule   MovieSchedule      @relation(fields: [movieScheduleId], references: [id])
+  movieScheduleId String             @db.Uuid
+  startTime       DateTime
+  endTime         DateTime
+  reservations    Reservation[]
+  seats           SeatsOnShowTimes[]
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 }
 
 model SeatsOnShowTimes {
