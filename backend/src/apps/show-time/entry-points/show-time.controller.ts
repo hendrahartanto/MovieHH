@@ -2,6 +2,7 @@ import { SuccessResponse } from "../../../core/api-response";
 import asyncHandler from "../../../core/helpers/async-handler";
 import { createMovieScheduleSchema } from "../domain/dto/create-movie-schedule.dto";
 import { createShowTimeSchema } from "../domain/dto/create-show-time.dto";
+import { getMovieScheduleByDateSchema } from "../domain/dto/get-movie-schedule-by-date.dto";
 import { getShowTimesByDateSchema } from "../domain/dto/get-show-times-by-date.dto";
 import showTimeService from "../domain/show-time.service";
 
@@ -23,6 +24,17 @@ const createShowTime = asyncHandler(async (req, res) => {
   new SuccessResponse("Create show time successful", { newShowTime }).send(res);
 });
 
+const getMovieScheduleByDate = asyncHandler(async (req, res) => {
+  const validatedData = getMovieScheduleByDateSchema.parse(req.query);
+  const movieSchedules = await showTimeService.getMovieScheduleByDate(
+    validatedData
+  );
+
+  new SuccessResponse("Get movie schedules successful", movieSchedules).send(
+    res
+  );
+});
+
 const getShowTimeByDate = asyncHandler(async (req, res) => {
   const validatedData = getShowTimesByDateSchema.parse(req.query);
   const showTimes = await showTimeService.getShowTimeByDate(validatedData);
@@ -42,6 +54,7 @@ const getShowTimeSeats = asyncHandler(async (req, res) => {
 export default {
   createMovieSchedule,
   createShowTime,
+  getMovieScheduleByDate,
   getShowTimeByDate,
   getShowTimeSeats,
 };

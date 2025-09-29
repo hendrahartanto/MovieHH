@@ -22,6 +22,7 @@
     "bullmq": "^5.58.7",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.18",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

@@ -22,6 +22,7 @@ router.get(
   authenticate,
   showTimeController.getShowTimeSeats
 );
+router.get("/movie-schedule", showTimeController.getMovieScheduleByDate);
 router.get("/", showTimeController.getShowTimeByDate);
 
 export default router;

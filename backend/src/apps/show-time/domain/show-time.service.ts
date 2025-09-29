@@ -5,20 +5,26 @@ import showTimeRepository from "../data-access/show-time.repository";
 import { CreateMovieScheduleDTO } from "./dto/create-movie-schedule.dto";
 import { CreateShowTimeSeatsDTO } from "./dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "./dto/create-show-time.dto";
+import { GetMovieScheduleByDateDTO } from "./dto/get-movie-schedule-by-date.dto";
 import { GetShowTimesByDateDTO } from "./dto/get-show-times-by-date.dto";
 
 const createMovieSchedule = async (
   newMovieScheduleData: CreateMovieScheduleDTO
 ) => {
-  const existingMovie = await movieRepository.getMovieById(
-    newMovieScheduleData.movieId
-  );
+  const { movieId, theaterId, date } = newMovieScheduleData;
+
+  const existingMovie = await movieRepository.getMovieById(movieId);
   if (!existingMovie) throw new NoDataError("Movie not found");
 
-  const existingTheater = await theaterRepisotry.getTheaterById(
-    newMovieScheduleData.theaterId
-  );
+  const existingTheater = await theaterRepisotry.getTheaterById(theaterId);
   if (!existingTheater) throw new NoDataError("Theater not found");
+
+  const existingMovieSchedule =
+    await showTimeRepository.getMovieScheduleByMovieIdAndDate(movieId, date);
+  if (existingMovieSchedule)
+    throw new BadRequestError(
+      "Schedule with the given date and movie already exists"
+    );
 
   return await showTimeRepository.createMovieSchedule(newMovieScheduleData);
 };
@@ -33,7 +39,7 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
     throw new BadRequestError("Start time must be before end time");
 
   const overlappingShowTime = await showTimeRepository.getOverlappingShowTime(
-    newShowTimeData.movieScheduleId,
+    existingMovieSchedule.theaterId,
     newShowTimeData.startTime,
     newShowTimeData.endTime
   );
@@ -58,6 +64,10 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return newShowTime;
 };
 
+const getMovieScheduleByDate = async (query: GetMovieScheduleByDateDTO) => {
+  return showTimeRepository.getMovieScheduleByDate(query.date);
+};
+
 const getShowTimeByDate = async (query: GetShowTimesByDateDTO) => {
   return showTimeRepository.getShowTimeByDate(query.date);
 };
@@ -72,6 +82,7 @@ const getShowTimeSeats = async (showTimeId: string) => {
 export default {
   createMovieSchedule,
   createShowTime,
+  getMovieScheduleByDate,
   getShowTimeByDate,
   getShowTimeSeats,
 };

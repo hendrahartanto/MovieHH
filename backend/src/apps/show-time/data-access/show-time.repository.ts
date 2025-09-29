@@ -3,6 +3,7 @@ import prisma from "../../../db";
 import { CreateShowTimeSeatsDTO } from "../domain/dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "../domain/dto/create-show-time.dto";
 import { CreateMovieScheduleDTO } from "../domain/dto/create-movie-schedule.dto";
+import { endOfDay, startOfDay } from "date-fns";
 
 const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {
   return prisma.movieSchedule.create({ data: newMovieScheduleData });
@@ -23,6 +24,37 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return prisma.showTime.create({ data: newShowTimeData });
 };
 
+const getMovieScheduleByDate = async (date: string) => {
+  const startOfDay = new Date(`${date}T00:00:00.000Z`);
+  const endOfDay = new Date(`${date}T23:59:59.999Z`);
+
+  return prisma.movieSchedule.findMany({
+    where: {
+      date: { gte: startOfDay, lte: endOfDay },
+    },
+    include: {
+      movie: true,
+      showTimes: true,
+      theater: true,
+    },
+  });
+};
+
+const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
+  const start = startOfDay(date);
+  const end = endOfDay(date);
+
+  console.log(start);
+  console.log(end);
+
+  return prisma.movieSchedule.findFirst({
+    where: {
+      date: { gte: start, lte: end },
+      movieId,
+    },
+  });
+};
+
 const getShowTimeByDate = async (date: string) => {
   const startOfDay = new Date(`${date}T00:00:00.000Z`);
   const endOfDay = new Date(`${date}T23:59:59.999Z`);
@@ -38,13 +70,13 @@ const getShowTimeByDate = async (date: string) => {
 };
 
 const getOverlappingShowTime = async (
-  movieScheduleId: string,
+  theaterId: string,
   startTime: Date,
   endTime: Date
 ) => {
   return prisma.showTime.findFirst({
     where: {
-      movieScheduleId,
+      movieSchedule: { theaterId },
       startTime: { lte: endTime },
       endTime: { gte: startTime },
     },
@@ -110,6 +142,8 @@ export default {
   createMovieSchedule,
   getMovieScheduleById,
   createShowTime,
+  getMovieScheduleByMovieIdAndDate,
+  getMovieScheduleByDate,
   getShowTimeByDate,
   getShowTimeById,
   getOverlappingShowTime,
