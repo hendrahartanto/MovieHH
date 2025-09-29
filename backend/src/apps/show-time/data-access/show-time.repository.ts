@@ -44,9 +44,6 @@ const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
   const start = startOfDay(date);
   const end = endOfDay(date);
 
-  console.log(start);
-  console.log(end);
-
   return prisma.movieSchedule.findFirst({
     where: {
       date: { gte: start, lte: end },
