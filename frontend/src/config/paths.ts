@@ -45,6 +45,10 @@ export const paths = {
       path: "showtimes",
       getHref: () => "/admin/showtimes",
     },
+    movieSchedules: {
+      path: "movie-schedules",
+      getHref: () => "/admin/movie-schedules",
+    },
   },
 
   home: {

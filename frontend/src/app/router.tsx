@@ -74,6 +74,13 @@ const createAppRouter = (queryClient: QueryClient) =>
               convert(queryClient)
             ),
         },
+        {
+          path: paths.admin.movieSchedules.path,
+          lazy: () =>
+            import("./pages/admin/movie-schedules/movie-schedules").then(
+              convert(queryClient)
+            ),
+        },
       ],
     },
     {

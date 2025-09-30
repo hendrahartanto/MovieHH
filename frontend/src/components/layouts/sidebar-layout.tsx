@@ -10,6 +10,7 @@ import {
   LogOut,
   Tags,
   Map,
+  Calendar,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
@@ -50,6 +51,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Theaters",
       to: paths.admin.theaters.getHref(),
       icon: <MapPin className="w-5 h-5" />,
+    },
+    {
+      name: "Movie Schedules",
+      to: paths.admin.movieSchedules.getHref(),
+      icon: <Calendar className="w-5 h-5" />,
     },
   ];
 
