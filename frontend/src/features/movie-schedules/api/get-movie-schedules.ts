@@ -23,7 +23,7 @@ export const getMovieSchedulesQueryOptions = ({
 }: {
   page?: number;
   search?: string;
-}) => {
+} = {}) => {
   return queryOptions({
     queryKey: page
       ? ["movie-schedules", { page, search }]

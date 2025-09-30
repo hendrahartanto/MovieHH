@@ -9,7 +9,7 @@ export const createMovieScheduleSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: "Invalid startTime format",
     }),
-  price: z.number(),
+  price: z.number().min(1, { message: "Minimal amount is 1" }),
 });
 
 export type CreateMovieScheduleDTO = z.infer<typeof createMovieScheduleSchema>;
