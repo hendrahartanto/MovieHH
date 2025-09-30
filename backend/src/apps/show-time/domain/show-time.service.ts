@@ -29,6 +29,15 @@ const createMovieSchedule = async (
   return await showTimeRepository.createMovieSchedule(newMovieScheduleData);
 };
 
+const getMovieScheduleByDateRange = async (
+  query: GetMovieScheduleByDateRangeDTO
+) => {
+  return showTimeRepository.getMovieScheduleByDateRange(
+    query.startDate,
+    query.endDate
+  );
+};
+
 const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   const existingMovieSchedule = await showTimeRepository.getMovieScheduleById(
     newShowTimeData.movieScheduleId
@@ -62,15 +71,6 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   await showTimeRepository.createShowTimeSeats(seatsMapping);
 
   return newShowTime;
-};
-
-const getMovieScheduleByDateRange = async (
-  query: GetMovieScheduleByDateRangeDTO
-) => {
-  return showTimeRepository.getMovieScheduleByDateRange(
-    query.startDate,
-    query.endDate
-  );
 };
 
 const getShowTimeByDateRange = async (query: GetShowTimesByDateRangeDTO) => {

@@ -20,10 +20,6 @@ const getMovieScheduleById = (movieScheduleId: string) => {
   });
 };
 
-const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
-  return prisma.showTime.create({ data: newShowTimeData });
-};
-
 const getMovieScheduleByDateRange = async (
   startDate: string,
   endDate: string
@@ -53,6 +49,10 @@ const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
       movieId,
     },
   });
+};
+
+const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
+  return prisma.showTime.create({ data: newShowTimeData });
 };
 
 const getShowTimeByDateRange = async (startDate: string, endDate: string) => {

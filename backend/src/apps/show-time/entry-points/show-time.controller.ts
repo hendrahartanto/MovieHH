@@ -17,13 +17,6 @@ const createMovieSchedule = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
-const createShowTime = asyncHandler(async (req, res) => {
-  const validatedData = createShowTimeSchema.parse(req.body);
-  const newShowTime = await showTimeService.createShowTime(validatedData);
-
-  new SuccessResponse("Create show time successful", { newShowTime }).send(res);
-});
-
 const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   const validatedData = getMovieScheduleByDateRangeSchema.parse(req.query);
   const movieSchedules = await showTimeService.getMovieScheduleByDateRange(
@@ -33,6 +26,13 @@ const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   new SuccessResponse("Get movie schedules successful", movieSchedules).send(
     res
   );
+});
+
+const createShowTime = asyncHandler(async (req, res) => {
+  const validatedData = createShowTimeSchema.parse(req.body);
+  const newShowTime = await showTimeService.createShowTime(validatedData);
+
+  new SuccessResponse("Create show time successful", { newShowTime }).send(res);
 });
 
 const getShowTimeByDateRange = asyncHandler(async (req, res) => {
