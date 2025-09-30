@@ -28,6 +28,7 @@ const getMovieSchedulesPaginated = async (
       where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
+      include: { movie: true, theater: true, showTimes: true },
     }),
     prisma.movieSchedule.count({ where: whereClause }),
   ]);
