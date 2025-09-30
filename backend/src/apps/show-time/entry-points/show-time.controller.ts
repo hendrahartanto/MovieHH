@@ -17,6 +17,25 @@ const createMovieSchedule = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const getMovieSchedules = asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const search = (req.query.search as string) || "";
+
+  const { movieSchedules, total } =
+    await showTimeService.getMovieSchedulesPaginated(page, limit, search);
+
+  new SuccessResponse("Get movie schedules successful", {
+    movieSchedules,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
+});
+
 const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   const validatedData = getMovieScheduleByDateRangeSchema.parse(req.query);
   const movieSchedules = await showTimeService.getMovieScheduleByDateRange(
@@ -57,4 +76,5 @@ export default {
   getMovieScheduleByDateRange,
   getShowTimeByDateRange,
   getShowTimeSeats,
+  getMovieSchedules,
 };

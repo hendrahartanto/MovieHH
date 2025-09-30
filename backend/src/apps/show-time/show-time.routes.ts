@@ -22,6 +22,12 @@ router.get(
   authenticate,
   showTimeController.getShowTimeSeats
 );
+router.get(
+  "/movie-schedule",
+  authenticate,
+  authorize(Role.ADMIN),
+  showTimeController.getMovieSchedules
+);
 router.get("/movie-schedule", showTimeController.getMovieScheduleByDateRange);
 router.get("/", showTimeController.getShowTimeByDateRange);
 

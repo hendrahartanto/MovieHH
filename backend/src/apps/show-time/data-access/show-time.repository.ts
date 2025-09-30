@@ -9,6 +9,32 @@ const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {
   return prisma.movieSchedule.create({ data: newMovieScheduleData });
 };
 
+const getMovieSchedulesPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  const whereClause: Prisma.MovieScheduleWhereInput = {
+    movie: {
+      title: {
+        contains: search,
+        mode: "insensitive",
+      },
+    },
+  };
+
+  const [movieSchedules, total] = await Promise.all([
+    prisma.movieSchedule.findMany({
+      where: whereClause,
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.movieSchedule.count({ where: whereClause }),
+  ]);
+
+  return { movieSchedules, total };
+};
+
 const getMovieScheduleById = (movieScheduleId: string) => {
   return prisma.movieSchedule.findUnique({
     where: { id: movieScheduleId },
@@ -152,4 +178,5 @@ export default {
   getShowTimeSeat,
   updateSeatStatus,
   updateManySeatStatus,
+  getMovieSchedulesPaginated,
 };

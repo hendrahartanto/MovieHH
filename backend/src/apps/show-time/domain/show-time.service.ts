@@ -29,6 +29,14 @@ const createMovieSchedule = async (
   return await showTimeRepository.createMovieSchedule(newMovieScheduleData);
 };
 
+const getMovieSchedulesPaginated = async (
+  page: number,
+  limit: number,
+  search: string
+) => {
+  return showTimeRepository.getMovieSchedulesPaginated(page, limit, search);
+};
+
 const getMovieScheduleByDateRange = async (
   query: GetMovieScheduleByDateRangeDTO
 ) => {
@@ -93,4 +101,5 @@ export default {
   getMovieScheduleByDateRange,
   getShowTimeByDateRange,
   getShowTimeSeats,
+  getMovieSchedulesPaginated,
 };
