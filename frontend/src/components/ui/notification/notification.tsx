@@ -25,32 +25,32 @@ const typeStyles: Record<
   }
 > = {
   info: {
-    bg: "bg-blue-500/10 border-blue-500/20",
-    icon: "text-blue-400",
-    title: "text-blue-300",
-    message: "text-blue-200/80",
-    progress: "bg-blue-500",
+    bg: "bg-card border-border",
+    icon: "text-primary",
+    title: "text-foreground",
+    message: "text-muted-foreground",
+    progress: "bg-primary",
   },
   success: {
-    bg: "bg-green-500/10 border-green-500/20",
-    icon: "text-green-400",
-    title: "text-green-300",
-    message: "text-green-200/80",
+    bg: "bg-card border-border",
+    icon: "text-green-500",
+    title: "text-foreground",
+    message: "text-muted-foreground",
     progress: "bg-green-500",
   },
   warning: {
-    bg: "bg-yellow-500/10 border-yellow-500/20",
-    icon: "text-yellow-400",
-    title: "text-yellow-300",
-    message: "text-yellow-200/80",
+    bg: "bg-card border-border",
+    icon: "text-yellow-500",
+    title: "text-foreground",
+    message: "text-muted-foreground",
     progress: "bg-yellow-500",
   },
   error: {
-    bg: "bg-red-500/10 border-red-500/20",
-    icon: "text-red-400",
-    title: "text-red-300",
-    message: "text-red-200/80",
-    progress: "bg-red-500",
+    bg: "bg-card border-border",
+    icon: "text-destructive",
+    title: "text-destructive",
+    message: "text-muted-foreground",
+    progress: "bg-destructive",
   },
 };
 
@@ -118,16 +118,16 @@ export const NotificationComponent = ({
       <div
         className={`
           relative overflow-hidden backdrop-blur-md
-          bg-orange-950/80 border border-orange-900/30
           rounded-lg shadow-xl ring-1 ring-black/5
           w-full max-w-sm
+          border
           ${style.bg}
         `}
         role="alert"
         aria-label={title}
       >
         {!persistent && duration > 0 && (
-          <div className="absolute bottom-0 left-0 h-1 bg-orange-900/30 w-full">
+          <div className="absolute bottom-0 left-0 h-1 w-full bg-border">
             <div
               className={`h-full transition-all duration-100 ease-linear ${style.progress}`}
               style={{ width: `${progress}%` }}
@@ -154,9 +154,9 @@ export const NotificationComponent = ({
               onClick={handleDismiss}
               className="
                 shrink-0 p-1 rounded-md
-                text-orange-400/60 hover:text-orange-200
-                hover:bg-orange-900/30
-                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-orange-950
+                text-muted-foreground hover:text-foreground
+                hover:bg-muted
+                focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background
                 transition-colors duration-200
               "
               aria-label="Close notification"
