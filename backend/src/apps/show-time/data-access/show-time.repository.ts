@@ -24,9 +24,12 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return prisma.showTime.create({ data: newShowTimeData });
 };
 
-const getMovieScheduleByDate = async (date: string) => {
-  const startOfDay = new Date(`${date}T00:00:00.000Z`);
-  const endOfDay = new Date(`${date}T23:59:59.999Z`);
+const getMovieScheduleByDateRange = async (
+  startDate: string,
+  endDate: string
+) => {
+  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
 
   return prisma.movieSchedule.findMany({
     where: {
@@ -52,9 +55,9 @@ const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
   });
 };
 
-const getShowTimeByDate = async (date: string) => {
-  const startOfDay = new Date(`${date}T00:00:00.000Z`);
-  const endOfDay = new Date(`${date}T23:59:59.999Z`);
+const getShowTimeByDateRange = async (startDate: string, endDate: string) => {
+  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
 
   return prisma.showTime.findMany({
     where: {
@@ -140,8 +143,8 @@ export default {
   getMovieScheduleById,
   createShowTime,
   getMovieScheduleByMovieIdAndDate,
-  getMovieScheduleByDate,
-  getShowTimeByDate,
+  getMovieScheduleByDateRange,
+  getShowTimeByDateRange,
   getShowTimeById,
   getOverlappingShowTime,
   createShowTimeSeats,

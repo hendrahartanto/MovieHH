@@ -5,8 +5,8 @@ import showTimeRepository from "../data-access/show-time.repository";
 import { CreateMovieScheduleDTO } from "./dto/create-movie-schedule.dto";
 import { CreateShowTimeSeatsDTO } from "./dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "./dto/create-show-time.dto";
-import { GetMovieScheduleByDateDTO } from "./dto/get-movie-schedule-by-date.dto";
-import { GetShowTimesByDateDTO } from "./dto/get-show-times-by-date.dto";
+import { GetMovieScheduleByDateRangeDTO } from "./dto/get-movie-schedule-by-date-range.dto";
+import { GetShowTimesByDateRangeDTO } from "./dto/get-show-times-by-date-range.dto";
 
 const createMovieSchedule = async (
   newMovieScheduleData: CreateMovieScheduleDTO
@@ -64,12 +64,20 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return newShowTime;
 };
 
-const getMovieScheduleByDate = async (query: GetMovieScheduleByDateDTO) => {
-  return showTimeRepository.getMovieScheduleByDate(query.date);
+const getMovieScheduleByDateRange = async (
+  query: GetMovieScheduleByDateRangeDTO
+) => {
+  return showTimeRepository.getMovieScheduleByDateRange(
+    query.startDate,
+    query.endDate
+  );
 };
 
-const getShowTimeByDate = async (query: GetShowTimesByDateDTO) => {
-  return showTimeRepository.getShowTimeByDate(query.date);
+const getShowTimeByDateRange = async (query: GetShowTimesByDateRangeDTO) => {
+  return showTimeRepository.getShowTimeByDateRange(
+    query.startDate,
+    query.endDate
+  );
 };
 
 const getShowTimeSeats = async (showTimeId: string) => {
@@ -82,7 +90,7 @@ const getShowTimeSeats = async (showTimeId: string) => {
 export default {
   createMovieSchedule,
   createShowTime,
-  getMovieScheduleByDate,
-  getShowTimeByDate,
+  getMovieScheduleByDateRange,
+  getShowTimeByDateRange,
   getShowTimeSeats,
 };
