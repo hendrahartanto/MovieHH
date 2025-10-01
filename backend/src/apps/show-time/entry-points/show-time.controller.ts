@@ -50,8 +50,9 @@ const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
 const deleteMovieSchedule = asyncHandler(async (req, res) => {
   const { movieScheduleId } = req.params;
 
-  const deletedMovieSchedule =
-    showTimeService.deleteMovieSchedule(movieScheduleId);
+  const deletedMovieSchedule = await showTimeService.deleteMovieSchedule(
+    movieScheduleId
+  );
   new SuccessResponse("Delete movie schedule successful", {
     deletedMovieSchedule,
   }).send(res);
