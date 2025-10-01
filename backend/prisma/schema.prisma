@@ -31,18 +31,18 @@ enum Role {
 }
 
 model Movie {
-  id          String           @id @default(uuid()) @db.Uuid
-  title       String
-  description String?
-  posterUrl   String?
-  duration    Int
-  director    String?
-  writer      String?
-  genres      GenresOnMovies[]
-
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id             String           @id @default(uuid()) @db.Uuid
+  title          String
+  description    String?
+  posterUrl      String?
+  duration       Int
+  director       String?
+  writer         String?
+  genres         GenresOnMovies[]
   movieSchedules MovieSchedule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Genre {
@@ -57,7 +57,7 @@ model Genre {
 model GenresOnMovies {
   movie   Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId String @db.Uuid
-  genre   Genre  @relation(fields: [genreId], references: [id])
+  genre   Genre  @relation(fields: [genreId], references: [id], onDelete: Cascade)
   genreId String @db.Uuid
 
   createdAt DateTime @default(now())
@@ -82,11 +82,11 @@ model Theater {
   location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId String   @db.Uuid
 
-  seats Seat[]
-
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  seats          Seat[]
   movieSchedules MovieSchedule[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Seat {
@@ -101,7 +101,7 @@ model Seat {
 
 model MovieSchedule {
   id        String     @id @default(uuid()) @db.Uuid
-  movie     Movie      @relation(fields: [movieId], references: [id])
+  movie     Movie      @relation(fields: [movieId], references: [id], onDelete: Cascade)
   movieId   String     @db.Uuid
   theater   Theater    @relation(fields: [theaterId], references: [id], onDelete: Cascade)
   theaterId String     @db.Uuid
@@ -115,7 +115,7 @@ model MovieSchedule {
 
 model ShowTime {
   id              String             @id @default(uuid()) @db.Uuid
-  movieSchedule   MovieSchedule      @relation(fields: [movieScheduleId], references: [id])
+  movieSchedule   MovieSchedule      @relation(fields: [movieScheduleId], references: [id], onDelete: Cascade)
   movieScheduleId String             @db.Uuid
   startTime       DateTime
   endTime         DateTime
@@ -126,9 +126,9 @@ model ShowTime {
 }
 
 model SeatsOnShowTimes {
-  seat       Seat       @relation(fields: [seatId], references: [id])
+  seat       Seat       @relation(fields: [seatId], references: [id], onDelete: Cascade)
   seatId     String     @db.Uuid
-  showTime   ShowTime   @relation(fields: [showTimeId], references: [id])
+  showTime   ShowTime   @relation(fields: [showTimeId], references: [id], onDelete: Cascade)
   showTimeId String     @db.Uuid
   status     SeatStatus @default(AVAILABLE)
 
@@ -137,9 +137,9 @@ model SeatsOnShowTimes {
 
 model Reservation {
   id                 String              @id @default(uuid()) @db.Uuid
-  user               User                @relation(fields: [userId], references: [id])
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String              @db.Uuid
-  showTime           ShowTime            @relation(fields: [showTimeId], references: [id])
+  showTime           ShowTime            @relation(fields: [showTimeId], references: [id], onDelete: Cascade)
   showTimeId         String              @db.Uuid
   status             ReservationStatus   @default(PENDING)
   totalPrice         Decimal
@@ -150,9 +150,9 @@ model Reservation {
 
 model ReservationDetail {
   id            String      @id @default(uuid()) @db.Uuid
-  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
   reservationId String      @db.Uuid
-  seat          Seat        @relation(fields: [seatId], references: [id])
+  seat          Seat        @relation(fields: [seatId], references: [id], onDelete: Cascade)
   seatId        String      @db.Uuid
 }
 
