@@ -11,6 +11,12 @@ router.post(
   authorize(Role.ADMIN),
   showTimeController.createMovieSchedule
 );
+router.delete(
+  "/movie-schedule",
+  authenticate,
+  authorize(Role.ADMIN),
+  showTimeController.deleteMovieSchedule
+);
 router.post(
   "/",
   authenticate,

@@ -78,6 +78,10 @@ const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
   });
 };
 
+const deleteMovieSchedule = async (movieScheduleId: string) => {
+  return prisma.movieSchedule.delete({ where: { id: movieScheduleId } });
+};
+
 const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   return prisma.showTime.create({ data: newShowTimeData });
 };
@@ -180,4 +184,5 @@ export default {
   updateSeatStatus,
   updateManySeatStatus,
   getMovieSchedulesPaginated,
+  deleteMovieSchedule,
 };

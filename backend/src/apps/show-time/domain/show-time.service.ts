@@ -46,6 +46,10 @@ const getMovieScheduleByDateRange = async (
   );
 };
 
+const deleteMovieSchedule = async (movieScheduleId: string) => {
+  return showTimeRepository.deleteMovieSchedule(movieScheduleId);
+};
+
 const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   const existingMovieSchedule = await showTimeRepository.getMovieScheduleById(
     newShowTimeData.movieScheduleId
@@ -102,4 +106,5 @@ export default {
   getShowTimeByDateRange,
   getShowTimeSeats,
   getMovieSchedulesPaginated,
+  deleteMovieSchedule,
 };

@@ -47,6 +47,16 @@ const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   );
 });
 
+const deleteMovieSchedule = asyncHandler(async (req, res) => {
+  const { movieScheduleId } = req.params;
+
+  const deletedMovieSchedule =
+    showTimeService.deleteMovieSchedule(movieScheduleId);
+  new SuccessResponse("Delete movie schedule successful", {
+    deletedMovieSchedule,
+  }).send(res);
+});
+
 const createShowTime = asyncHandler(async (req, res) => {
   const validatedData = createShowTimeSchema.parse(req.body);
   const newShowTime = await showTimeService.createShowTime(validatedData);
@@ -77,4 +87,5 @@ export default {
   getShowTimeByDateRange,
   getShowTimeSeats,
   getMovieSchedules,
+  deleteMovieSchedule,
 };
