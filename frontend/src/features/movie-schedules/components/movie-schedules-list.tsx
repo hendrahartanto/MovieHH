@@ -4,7 +4,6 @@ import {
   Eye,
   Calendar,
   Clock,
-  Film,
   Building2,
   ChevronLeft,
   ChevronRight,
@@ -23,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatImageUrl } from "@/helper/image-helper";
-// import { DeleteMovieSchedule } from "./delete-movie-schedule";
+import { DeleteMovieSchedule } from "./delete-movie-schedule";
 // import { UpdateMovieSchedule } from "./update-movie-schedule";
 
 export const MovieSchedulesList = () => {
@@ -159,8 +158,8 @@ export const MovieSchedulesList = () => {
                         <span className="sr-only">View Details</span>
                       </Button>
 
-                      {/* <UpdateMovieSchedule schedule={schedule} />
-                      <DeleteMovieSchedule scheduleId={schedule.id} /> */}
+                      {/* <UpdateMovieSchedule schedule={schedule} /> */}
+                      <DeleteMovieSchedule movieScheduleId={schedule.id} />
                     </div>
                   </TableCell>
                 </TableRow>
