@@ -21,7 +21,7 @@ router.put(
   "/movie-schedule/:movieScheduleId",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.deleteMovieSchedule
+  showTimeController.updateMovieSchedule
 );
 router.post(
   "/",

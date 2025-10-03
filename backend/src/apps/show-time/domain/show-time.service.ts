@@ -1,6 +1,9 @@
 import { BadRequestError, NoDataError } from "../../../core/api-error";
 import prisma from "../../../db";
-import { updateDateOnly } from "../../../helper/date-helper";
+import {
+  combineDateAndTime,
+  updateDateOnly,
+} from "../../../helper/date-helper";
 import movieRepository from "../../movie/data-access/movie.repository";
 import theaterRepisotry from "../../theater/data-access/theater.repisotry";
 import showTimeRepository from "../data-access/show-time.repository";
@@ -106,13 +109,22 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   );
   if (!existingMovieSchedule) throw new NoDataError("Movie schedule not found");
 
-  if (newShowTimeData.startTime > newShowTimeData.endTime)
+  const startTime = combineDateAndTime(
+    existingMovieSchedule.date,
+    newShowTimeData.startTime
+  );
+  const endTime = combineDateAndTime(
+    existingMovieSchedule.date,
+    newShowTimeData.endTime
+  );
+
+  if (startTime > endTime)
     throw new BadRequestError("Start time must be before end time");
 
   const overlappingShowTime = await showTimeRepository.getOverlappingShowTime(
     existingMovieSchedule.theaterId,
-    newShowTimeData.startTime,
-    newShowTimeData.endTime
+    startTime,
+    endTime
   );
 
   if (overlappingShowTime)
@@ -120,7 +132,11 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
       "Showtime overlap with existing schedule in given theater"
     );
 
-  const newShowTime = await showTimeRepository.createShowTime(newShowTimeData);
+  const newShowTime = await showTimeRepository.createShowTime({
+    ...newShowTimeData,
+    startTime,
+    endTime,
+  });
 
   const seatsMapping: CreateShowTimeSeatsDTO[] = [];
   existingMovieSchedule.theater.seats.forEach((seat) => {

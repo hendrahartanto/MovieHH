@@ -109,7 +109,11 @@ const deleteMovieSchedule = async (movieScheduleId: string) => {
   return prisma.movieSchedule.delete({ where: { id: movieScheduleId } });
 };
 
-const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
+const createShowTime = async (newShowTimeData: {
+  movieScheduleId: string;
+  startTime: Date;
+  endTime: Date;
+}) => {
   return prisma.showTime.create({ data: newShowTimeData });
 };
 
