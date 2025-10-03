@@ -4,6 +4,7 @@ import { createMovieScheduleSchema } from "../domain/dto/create-movie-schedule.d
 import { createShowTimeSchema } from "../domain/dto/create-show-time.dto";
 import { getMovieScheduleByDateRangeSchema } from "../domain/dto/get-movie-schedule-by-date-range.dto";
 import { getShowTimesByDateRangeSchema } from "../domain/dto/get-show-times-by-date-range.dto";
+import { updateMovieScheduleSchema } from "../domain/dto/update-movie-schedule.dto";
 import showTimeService from "../domain/show-time.service";
 
 const createMovieSchedule = asyncHandler(async (req, res) => {
@@ -45,6 +46,19 @@ const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   new SuccessResponse("Get movie schedules successful", movieSchedules).send(
     res
   );
+});
+
+const updateMovieSchedule = asyncHandler(async (req, res) => {
+  const { movieScheduleId } = req.params;
+  const validatedData = updateMovieScheduleSchema.parse(req.body);
+
+  const updatedMovieSchedules = await showTimeService.updateMovieSchedule(
+    movieScheduleId,
+    validatedData
+  );
+  new SuccessResponse("Updtea movie schedule successful", {
+    updatedMovieSchedules,
+  }).send(res);
 });
 
 const deleteMovieSchedule = asyncHandler(async (req, res) => {
@@ -89,4 +103,5 @@ export default {
   getShowTimeSeats,
   getMovieSchedules,
   deleteMovieSchedule,
+  updateMovieSchedule,
 };

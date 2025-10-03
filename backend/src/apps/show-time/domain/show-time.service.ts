@@ -1,4 +1,6 @@
 import { BadRequestError, NoDataError } from "../../../core/api-error";
+import prisma from "../../../db";
+import { updateDateOnly } from "../../../helper/date-helper";
 import movieRepository from "../../movie/data-access/movie.repository";
 import theaterRepisotry from "../../theater/data-access/theater.repisotry";
 import showTimeRepository from "../data-access/show-time.repository";
@@ -7,6 +9,7 @@ import { CreateShowTimeSeatsDTO } from "./dto/create-show-time-seats.dto.ts";
 import { CreateShowTimeDTO } from "./dto/create-show-time.dto";
 import { GetMovieScheduleByDateRangeDTO } from "./dto/get-movie-schedule-by-date-range.dto";
 import { GetShowTimesByDateRangeDTO } from "./dto/get-show-times-by-date-range.dto";
+import { UpdateMovieScheduleDTO } from "./dto/update-movie-schedule.dto";
 
 const createMovieSchedule = async (
   newMovieScheduleData: CreateMovieScheduleDTO
@@ -44,6 +47,53 @@ const getMovieScheduleByDateRange = async (
     query.startDate,
     query.endDate
   );
+};
+
+const updateMovieSchedule = async (
+  movieScheduleId: string,
+  updatedMovieSchedule: UpdateMovieScheduleDTO
+) => {
+  const existingMovieSchedule = await showTimeRepository.getMovieScheduleById(
+    movieScheduleId
+  );
+  if (!existingMovieSchedule) throw new NoDataError("Movie schedule not found");
+
+  const updatedShowTimes = existingMovieSchedule.showTimes.map((st) => {
+    const newStart = updateDateOnly(st.startTime, updatedMovieSchedule.date);
+    const newEnd = updateDateOnly(st.endTime, updatedMovieSchedule.date);
+    return { ...st, startTime: newStart, endTime: newEnd };
+  });
+
+  for (const st of updatedShowTimes) {
+    const overlapping = await showTimeRepository.getOverlappingShowTime(
+      updatedMovieSchedule.theaterId,
+      st.startTime,
+      st.endTime
+    );
+
+    if (overlapping && overlapping.id !== st.id) {
+      throw new BadRequestError(
+        `ShowTime conflict detected at (${overlapping.startTime} - ${overlapping.endTime})`
+      );
+    }
+  }
+
+  return prisma.$transaction(async (tx) => {
+    const updatedSchedule = await showTimeRepository.updateMovieSchedule(
+      tx,
+      movieScheduleId,
+      updatedMovieSchedule
+    );
+
+    for (const st of updatedShowTimes) {
+      await showTimeRepository.updateShowTime(tx, st.id, {
+        startTime: st.startTime,
+        endTime: st.endTime,
+      });
+    }
+
+    return updatedSchedule;
+  });
 };
 
 const deleteMovieSchedule = async (movieScheduleId: string) => {
@@ -107,4 +157,5 @@ export default {
   getShowTimeSeats,
   getMovieSchedulesPaginated,
   deleteMovieSchedule,
+  updateMovieSchedule,
 };

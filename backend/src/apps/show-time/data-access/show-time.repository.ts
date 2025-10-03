@@ -78,6 +78,33 @@ const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
   });
 };
 
+const updateMovieSchedule = async (
+  tx: PrismaClient | Prisma.TransactionClient = prisma,
+  movieScheduleId: string,
+  data: {
+    movieId: string;
+    theaterId: string;
+    date: Date;
+    price: number;
+  }
+) => {
+  return tx.movieSchedule.update({
+    where: { id: movieScheduleId },
+    data,
+  });
+};
+
+const updateShowTime = async (
+  tx: PrismaClient | Prisma.TransactionClient = prisma,
+  showTimeId: string,
+  data: { startTime: Date; endTime: Date }
+) => {
+  return tx.showTime.update({
+    where: { id: showTimeId },
+    data,
+  });
+};
+
 const deleteMovieSchedule = async (movieScheduleId: string) => {
   return prisma.movieSchedule.delete({ where: { id: movieScheduleId } });
 };
@@ -185,4 +212,6 @@ export default {
   updateManySeatStatus,
   getMovieSchedulesPaginated,
   deleteMovieSchedule,
+  updateMovieSchedule,
+  updateShowTime,
 };

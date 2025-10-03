@@ -17,6 +17,12 @@ router.delete(
   authorize(Role.ADMIN),
   showTimeController.deleteMovieSchedule
 );
+router.put(
+  "/movie-schedule/:movieScheduleId",
+  authenticate,
+  authorize(Role.ADMIN),
+  showTimeController.deleteMovieSchedule
+);
 router.post(
   "/",
   authenticate,
