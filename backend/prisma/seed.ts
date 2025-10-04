@@ -69,8 +69,8 @@ async function main() {
 
   // 5. Seed showtime (using service, includes SeatsOnShowTimes)
   const now = new Date();
-  const showTimeStart = new Date(now.getTime() + 60 * 60 * 1000); // +1 hour
-  const showTimeEnd = new Date(showTimeStart.getTime() + 2 * 60 * 60 * 1000); // +2 hours
+  const showTimeStart = "19:00";
+  const showTimeEnd = "21:00";
 
   const movieSchedule = await showTimeService.createMovieSchedule({
     date: now,
