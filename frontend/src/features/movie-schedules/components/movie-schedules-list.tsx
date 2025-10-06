@@ -23,7 +23,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatImageUrl } from "@/helper/image-helper";
 import { DeleteMovieSchedule } from "./delete-movie-schedule";
-// import { UpdateMovieSchedule } from "./update-movie-schedule";
+import { UpdateMovieSchedule } from "./update-movie-schedule";
 
 export const MovieSchedulesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -158,7 +158,7 @@ export const MovieSchedulesList = () => {
                         <span className="sr-only">View Details</span>
                       </Button>
 
-                      {/* <UpdateMovieSchedule schedule={schedule} /> */}
+                      <UpdateMovieSchedule schedule={schedule} />
                       <DeleteMovieSchedule movieScheduleId={schedule.id} />
                     </div>
                   </TableCell>
