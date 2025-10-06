@@ -91,6 +91,7 @@ const updateMovieSchedule = async (
   return tx.movieSchedule.update({
     where: { id: movieScheduleId },
     data,
+    include: { showTimes: true, theater: true, movie: true },
   });
 };
 

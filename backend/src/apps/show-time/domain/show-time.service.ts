@@ -92,18 +92,18 @@ const updateMovieSchedule = async (
   }
 
   return prisma.$transaction(async (tx) => {
-    const updatedSchedule = await showTimeRepository.updateMovieSchedule(
-      tx,
-      movieScheduleId,
-      updatedMovieSchedule
-    );
-
     for (const st of updatedShowTimes) {
       await showTimeRepository.updateShowTime(tx, st.id, {
         startTime: st.startTime,
         endTime: st.endTime,
       });
     }
+
+    const updatedSchedule = await showTimeRepository.updateMovieSchedule(
+      tx,
+      movieScheduleId,
+      updatedMovieSchedule
+    );
 
     return updatedSchedule;
   });
