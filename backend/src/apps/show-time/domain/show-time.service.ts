@@ -61,6 +61,16 @@ const updateMovieSchedule = async (
   );
   if (!existingMovieSchedule) throw new NoDataError("Movie schedule not found");
 
+  const conflictedMovieSchedule =
+    await showTimeRepository.getMovieScheduleByMovieIdAndDate(
+      updatedMovieSchedule.movieId,
+      updatedMovieSchedule.date
+    );
+  if (conflictedMovieSchedule)
+    throw new BadRequestError(
+      "Movie schedule with this movie and date already exists"
+    );
+
   const updatedShowTimes = existingMovieSchedule.showTimes.map((st) => {
     const newStart = updateDateOnly(st.startTime, updatedMovieSchedule.date);
     const newEnd = updateDateOnly(st.endTime, updatedMovieSchedule.date);
