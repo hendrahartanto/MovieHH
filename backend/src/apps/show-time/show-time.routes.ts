@@ -42,7 +42,7 @@ router.get(
 );
 router.get("/movie-schedule", showTimeController.getMovieScheduleByDateRange);
 router.get(
-  "/:movieScheduleid",
+  "/:movieScheduleid/movie-schedule",
   showTimeController.getShowTimeByMovieScheduleId
 );
 router.get("/", showTimeController.getShowTimeByDateRange);
