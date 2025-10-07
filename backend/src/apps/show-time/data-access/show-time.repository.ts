@@ -153,6 +153,12 @@ const getShowTimeById = async (showTimeId: string) => {
   });
 };
 
+const getShowTimeByMovieScheduleId = async (movieScheduleId: string) => {
+  return prisma.showTime.findMany({
+    where: { movieScheduleId },
+  });
+};
+
 const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[]) => {
   return prisma.seatsOnShowTimes.createMany({ data: mappingDatas });
 };
@@ -219,4 +225,5 @@ export default {
   deleteMovieSchedule,
   updateMovieSchedule,
   updateShowTime,
+  getShowTimeByMovieScheduleId,
 };
