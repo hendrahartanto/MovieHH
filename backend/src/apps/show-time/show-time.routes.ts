@@ -44,7 +44,7 @@ router.delete(
   "/:showTimeId",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.deleteMovieSchedule
+  showTimeController.deleteShowTime
 );
 router.get("/movie-schedule", showTimeController.getMovieScheduleByDateRange);
 router.get(

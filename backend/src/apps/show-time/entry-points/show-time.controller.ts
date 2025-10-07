@@ -125,4 +125,5 @@ export default {
   deleteMovieSchedule,
   updateMovieSchedule,
   getShowTimeByMovieScheduleId,
+  deleteShowTime,
 };
