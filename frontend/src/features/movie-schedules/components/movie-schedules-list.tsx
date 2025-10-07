@@ -27,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatImageUrl } from "@/helper/image-helper";
 import { DeleteMovieSchedule } from "./delete-movie-schedule";
 import { UpdateMovieSchedule } from "./update-movie-schedule";
+import { CreateShowTime } from "./create-show-time";
 
 export const MovieSchedulesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -200,11 +201,14 @@ export const MovieSchedulesList = () => {
                     <TableRow>
                       <TableCell colSpan={7} className="bg-muted/30 p-0">
                         <div className="px-6 py-4">
-                          <div className="flex items-center gap-2 mb-3">
+                          <div className="flex items-center gap-2 mb-4">
                             <Clock className="w-4 h-4 text-muted-foreground" />
-                            <h4 className="font-semibold text-sm">
-                              Showtime Details
-                            </h4>
+                            <div className="flex gap-5 items-center">
+                              <h4 className="font-semibold text-sm">
+                                Showtime Details
+                              </h4>
+                              <CreateShowTime movieScheduleId={schedule.id} />
+                            </div>
                           </div>
                           <div className="space-y-2">
                             {schedule.showTimes.map((showtime, index) => (

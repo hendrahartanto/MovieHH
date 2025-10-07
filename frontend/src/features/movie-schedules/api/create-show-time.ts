@@ -3,7 +3,7 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
-import { getShowTimesQueryOptions } from "./get-show-times-by-movie-schedule-id";
+import { getMovieSchedulesQueryOptions } from "./get-movie-schedules";
 
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -40,7 +40,7 @@ export const useCreateShowTime = ({
   return useMutation({
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
-        queryKey: getShowTimesQueryOptions().queryKey,
+        queryKey: getMovieSchedulesQueryOptions().queryKey,
       });
       onSuccess?.(...args);
     },
