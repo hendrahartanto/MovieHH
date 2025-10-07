@@ -168,6 +168,10 @@ const getShowTimeByDateRange = async (query: GetShowTimesByDateRangeDTO) => {
   );
 };
 
+const getShowTimeByMovieScheduleId = async (movieScheduleId: string) => {
+  return showTimeRepository.getShowTimeByMovieScheduleId(movieScheduleId);
+};
+
 const getShowTimeSeats = async (showTimeId: string) => {
   const existingShowTime = await showTimeRepository.getShowTimeById(showTimeId);
   if (!existingShowTime) throw new BadRequestError("Showtime not found");
@@ -184,4 +188,5 @@ export default {
   getMovieSchedulesPaginated,
   deleteMovieSchedule,
   updateMovieSchedule,
+  getShowTimeByMovieScheduleId,
 };

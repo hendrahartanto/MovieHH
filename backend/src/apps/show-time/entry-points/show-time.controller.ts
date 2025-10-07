@@ -83,7 +83,18 @@ const getShowTimeByDateRange = asyncHandler(async (req, res) => {
   const validatedData = getShowTimesByDateRangeSchema.parse(req.query);
   const showTimes = await showTimeService.getShowTimeByDateRange(validatedData);
 
-  new SuccessResponse("Get showtimes successful", showTimes).send(res);
+  new SuccessResponse("Get showtimes successful", { showTimes }).send(res);
+});
+
+const getShowTimeByMovieScheduleId = asyncHandler(async (req, res) => {
+  const { movieScheduleId } = req.params;
+  const showTimes = await showTimeService.getShowTimeByMovieScheduleId(
+    movieScheduleId
+  );
+
+  new SuccessResponse("Get showtimes by movie id successful", {
+    showTimes,
+  }).send(res);
 });
 
 const getShowTimeSeats = asyncHandler(async (req, res) => {
@@ -104,4 +115,5 @@ export default {
   getMovieSchedules,
   deleteMovieSchedule,
   updateMovieSchedule,
+  getShowTimeByMovieScheduleId,
 };
