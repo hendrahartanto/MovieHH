@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { useMovieSchedules } from "../api/get-movie-schedules";
 import {
@@ -7,7 +8,9 @@ import {
   Building2,
   ChevronLeft,
   ChevronRight,
-  ImageIcon,
+  Image,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 import {
@@ -27,6 +30,7 @@ import { UpdateMovieSchedule } from "./update-movie-schedule";
 
 export const MovieSchedulesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const page = +(searchParams.get("page") || 1);
   const search = searchParams.get("search") || "";
@@ -38,6 +42,18 @@ export const MovieSchedulesList = () => {
 
   const handlePageChange = (page: number) => {
     setSearchParams({ page: page.toString() });
+  };
+
+  const toggleRow = (scheduleId: string) => {
+    setExpandedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(scheduleId)) {
+        newSet.delete(scheduleId);
+      } else {
+        newSet.add(scheduleId);
+      }
+      return newSet;
+    });
   };
 
   if (schedulesQuery.isLoading) {
@@ -58,6 +74,7 @@ export const MovieSchedulesList = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12"></TableHead>
                 <TableHead className="pl-6">Movie</TableHead>
                 <TableHead>Theater</TableHead>
                 <TableHead>Date</TableHead>
@@ -68,101 +85,167 @@ export const MovieSchedulesList = () => {
             </TableHeader>
             <TableBody>
               {schedules.map((schedule) => (
-                <TableRow key={schedule.id}>
-                  <TableCell className="pl-6">
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
-                        {schedule.movie.posterUrl ? (
-                          <img
-                            src={formatImageUrl(schedule.movie.posterUrl)}
-                            alt={schedule.movie.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <ImageIcon className="w-5 h-5 text-muted-foreground" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-semibold truncate">
-                          {schedule.movie.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                          {schedule.movie.description}
-                        </p>
-                      </div>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Building2 className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium truncate">
-                        {schedule.theater.name}
-                      </span>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">
-                        {new Date(schedule.date).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    <span className="text-sm font-semibold">
-                      {new Intl.NumberFormat("id-ID", {
-                        style: "currency",
-                        currency: "IDR",
-                        minimumFractionDigits: 0,
-                      }).format(Number(schedule.price))}
-                    </span>
-                  </TableCell>
-
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm font-medium">
-                        {schedule.showTimes.length}
-                        <span className="text-muted-foreground ml-1">
-                          {schedule.showTimes.length === 1
-                            ? "showtime"
-                            : "showtimes"}
-                        </span>
-                      </span>
-                    </div>
-                  </TableCell>
-
-                  <TableCell className="text-right pr-6">
-                    <div className="flex items-center gap-2 justify-end">
+                <>
+                  <TableRow key={schedule.id} className="group">
+                    <TableCell className="pl-6">
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => {
-                          console.log(
-                            "View details for schedule:",
-                            schedule.id
-                          );
-                        }}
+                        className="h-6 w-6 p-0"
+                        onClick={() => toggleRow(schedule.id)}
                       >
-                        <Eye className="h-4 w-4" />
-                        <span className="sr-only">View Details</span>
+                        {expandedRows.has(schedule.id) ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
                       </Button>
+                    </TableCell>
+                    <TableCell className="pl-0">
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                          {schedule.movie.posterUrl ? (
+                            <img
+                              src={formatImageUrl(schedule.movie.posterUrl)}
+                              alt={schedule.movie.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Image className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-semibold truncate">
+                            {schedule.movie.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                            {schedule.movie.description}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
 
-                      <UpdateMovieSchedule schedule={schedule} />
-                      <DeleteMovieSchedule movieScheduleId={schedule.id} />
-                    </div>
-                  </TableCell>
-                </TableRow>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium truncate">
+                          {schedule.theater.name}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          {new Date(schedule.date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <span className="text-sm font-semibold">
+                        {new Intl.NumberFormat("id-ID", {
+                          style: "currency",
+                          currency: "IDR",
+                          minimumFractionDigits: 0,
+                        }).format(Number(schedule.price))}
+                      </span>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          {schedule.showTimes.length}
+                          <span className="text-muted-foreground ml-1">
+                            {schedule.showTimes.length === 1
+                              ? "showtime"
+                              : "showtimes"}
+                          </span>
+                        </span>
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-right pr-6">
+                      <div className="flex items-center gap-2 justify-end">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={() => {
+                            console.log(
+                              "View details for schedule:",
+                              schedule.id
+                            );
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span className="sr-only">View Details</span>
+                        </Button>
+
+                        <UpdateMovieSchedule schedule={schedule} />
+                        <DeleteMovieSchedule movieScheduleId={schedule.id} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+
+                  {expandedRows.has(schedule.id) && (
+                    <TableRow>
+                      <TableCell colSpan={7} className="bg-muted/30 p-0">
+                        <div className="px-6 py-4">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Clock className="w-4 h-4 text-muted-foreground" />
+                            <h4 className="font-semibold text-sm">
+                              Showtime Details
+                            </h4>
+                          </div>
+                          <div className="space-y-2">
+                            {schedule.showTimes.map((showtime, index) => (
+                              <div
+                                key={showtime.id}
+                                className="flex items-center gap-4 bg-background border rounded-lg px-5 py-3 w-fit"
+                              >
+                                <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
+                                  {index + 1}.
+                                </span>
+                                <div className="flex items-center gap-2 flex-1">
+                                  <span className="text-sm font-medium">
+                                    {new Date(
+                                      showtime.startTime
+                                    ).toLocaleTimeString("en-US", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: false,
+                                    })}
+                                  </span>
+                                  <span className="text-muted-foreground">
+                                    -
+                                  </span>
+                                  <span className="text-sm font-medium">
+                                    {new Date(
+                                      showtime.endTime
+                                    ).toLocaleTimeString("en-US", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                      hour12: false,
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </>
               ))}
             </TableBody>
           </Table>
