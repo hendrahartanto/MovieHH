@@ -40,6 +40,12 @@ router.get(
   authorize(Role.ADMIN),
   showTimeController.getMovieSchedules
 );
+router.delete(
+  "/:showTimeId",
+  authenticate,
+  authorize(Role.ADMIN),
+  showTimeController.deleteMovieSchedule
+);
 router.get("/movie-schedule", showTimeController.getMovieScheduleByDateRange);
 router.get(
   "/:movieScheduleid/movie-schedule",

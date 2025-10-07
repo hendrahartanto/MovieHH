@@ -184,6 +184,10 @@ const getShowTimeSeat = async (showTimeId: string, seatId: string) => {
   });
 };
 
+const deleteShowTime = async (showTimeId: string) => {
+  return prisma.showTime.delete({ where: { id: showTimeId } });
+};
+
 const updateSeatStatus = (
   showTimeId: string,
   seatId: string,
@@ -226,4 +230,5 @@ export default {
   updateMovieSchedule,
   updateShowTime,
   getShowTimeByMovieScheduleId,
+  deleteShowTime,
 };

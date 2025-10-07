@@ -106,6 +106,15 @@ const getShowTimeSeats = asyncHandler(async (req, res) => {
   );
 });
 
+const deleteShowTime = asyncHandler(async (req, res) => {
+  const { showTimeId } = req.params;
+  const deletedShowTime = await showTimeService.deleteShowTime(showTimeId);
+
+  new SuccessResponse("Delete showtime successful", { deletedShowTime }).send(
+    res
+  );
+});
+
 export default {
   createMovieSchedule,
   createShowTime,

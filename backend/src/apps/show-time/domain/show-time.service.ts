@@ -179,6 +179,13 @@ const getShowTimeSeats = async (showTimeId: string) => {
   return showTimeRepository.getShowTimeSeats(showTimeId);
 };
 
+const deleteShowTime = async (showTimeId: string) => {
+  const existingShowTime = await showTimeRepository.getShowTimeById(showTimeId);
+  if (!existingShowTime) throw new BadRequestError("Showtime not found");
+
+  return showTimeRepository.deleteShowTime(showTimeId);
+};
+
 export default {
   createMovieSchedule,
   createShowTime,
@@ -189,4 +196,5 @@ export default {
   deleteMovieSchedule,
   updateMovieSchedule,
   getShowTimeByMovieScheduleId,
+  deleteShowTime,
 };
