@@ -20,17 +20,17 @@ const MovieSchedulesPage = () => {
     <SidebarContentLayout
       title="Movie Schedules"
       subtitle="Manage your movie schedules"
+      headerComponent={
+        <div className="flex justify-between">
+          <SearchBox
+            onSearch={handleSearch}
+            defaultValue={searchParams.get("search") || ""}
+          />
+          <CreateMovieSchedule />
+        </div>
+      }
     >
-      <div className="flex justify-between">
-        <SearchBox
-          onSearch={handleSearch}
-          defaultValue={searchParams.get("search") || ""}
-        />
-        <CreateMovieSchedule />
-      </div>
-      <div className="mt-4">
-        <MovieSchedulesList />
-      </div>
+      <MovieSchedulesList />
     </SidebarContentLayout>
   );
 };

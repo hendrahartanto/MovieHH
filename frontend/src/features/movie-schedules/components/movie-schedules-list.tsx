@@ -121,8 +121,8 @@ export const MovieSchedulesList = () => {
                           <h3 className="font-semibold truncate">
                             {schedule.movie.title}
                           </h3>
-                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                            {schedule.movie.description}
+                          <p className="text-sm text-muted-foreground text-wrap line-clamp-2 mt-1">
+                            {schedule.movie.synopsis}
                           </p>
                         </div>
                       </div>

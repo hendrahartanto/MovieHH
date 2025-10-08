@@ -15,8 +15,7 @@ export const ShowTimesListDropdown = ({
   const hasShowTimes = showTimes && showTimes.length > 0;
 
   return (
-    <div className="px-6 py-4">
-      {/* Header */}
+    <div className="px-14 py-4">
       <div className="flex items-center gap-2 mb-4">
         <Clock className="w-4 h-4 text-muted-foreground" />
         <div className="flex gap-5 items-center">
@@ -25,7 +24,6 @@ export const ShowTimesListDropdown = ({
         </div>
       </div>
 
-      {/* Content */}
       {hasShowTimes ? (
         <div className="space-y-2">
           {showTimes.map((showtime, index) => (

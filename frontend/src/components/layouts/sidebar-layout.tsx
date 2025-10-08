@@ -65,13 +65,6 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {/* <Modal
-        isOpen={isLogoutModalOpen}
-        onClose={handleLogoutCancel}
-        title="Confirm Logout"
-      >
-        <ConfirmLogout onCancel={handleLogoutCancel} />
-      </Modal> */}
       <div className="flex min-h-screen bg-background">
         <div
           className={`${
@@ -224,7 +217,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         <div className="flex-1 bg-background h-screen">
-          <div className="p-6 max-h-full overflow-auto">{children}</div>
+          <div className="max-h-full overflow-auto px-10">{children}</div>
         </div>
       </div>
     </>

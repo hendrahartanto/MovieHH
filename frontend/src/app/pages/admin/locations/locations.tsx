@@ -17,17 +17,20 @@ const LocationsPage = () => {
   };
 
   return (
-    <SidebarContentLayout title="Locations" subtitle="Manage locations list">
-      <div className="flex justify-between">
-        <SearchBox
-          onSearch={handleSearch}
-          defaultValue={searchParams.get("search") || ""}
-        />
-        <CreateLocation />
-      </div>
-      <div className="mt-4">
-        <LocationsList />
-      </div>
+    <SidebarContentLayout
+      title="Locations"
+      subtitle="Manage locations list"
+      headerComponent={
+        <div className="flex justify-between">
+          <SearchBox
+            onSearch={handleSearch}
+            defaultValue={searchParams.get("search") || ""}
+          />
+          <CreateLocation />
+        </div>
+      }
+    >
+      <LocationsList />
     </SidebarContentLayout>
   );
 };

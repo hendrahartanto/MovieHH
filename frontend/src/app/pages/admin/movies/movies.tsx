@@ -20,17 +20,17 @@ const MoviesPage = () => {
     <SidebarContentLayout
       title="Movies"
       subtitle="Manage your movie collection"
+      headerComponent={
+        <div className="flex justify-between">
+          <SearchBox
+            onSearch={handleSearch}
+            defaultValue={searchParams.get("search") || ""}
+          />
+          <CreateMovie />
+        </div>
+      }
     >
-      <div className="flex justify-between">
-        <SearchBox
-          onSearch={handleSearch}
-          defaultValue={searchParams.get("search") || ""}
-        />
-        <CreateMovie />
-      </div>
-      <div className="mt-4">
-        <MoviesList />
-      </div>
+      <MoviesList />
     </SidebarContentLayout>
   );
 };

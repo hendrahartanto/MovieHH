@@ -17,17 +17,20 @@ const TheatersPage = () => {
   };
 
   return (
-    <SidebarContentLayout title="Theaters" subtitle="Manage theaters list">
-      <div className="flex justify-between">
-        <SearchBox
-          onSearch={handleSearch}
-          defaultValue={searchParams.get("search") || ""}
-        />
-        <CreateTheater />
-      </div>
-      <div className="mt-4">
-        <TheatersList />
-      </div>
+    <SidebarContentLayout
+      title="Theaters"
+      subtitle="Manage theaters list"
+      headerComponent={
+        <div className="flex justify-between">
+          <SearchBox
+            onSearch={handleSearch}
+            defaultValue={searchParams.get("search") || ""}
+          />
+          <CreateTheater />
+        </div>
+      }
+    >
+      <TheatersList />
     </SidebarContentLayout>
   );
 };

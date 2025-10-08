@@ -17,17 +17,20 @@ const GenresPage = () => {
   };
 
   return (
-    <SidebarContentLayout title="Genres" subtitle="Manage genres list">
-      <div className="flex justify-between">
-        <SearchBox
-          onSearch={handleSearch}
-          defaultValue={searchParams.get("search") || ""}
-        />
-        <CreateGenre />
-      </div>
-      <div className="mt-4">
-        <GenresList />
-      </div>
+    <SidebarContentLayout
+      title="Genres"
+      subtitle="Manage genres list"
+      headerComponent={
+        <div className="flex justify-between">
+          <SearchBox
+            onSearch={handleSearch}
+            defaultValue={searchParams.get("search") || ""}
+          />
+          <CreateGenre />
+        </div>
+      }
+    >
+      <GenresList />
     </SidebarContentLayout>
   );
 };
