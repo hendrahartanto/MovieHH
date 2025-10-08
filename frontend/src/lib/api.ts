@@ -49,8 +49,6 @@ export type Movie = {
   duration: number;
   director?: string;
   writer?: string;
-  releaseDate?: Date;
-  endDate?: Date;
   isFeatured: boolean;
   status: MovieStatus;
   genres: Genre[];

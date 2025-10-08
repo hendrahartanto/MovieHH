@@ -21,10 +21,6 @@ async function seedGenres() {
 }
 
 async function seedMovieWithGenres(genreIds: string[]) {
-  const now = new Date();
-  const end = new Date();
-  end.setMonth(now.getMonth() + 1); // Film tayang 1 bulan ke depan
-
   const movie = await prisma.movie.create({
     data: {
       title: "Galactic Adventures",
@@ -33,8 +29,6 @@ async function seedMovieWithGenres(genreIds: string[]) {
       duration: 120,
       director: "Hendra Hartanto",
       writer: "Hendra Hartanto",
-      releaseDate: now,
-      endDate: end,
       isFeatured: true,
       status: "ACTIVE", // pakai enum MovieStatus
       genres: {

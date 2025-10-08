@@ -38,8 +38,6 @@ model Movie {
   duration       Int
   director       String?
   writer         String?
-  releaseDate    DateTime?
-  endDate        DateTime?
   isFeatured     Boolean
   status         MovieStatus
   genres         GenresOnMovies[]

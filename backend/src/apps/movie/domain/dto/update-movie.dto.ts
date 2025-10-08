@@ -13,14 +13,6 @@ export const updateMovieSchema = z.object({
     }),
   director: z.string().optional(),
   writer: z.string().optional(),
-  releaseDate: z
-    .string()
-    .optional()
-    .transform((val) => (val ? new Date(val) : undefined)),
-  endDate: z
-    .string()
-    .optional()
-    .transform((val) => (val ? new Date(val) : undefined)),
   isFeatured: z
     .union([z.string(), z.boolean()])
     .transform((val) => {

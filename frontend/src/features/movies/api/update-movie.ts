@@ -28,8 +28,6 @@ export const updateMovieInputSchema = z.object({
     .optional(),
   director: z.string().optional(),
   writer: z.string().optional(),
-  releaseDate: z.string().optional(),
-  endDate: z.string().optional(),
   isFeatured: z.boolean().default(false),
   status: movieStatusEnum,
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
@@ -52,13 +50,6 @@ export const updateMovie = ({
   formData.append("duration", String(data.duration));
   formData.append("status", data.status);
   formData.append("isFeatured", String(data.isFeatured));
-
-  if (data.releaseDate) {
-    formData.append("releaseDate", new Date(data.releaseDate).toISOString());
-  }
-  if (data.endDate) {
-    formData.append("endDate", new Date(data.endDate).toISOString());
-  }
 
   data.genreIds.forEach((id) => formData.append("genreIds", id));
 

@@ -77,12 +77,6 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
       director: movie.director || "",
       writer: movie.writer || "",
       duration: movie.duration || undefined,
-      releaseDate: movie.releaseDate
-        ? new Date(movie.releaseDate).toISOString().split("T")[0]
-        : undefined,
-      endDate: movie.endDate
-        ? new Date(movie.endDate).toISOString().split("T")[0]
-        : undefined,
       isFeatured: movie.isFeatured || false,
       status: movie.status || "ACTIVE",
       genreIds: movie.genres?.map((genre) => genre.id) || [],
@@ -235,36 +229,6 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
                         <SelectItem value="COMING_SOON">Coming Soon</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="releaseDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Release Date (optional)</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date (optional)</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -72,8 +72,6 @@ export const CreateMovie = () => {
       director: "",
       writer: "",
       duration: undefined,
-      releaseDate: undefined,
-      endDate: undefined,
       isFeatured: false,
       status: "ACTIVE",
       genreIds: [],
@@ -227,36 +225,6 @@ export const CreateMovie = () => {
                         <SelectItem value="COMING_SOON">Coming Soon</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="releaseDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Release Date (optional)</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date (optional)</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
