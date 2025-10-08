@@ -27,9 +27,23 @@ import { DeleteMovie } from "./delete-movie";
 import { UpdateMovie } from "./update-movie";
 import { formatImageUrl } from "@/helper/image-helper";
 import { getStatusLabel, getStatusVariant } from "@/helper/enum-display-helper";
+import { useState } from "react";
+import { Lightbox } from "@/components/ui/lightbox";
 
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+
+  const openLightbox = (url: string) => {
+    setLightboxImage(url);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    setLightboxImage(null);
+  };
 
   const page = +(searchParams.get("page") || 1);
   const search = searchParams.get("search") || "";
@@ -80,7 +94,12 @@ export const MoviesList = () => {
                 <TableRow key={movie.id}>
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                      <div
+                        className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0"
+                        onClick={() => {
+                          if (movie.posterUrl) openLightbox(movie.posterUrl);
+                        }}
+                      >
                         {movie.posterUrl ? (
                           <img
                             src={formatImageUrl(movie.posterUrl)}
@@ -255,6 +274,15 @@ export const MoviesList = () => {
           )}
         </CardContent>
       </Card>
+
+      {lightboxImage && (
+        <Lightbox
+          imageUrl={lightboxImage}
+          isOpen={lightboxOpen}
+          onClose={closeLightbox}
+          alt="Movie poster"
+        />
+      )}
     </div>
   );
 };
