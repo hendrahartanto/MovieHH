@@ -75,7 +75,7 @@ export const UpdateMovieSchedule = ({ schedule }: UpdateMovieScheduleProps) => {
       movieId: schedule.movie.id,
       theaterId: schedule.theater.id,
       date: new Date(schedule.date).toISOString().split("T")[0],
-      price: schedule.price,
+      price: +schedule.price,
     },
   });
 

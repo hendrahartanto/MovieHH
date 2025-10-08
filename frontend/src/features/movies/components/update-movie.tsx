@@ -434,7 +434,7 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
                   <img
                     src={URL.createObjectURL(form.watch("banner") as File)}
                     alt="banner preview"
-                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                    className="w-full h-48 object-cover rounded-md mx-auto"
                   />
                 </div>
               </div>
@@ -447,7 +447,7 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
                   <img
                     src={formatImageUrl(movie.bannerUrl)}
                     alt="Current movie banner"
-                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                    className="w-full h-48 object-cover rounded-md mx-auto"
                   />
                 </div>
               </div>

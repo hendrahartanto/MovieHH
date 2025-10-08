@@ -405,7 +405,7 @@ export const CreateMovie = () => {
                     <img
                       src={URL.createObjectURL(form.watch("poster") as File)}
                       alt="Poster preview"
-                      className="w-full h-48 object-cover rounded-md"
+                      className="w-32 h-48 object-cover rounded-md mx-auto"
                     />
                   </div>
                 )}
@@ -416,7 +416,7 @@ export const CreateMovie = () => {
                     <img
                       src={URL.createObjectURL(form.watch("banner") as File)}
                       alt="Banner preview"
-                      className="w-full h-48 object-cover rounded-md"
+                      className="w-full h-48 object-cover rounded-md mx-auto"
                     />
                   </div>
                 )}

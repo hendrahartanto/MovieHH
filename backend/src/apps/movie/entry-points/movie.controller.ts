@@ -5,16 +5,24 @@ import { updateMovieSchema } from "../domain/dto/update-movie.dto";
 import movieService from "../domain/movie.service";
 
 const createMovie = asyncHandler(async (req, res) => {
-  let posterUrl: string = "";
-  if (req.file) posterUrl = `/uploads/${req.file.filename}`;
+  const posterFile = (req.files as any)?.poster?.[0];
+  const bannerFile = (req.files as any)?.banner?.[0];
+
+  let posterUrl = "";
+  let bannerUrl = "";
+
+  if (posterFile) posterUrl = `/uploads/${posterFile.filename}`;
+  if (bannerFile) bannerUrl = `/uploads/${bannerFile.filename}`;
 
   let { genreIds, ...rest } = req.body;
+
   if (typeof genreIds === "string") genreIds = [genreIds];
 
   const validatedData = createMovieSchema.parse({
     ...rest,
     genreIds,
     posterUrl,
+    bannerUrl,
   });
 
   const movie = await movieService.createMovie(validatedData);
@@ -49,8 +57,15 @@ const getMovie = asyncHandler(async (req, res) => {
 
 const updateMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
-  let posterUrl: string = "";
-  if (req.file) posterUrl = `/uploads/${req.file.filename}`;
+
+  const posterFile = (req.files as any)?.poster?.[0];
+  const bannerFile = (req.files as any)?.banner?.[0];
+
+  let posterUrl = "";
+  let bannerUrl = "";
+
+  if (posterFile) posterUrl = `/uploads/${posterFile.filename}`;
+  if (bannerFile) bannerUrl = `/uploads/${bannerFile.filename}`;
 
   let { genreIds, ...rest } = req.body;
   if (typeof genreIds === "string") genreIds = [genreIds];
@@ -58,10 +73,12 @@ const updateMovie = asyncHandler(async (req, res) => {
   const validatedData = updateMovieSchema.parse({
     ...rest,
     genreIds,
-    posterUrl,
+    ...(posterUrl && { posterUrl }),
+    ...(bannerUrl && { bannerUrl }),
   });
 
   const updatedMovie = await movieService.updateMovie(movieId, validatedData);
+
   new SuccessResponse("Update movie successful", { updatedMovie }).send(res);
 });
 

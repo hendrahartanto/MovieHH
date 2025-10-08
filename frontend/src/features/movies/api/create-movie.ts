@@ -40,7 +40,7 @@ export const createMovieInputSchema = z.object({
   writer: z.string().optional(),
   isFeatured: z.boolean().default(false),
   status: movieStatusEnum,
-  trailerUrl: z.string().url().optional(),
+  trailerUrl: z.string().optional(),
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
 });
 
