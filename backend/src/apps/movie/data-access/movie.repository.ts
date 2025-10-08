@@ -6,11 +6,15 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
   return prisma.movie.create({
     data: {
       title: newMovieData.title,
-      description: newMovieData.description,
+      synopsis: newMovieData.synopsis,
       posterUrl: newMovieData.posterUrl,
       duration: newMovieData.duration,
-      writer: newMovieData.writer,
       director: newMovieData.director,
+      writer: newMovieData.writer,
+      releasetDate: newMovieData.releasetDate,
+      endDate: newMovieData.endDate,
+      isFeatured: newMovieData.isFeatured,
+      status: newMovieData.status,
       genres: {
         create: newMovieData.genreIds.map((genreId) => ({
           genre: { connect: { id: genreId } },

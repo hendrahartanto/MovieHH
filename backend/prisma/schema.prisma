@@ -33,11 +33,15 @@ enum Role {
 model Movie {
   id             String           @id @default(uuid()) @db.Uuid
   title          String
-  description    String?
+  synopsis       String?
   posterUrl      String?
   duration       Int
   director       String?
   writer         String?
+  releasetDate   DateTime?
+  endDate        DateTime?
+  isFeatured     Boolean
+  status         MovieStatus
   genres         GenresOnMovies[]
   movieSchedules MovieSchedule[]
 
@@ -154,6 +158,12 @@ model ReservationDetail {
   reservationId String      @db.Uuid
   seat          Seat        @relation(fields: [seatId], references: [id], onDelete: Cascade)
   seatId        String      @db.Uuid
+}
+
+enum MovieStatus {
+  ACTIVE
+  INACTIVE
+  COMING_SOON
 }
 
 enum ReservationStatus {

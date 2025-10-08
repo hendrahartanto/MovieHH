@@ -1,8 +1,11 @@
 import { z } from "zod";
 
+export const movieStatusEnum = z.enum(["ACTIVE", "INACTIVE", "COMING_SOON"]);
+
 export const createMovieSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  description: z.string().optional(),
+  synopsis: z.string().optional(),
+  posterUrl: z.string().optional(),
   duration: z
     .string()
     .transform((val) => Number(val))
@@ -11,7 +14,16 @@ export const createMovieSchema = z.object({
     }),
   director: z.string().optional(),
   writer: z.string().optional(),
-  posterUrl: z.string().optional(),
+  releasetDate: z
+    .string()
+    .optional()
+    .transform((val) => (val ? new Date(val) : undefined)),
+  endDate: z
+    .string()
+    .optional()
+    .transform((val) => (val ? new Date(val) : undefined)),
+  isFeatured: z.boolean().default(false),
+  status: movieStatusEnum,
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
 });
 

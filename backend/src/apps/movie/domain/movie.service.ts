@@ -1,10 +1,21 @@
 import { BadRequestError, NoDataError } from "../../../core/api-error";
+import genreRepository from "../../genre/data-access/genre.repository";
 import movieRepository from "../data-access/movie.repository";
 import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { UpdateMovieDTO } from "./dto/update-movie.dto";
 
 const createMovie = async (createMovieData: CreateMovieDTO) => {
-  //TODO: create genre validation maybe
+  const { releasetDate, endDate, genreIds } = createMovieData;
+
+  for (const genreId of genreIds) {
+    const genre = await genreRepository.getGenreById(genreId);
+    if (!genre) throw new BadRequestError("On of the genre is not found");
+  }
+
+  if (releasetDate && endDate && endDate <= releasetDate) {
+    throw new BadRequestError("End date must be after release date");
+  }
+
   return movieRepository.createMovie(createMovieData);
 };
 

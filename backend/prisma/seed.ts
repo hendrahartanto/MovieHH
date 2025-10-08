@@ -21,23 +21,29 @@ async function seedGenres() {
 }
 
 async function seedMovieWithGenres(genreIds: string[]) {
+  const now = new Date();
+  const end = new Date();
+  end.setMonth(now.getMonth() + 1); // Film tayang 1 bulan ke depan
+
   const movie = await prisma.movie.create({
     data: {
       title: "Galactic Adventures",
-      description: "A sci-fi action film about space exploration.",
+      synopsis: "A sci-fi action film about space exploration.",
       posterUrl: "https://example.com/galactic.jpg",
       duration: 120,
       director: "Hendra Hartanto",
       writer: "Hendra Hartanto",
+      releasetDate: now,
+      endDate: end,
+      isFeatured: true,
+      status: "ACTIVE", // pakai enum MovieStatus
+      genres: {
+        create: genreIds.map((genreId) => ({
+          genre: { connect: { id: genreId } },
+        })),
+      },
     },
   });
-
-  const relations = genreIds.map((genreId) => ({
-    genreId,
-    movieId: movie.id,
-  }));
-
-  await prisma.genresOnMovies.createMany({ data: relations });
 
   return movie;
 }
@@ -61,13 +67,13 @@ async function main() {
     },
   });
 
-  // 4. Seed theater (using service, includes seats)
+  // 4. Seed theater (pakai service)
   const theater = await theaterService.createTheater({
     name: "Cinema XXI Mega Mall",
     locationId: location.id,
   });
 
-  // 5. Seed showtime (using service, includes SeatsOnShowTimes)
+  // 5. Seed showtime
   const now = new Date();
   const showTimeStart = "19:00";
   const showTimeEnd = "21:00";
