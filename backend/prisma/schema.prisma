@@ -38,7 +38,7 @@ model Movie {
   duration       Int
   director       String?
   writer         String?
-  releasetDate   DateTime?
+  releaseDate    DateTime?
   endDate        DateTime?
   isFeatured     Boolean
   status         MovieStatus

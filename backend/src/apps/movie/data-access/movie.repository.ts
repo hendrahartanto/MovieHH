@@ -11,7 +11,7 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
       duration: newMovieData.duration,
       director: newMovieData.director,
       writer: newMovieData.writer,
-      releasetDate: newMovieData.releasetDate,
+      releaseDate: newMovieData.releaseDate,
       endDate: newMovieData.endDate,
       isFeatured: newMovieData.isFeatured,
       status: newMovieData.status,

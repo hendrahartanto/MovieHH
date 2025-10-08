@@ -33,7 +33,7 @@ async function seedMovieWithGenres(genreIds: string[]) {
       duration: 120,
       director: "Hendra Hartanto",
       writer: "Hendra Hartanto",
-      releasetDate: now,
+      releaseDate: now,
       endDate: end,
       isFeatured: true,
       status: "ACTIVE", // pakai enum MovieStatus

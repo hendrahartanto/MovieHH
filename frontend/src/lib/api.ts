@@ -18,6 +18,12 @@ export enum SeatStatus {
   RESERVED = "RESERVED",
 }
 
+export enum MovieStatus {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  COMING_SOON = "COMING_SOON",
+}
+
 export type Pagination = {
   page: number;
   limit: number;
@@ -38,11 +44,15 @@ export type User = {
 export type Movie = {
   id: string;
   title: string;
-  description?: string;
+  synopsis?: string;
+  posterUrl: string;
+  duration: number;
   director?: string;
   writer?: string;
-  duration: number;
-  posterUrl: string;
+  releaseDate?: Date;
+  endDate?: Date;
+  isFeatured: boolean;
+  status: MovieStatus;
   genres: Genre[];
   movieSchedules: MovieSchedule[];
   createdAt: Date;

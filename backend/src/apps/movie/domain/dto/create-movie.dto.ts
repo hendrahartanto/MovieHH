@@ -14,7 +14,7 @@ export const createMovieSchema = z.object({
     }),
   director: z.string().optional(),
   writer: z.string().optional(),
-  releasetDate: z
+  releaseDate: z
     .string()
     .optional()
     .transform((val) => (val ? new Date(val) : undefined)),
@@ -22,7 +22,13 @@ export const createMovieSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? new Date(val) : undefined)),
-  isFeatured: z.boolean().default(false),
+  isFeatured: z
+    .union([z.string(), z.boolean()])
+    .transform((val) => {
+      if (typeof val === "boolean") return val;
+      return val === "true";
+    })
+    .default(false),
   status: movieStatusEnum,
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
 });

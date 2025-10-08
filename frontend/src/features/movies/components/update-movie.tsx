@@ -18,6 +18,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit, Search } from "lucide-react";
@@ -65,11 +72,19 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
     resolver: zodResolver(updateMovieInputSchema),
     defaultValues: {
       title: movie.title,
-      description: movie.description || "",
+      synopsis: movie.synopsis || "",
       poster: undefined,
       director: movie.director || "",
       writer: movie.writer || "",
       duration: movie.duration || undefined,
+      releaseDate: movie.releaseDate
+        ? new Date(movie.releaseDate).toISOString().split("T")[0]
+        : undefined,
+      endDate: movie.endDate
+        ? new Date(movie.endDate).toISOString().split("T")[0]
+        : undefined,
+      isFeatured: movie.isFeatured || false,
+      status: movie.status || "ACTIVE",
       genreIds: movie.genres?.map((genre) => genre.id) || [],
     },
   });
@@ -121,82 +136,158 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
 
             <FormField
               control={form.control}
-              name="description"
+              name="synopsis"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (optional)</FormLabel>
+                  <FormLabel>Synopsis (optional)</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Enter movie description"
+                      placeholder="Enter movie synopsis"
                       rows={4}
                       {...field}
                     />
                   </FormControl>
                   <FormDescription>
-                    Provide a brief description of the movie plot.
+                    Provide a brief synopsis of the movie plot.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="director"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Director (optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter director name" {...field} />
-                  </FormControl>
-                  <FormDescription>Who directed this movie?</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="director"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Director (optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter director name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="writer"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Writer (optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter writer name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Duration (minutes)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={1}
+                        placeholder="Enter duration"
+                        value={field.value === 0 ? "0" : String(field.value)}
+                        onChange={(e) => {
+                          let val = e.target.value;
+                          if (val === "") {
+                            field.onChange(0);
+                            return;
+                          }
+                          const num = Number(val);
+                          field.onChange(isNaN(num) ? 0 : num);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Status</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="ACTIVE">Active</SelectItem>
+                        <SelectItem value="INACTIVE">Inactive</SelectItem>
+                        <SelectItem value="COMING_SOON">Coming Soon</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="releaseDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Release Date (optional)</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>End Date (optional)</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
-              name="writer"
+              name="isFeatured"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Writer (optional)</FormLabel>
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
-                    <Input placeholder="Enter writer name" {...field} />
-                  </FormControl>
-                  <FormDescription>Who wrote this movie?</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="duration"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Duration (minutes)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min={1}
-                      placeholder="Enter duration in minutes"
-                      value={field.value === 0 ? "0" : String(field.value)}
-                      onChange={(e) => {
-                        let val = e.target.value;
-                        if (val === "") {
-                          field.onChange(0);
-                          return;
-                        }
-                        const num = Number(val);
-                        field.onChange(isNaN(num) ? 0 : num);
-                      }}
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Provide the runtime of the movie in minutes.
-                  </FormDescription>
-                  <FormMessage />
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Featured Movie</FormLabel>
+                    <FormDescription>
+                      Mark this movie as featured to display it prominently.
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />
@@ -302,23 +393,17 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
             />
 
             {form.watch("poster") ? (
-              <div className="space-y-2">
-                <FormLabel className="text-foreground font-medium">
-                  Poster Preview
-                </FormLabel>
+              <div className="">
                 <div className="border border-border rounded-lg p-4 bg-card">
                   <img
                     src={URL.createObjectURL(form.watch("poster") as File)}
-                    alt="Movie poster preview"
+                    alt="Poster preview"
                     className="w-32 h-48 object-cover rounded-md mx-auto"
                   />
                 </div>
               </div>
             ) : movie.posterUrl ? (
-              <div className="space-y-2">
-                <FormLabel className="text-foreground font-medium">
-                  Current Poster
-                </FormLabel>
+              <div className="">
                 <div className="border border-border rounded-lg p-4 bg-card">
                   <img
                     src={formatImageUrl(movie.posterUrl)}

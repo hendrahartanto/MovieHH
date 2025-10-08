@@ -7,6 +7,8 @@ import {
   ImageIcon,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  Star,
 } from "lucide-react";
 
 import {
@@ -24,6 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DeleteMovie } from "./delete-movie";
 import { UpdateMovie } from "./update-movie";
 import { formatImageUrl } from "@/helper/image-helper";
+import { getStatusLabel, getStatusVariant } from "@/helper/enum-display-helper";
 
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,6 +54,12 @@ export const MoviesList = () => {
     return <EmptyMoviesState />;
   }
 
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+  };
+
   return (
     <div className="space-y-6">
       <Card className="p-0">
@@ -59,9 +68,10 @@ export const MoviesList = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="pl-6">Movie</TableHead>
+                <TableHead>Info</TableHead>
                 <TableHead>Genres</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>Schedules</TableHead>
-                <TableHead>Created</TableHead>
                 <TableHead className="text-right pr-6">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -82,22 +92,56 @@ export const MoviesList = () => {
                             <ImageIcon className="w-5 h-5 text-muted-foreground" />
                           </div>
                         )}
+                        {movie.isFeatured && (
+                          <div className="absolute top-1 right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <Star className="w-3 h-3 text-white fill-white" />
+                          </div>
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <h3 className="font-semibold truncate">
                           {movie.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                          {movie.description}
-                        </p>
+                        {movie.synopsis && (
+                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                            {movie.synopsis}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </TableCell>
 
-                  {/* Genres */}
+                  <TableCell>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-sm">
+                          {formatDuration(movie.duration)}
+                        </span>
+                      </div>
+                      {movie.director && (
+                        <p className="text-xs text-muted-foreground">
+                          Dir: {movie.director}
+                        </p>
+                      )}
+                      {movie.releaseDate && (
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(movie.releaseDate).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  </TableCell>
+
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {movie.genres.slice(0, 3).map((genre) => (
+                      {movie.genres.slice(0, 2).map((genre) => (
                         <Badge
                           key={genre.id}
                           variant="secondary"
@@ -107,12 +151,21 @@ export const MoviesList = () => {
                           {genre.name}
                         </Badge>
                       ))}
-                      {movie.genres.length > 3 && (
+                      {movie.genres.length > 2 && (
                         <Badge variant="outline" className="text-xs">
-                          +{movie.genres.length - 3} more
+                          +{movie.genres.length - 2}
                         </Badge>
                       )}
                     </div>
+                  </TableCell>
+
+                  <TableCell>
+                    <Badge
+                      variant={getStatusVariant(movie.status)}
+                      className="text-xs"
+                    >
+                      {getStatusLabel(movie.status)}
+                    </Badge>
                   </TableCell>
 
                   <TableCell>
@@ -129,16 +182,6 @@ export const MoviesList = () => {
                     </div>
                   </TableCell>
 
-                  <TableCell>
-                    <span className="text-sm text-muted-foreground">
-                      {new Date(movie.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </TableCell>
-
                   <TableCell className="text-right pr-6">
                     <div className="flex items-center gap-2 justify-end">
                       <Button
@@ -146,7 +189,6 @@ export const MoviesList = () => {
                         size="sm"
                         className="h-8 w-8 p-0"
                         onClick={() => {
-                          // Handle view details
                           console.log("View details for movie:", movie.id);
                         }}
                       >
@@ -243,10 +285,13 @@ const MovieTableSkeleton = () => {
                 <Skeleton className="h-4 w-16" />
               </TableHead>
               <TableHead>
-                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-16" />
               </TableHead>
               <TableHead>
                 <Skeleton className="h-4 w-16" />
+              </TableHead>
+              <TableHead>
+                <Skeleton className="h-4 w-20" />
               </TableHead>
               <TableHead className="text-right pr-6">
                 <Skeleton className="h-4 w-16 ml-auto" />
@@ -266,16 +311,22 @@ const MovieTableSkeleton = () => {
                   </div>
                 </TableCell>
                 <TableCell>
+                  <div className="space-y-1">
+                    <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-3 w-20" />
+                  </div>
+                </TableCell>
+                <TableCell>
                   <div className="flex gap-1">
                     <Skeleton className="h-6 w-16 rounded-full" />
                     <Skeleton className="h-6 w-12 rounded-full" />
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-6 w-20 rounded-full" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-4 w-20" />
                 </TableCell>
                 <TableCell className="text-right pr-6">
                   <Skeleton className="w-8 h-8 ml-auto" />

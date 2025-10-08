@@ -5,14 +5,14 @@ import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { UpdateMovieDTO } from "./dto/update-movie.dto";
 
 const createMovie = async (createMovieData: CreateMovieDTO) => {
-  const { releasetDate, endDate, genreIds } = createMovieData;
+  const { releaseDate, endDate, genreIds } = createMovieData;
 
   for (const genreId of genreIds) {
     const genre = await genreRepository.getGenreById(genreId);
     if (!genre) throw new BadRequestError("On of the genre is not found");
   }
 
-  if (releasetDate && endDate && endDate <= releasetDate) {
+  if (releaseDate && endDate && endDate <= releaseDate) {
     throw new BadRequestError("End date must be after release date");
   }
 
