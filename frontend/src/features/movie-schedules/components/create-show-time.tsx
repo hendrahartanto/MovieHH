@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -6,15 +5,7 @@ import {
   CreateShowTimeInput,
   useCreateShowTime,
 } from "../api/create-show-time";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Modal } from "@/components/ui/modal";
 import {
   Form,
   FormControl,
@@ -28,13 +19,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+import { useEffect, useState } from "react";
 
 interface CreateShowTimeProps {
   movieScheduleId: string;
 }
 
 export const CreateShowTime = ({ movieScheduleId }: CreateShowTimeProps) => {
-  const [open, setOpen] = useState(false);
+  const [isClose, setIsClose] = useState(false);
+
   const createShowTime = useCreateShowTime({
     mutationConfig: {
       onSuccess: (response) => {
@@ -43,10 +36,20 @@ export const CreateShowTime = ({ movieScheduleId }: CreateShowTimeProps) => {
           title: "Success",
           message: response.message,
         });
-        setOpen(false);
+        setIsClose(true);
+        form.reset();
+      },
+      onError: () => {
+        setIsClose(true);
       },
     },
   });
+
+  useEffect(() => {
+    if (isClose) {
+      setIsClose(false);
+    }
+  }, [isClose]);
 
   const form = useForm<CreateShowTimeInput>({
     resolver: zodResolver(createShowTimeInputSchema),
@@ -61,94 +64,72 @@ export const CreateShowTime = ({ movieScheduleId }: CreateShowTimeProps) => {
     createShowTime.mutate({ data });
   };
 
+  const handleCancel = () => {
+    form.reset();
+    setIsClose(true);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Modal
+      title="Create Show Time"
+      triggerButton={
         <Button variant="ghost" size="sm" className="flex items-center gap-1">
           <Plus className="h-4 w-4" />
           Add Show Time
         </Button>
-      </DialogTrigger>
+      }
+      isDone={createShowTime.isSuccess || isClose}
+    >
+      <Form {...form}>
+        <form
+          id="create-show-time-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4 py-2"
+        >
+          <FormField
+            control={form.control}
+            name="startTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Start Time</FormLabel>
+                <FormControl>
+                  <Input type="time" step="60" {...field} placeholder="HH:mm" />
+                </FormControl>
+                <FormDescription>
+                  Enter the start time for the show.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Create Show Time</DialogTitle>
-          <DialogDescription>
-            Set the time range for this movie schedule.
-          </DialogDescription>
-        </DialogHeader>
+          <FormField
+            control={form.control}
+            name="endTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>End Time</FormLabel>
+                <FormControl>
+                  <Input type="time" step="60" {...field} placeholder="HH:mm" />
+                </FormControl>
+                <FormDescription>
+                  Enter the end time for the show.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Form {...form}>
-          <form
-            id="create-show-time-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 py-2"
-          >
-            {/* Start Time */}
-            <FormField
-              control={form.control}
-              name="startTime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Start Time</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="time"
-                      step="60"
-                      {...field}
-                      placeholder="HH:mm"
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Enter the start time for the show.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* End Time */}
-            <FormField
-              control={form.control}
-              name="endTime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>End Time</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="time"
-                      step="60"
-                      {...field}
-                      placeholder="HH:mm"
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Enter the end time for the show.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setOpen(false)}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="create-show-time-form"
-            disabled={createShowTime.isPending}
-          >
-            {createShowTime.isPending ? "Creating..." : "Create"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button type="button" variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={createShowTime.isPending}>
+              {createShowTime.isPending ? "Creating..." : "Create"}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </Modal>
   );
 };

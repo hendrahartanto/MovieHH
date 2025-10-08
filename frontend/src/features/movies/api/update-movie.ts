@@ -26,10 +26,21 @@ export const updateMovieInputSchema = z.object({
       { message: "Only image files are allowed" }
     )
     .optional(),
+  banner: z
+    .instanceof(File)
+    .refine(
+      (file) =>
+        ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+          file.type
+        ),
+      { message: "Only image files are allowed" }
+    )
+    .optional(),
   director: z.string().optional(),
   writer: z.string().optional(),
   isFeatured: z.boolean().default(false),
   status: movieStatusEnum,
+  trailerUrl: z.string().url().optional(),
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
 });
 
@@ -51,10 +62,19 @@ export const updateMovie = ({
   formData.append("status", data.status);
   formData.append("isFeatured", String(data.isFeatured));
 
+  if (data.trailerUrl) {
+    formData.append("trailerUrl", data.trailerUrl);
+  }
+
+  // genreIds multiple
   data.genreIds.forEach((id) => formData.append("genreIds", id));
 
+  // optional file upload
   if (data.poster) {
     formData.append("poster", data.poster);
+  }
+  if (data.banner) {
+    formData.append("banner", data.banner);
   }
 
   return api.put(`/movies/${movieId}`, formData, {
@@ -68,11 +88,14 @@ type UseUpdateMovieOptions = {
   mutationConfig?: MutationConfig<typeof updateMovie>;
 };
 
-export const useUpdateMovie = ({ mutationConfig }: UseUpdateMovieOptions) => {
+export const useUpdateMovie = ({
+  mutationConfig,
+}: UseUpdateMovieOptions = {}) => {
   const queryClient = useQueryClient();
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
+    mutationFn: updateMovie,
     onSuccess: (data, ...args) => {
       queryClient.invalidateQueries({
         queryKey: getMoviesQueryOptions().queryKey,
@@ -80,6 +103,5 @@ export const useUpdateMovie = ({ mutationConfig }: UseUpdateMovieOptions) => {
       onSuccess?.(data, ...args);
     },
     ...restConfig,
-    mutationFn: updateMovie,
   });
 };

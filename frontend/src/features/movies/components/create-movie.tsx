@@ -69,11 +69,13 @@ export const CreateMovie = () => {
       title: "",
       synopsis: "",
       poster: undefined,
+      banner: undefined,
       director: "",
       writer: "",
       duration: undefined,
       isFeatured: false,
       status: "ACTIVE",
+      trailerUrl: "",
       genreIds: [],
     },
   });
@@ -233,6 +235,27 @@ export const CreateMovie = () => {
 
             <FormField
               control={form.control}
+              name="trailerUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Trailer URL (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://youtube.com/watch?v=..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Enter the YouTube or video URL for the movie trailer.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="isFeatured"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
@@ -334,33 +357,69 @@ export const CreateMovie = () => {
               />
             )}
 
-            <FormField
-              control={form.control}
-              name="poster"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Poster (optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => field.onChange(e.target.files?.[0])}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="poster"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Poster (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => field.onChange(e.target.files?.[0])}
+                      />
+                    </FormControl>
+                    <FormDescription>Upload movie poster image</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {form.watch("poster") && (
-              <div className="">
-                <div className="border border-border rounded-lg p-4 bg-card">
-                  <img
-                    src={URL.createObjectURL(form.watch("poster") as File)}
-                    alt="Poster preview"
-                    className="w-32 h-48 object-cover rounded-md mx-auto"
-                  />
-                </div>
+              <FormField
+                control={form.control}
+                name="banner"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Banner (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => field.onChange(e.target.files?.[0])}
+                      />
+                    </FormControl>
+                    <FormDescription>Upload movie banner image</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {(form.watch("poster") || form.watch("banner")) && (
+              <div className="flex flex-col gap-4">
+                {form.watch("poster") && (
+                  <div className="border border-border rounded-lg p-4 bg-card">
+                    <p className="text-sm font-medium mb-2">Poster Preview</p>
+                    <img
+                      src={URL.createObjectURL(form.watch("poster") as File)}
+                      alt="Poster preview"
+                      className="w-full h-48 object-cover rounded-md"
+                    />
+                  </div>
+                )}
+
+                {form.watch("banner") && (
+                  <div className="border border-border rounded-lg p-4 bg-card">
+                    <p className="text-sm font-medium mb-2">Banner Preview</p>
+                    <img
+                      src={URL.createObjectURL(form.watch("banner") as File)}
+                      alt="Banner preview"
+                      className="w-full h-48 object-cover rounded-md"
+                    />
+                  </div>
+                )}
               </div>
             )}
           </form>

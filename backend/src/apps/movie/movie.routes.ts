@@ -12,14 +12,20 @@ router.post(
   "/",
   authenticate,
   authorize(Role.ADMIN),
-  upload.single("poster"),
+  upload.fields([
+    { name: "poster", maxCount: 1 },
+    { name: "banner", maxCount: 1 },
+  ]),
   movieController.createMovie
 );
 router.put(
   "/:movieId",
   authenticate,
   authorize(Role.ADMIN),
-  upload.single("poster"),
+  upload.fields([
+    { name: "poster", maxCount: 1 },
+    { name: "banner", maxCount: 1 },
+  ]),
   movieController.updateMovie
 );
 router.delete(

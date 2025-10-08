@@ -35,11 +35,13 @@ model Movie {
   title          String
   synopsis       String?
   posterUrl      String?
+  bannerUrl      String?
   duration       Int
   director       String?
   writer         String?
   isFeatured     Boolean
   status         MovieStatus
+  trailerUrl     String?
   genres         GenresOnMovies[]
   movieSchedules MovieSchedule[]
 

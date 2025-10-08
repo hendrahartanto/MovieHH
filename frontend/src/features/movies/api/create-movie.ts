@@ -26,10 +26,21 @@ export const createMovieInputSchema = z.object({
       { message: "Only image files are allowed" }
     )
     .optional(),
+  banner: z
+    .instanceof(File)
+    .refine(
+      (file) =>
+        ["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(
+          file.type
+        ),
+      { message: "Only image files are allowed" }
+    )
+    .optional(),
   director: z.string().optional(),
   writer: z.string().optional(),
   isFeatured: z.boolean().default(false),
   status: movieStatusEnum,
+  trailerUrl: z.string().url().optional(),
   genreIds: z.array(z.string().uuid()).min(1, "At least one genre is required"),
 });
 
@@ -45,14 +56,23 @@ export const createMovie = ({
   formData.append("synopsis", data.synopsis || "");
   formData.append("writer", data.writer || "");
   formData.append("director", data.director || "");
-  formData.append("duration", String(data.duration));
+  formData.append("duration", String(data.duration)); // backend terima string
   formData.append("status", data.status);
   formData.append("isFeatured", String(data.isFeatured));
 
+  if (data.trailerUrl) {
+    formData.append("trailerUrl", data.trailerUrl);
+  }
+
+  // genreIds multiple
   data.genreIds.forEach((id) => formData.append("genreIds", id));
 
+  // optional file upload
   if (data.poster) {
     formData.append("poster", data.poster);
+  }
+  if (data.banner) {
+    formData.append("banner", data.banner);
   }
 
   return api.post("/movies", formData, {
@@ -70,10 +90,10 @@ export const useCreateMovie = ({
   mutationConfig,
 }: UseCreateMovieOptions = {}) => {
   const queryClient = useQueryClient();
-
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
+    mutationFn: createMovie,
     onSuccess: (...args) => {
       queryClient.invalidateQueries({
         queryKey: getMoviesQueryOptions().queryKey,
@@ -81,6 +101,5 @@ export const useCreateMovie = ({
       onSuccess?.(...args);
     },
     ...restConfig,
-    mutationFn: createMovie,
   });
 };

@@ -66,7 +66,11 @@ const getMovieScheduleByDateRange = async (
   });
 };
 
-const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
+const getMovieScheduleByMovieIdAndDateAndTheaterId = (
+  movieId: string,
+  date: Date,
+  theaterId: string
+) => {
   const start = startOfDay(date);
   const end = endOfDay(date);
 
@@ -74,6 +78,7 @@ const getMovieScheduleByMovieIdAndDate = (movieId: string, date: Date) => {
     where: {
       date: { gte: start, lte: end },
       movieId,
+      theaterId,
     },
   });
 };
@@ -215,7 +220,7 @@ export default {
   createMovieSchedule,
   getMovieScheduleById,
   createShowTime,
-  getMovieScheduleByMovieIdAndDate,
+  getMovieScheduleByMovieIdAndDateAndTheaterId,
   getMovieScheduleByDateRange,
   getShowTimeByDateRange,
   getShowTimeById,

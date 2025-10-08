@@ -26,10 +26,14 @@ const createMovieSchedule = async (
   if (!existingTheater) throw new NoDataError("Theater not found");
 
   const existingMovieSchedule =
-    await showTimeRepository.getMovieScheduleByMovieIdAndDate(movieId, date);
+    await showTimeRepository.getMovieScheduleByMovieIdAndDateAndTheaterId(
+      movieId,
+      date,
+      theaterId
+    );
   if (existingMovieSchedule)
     throw new BadRequestError(
-      "Schedule with the given date and movie already exists"
+      "Schedule with the given date, movie, and theater already exists"
     );
 
   return await showTimeRepository.createMovieSchedule(newMovieScheduleData);
@@ -62,13 +66,14 @@ const updateMovieSchedule = async (
   if (!existingMovieSchedule) throw new NoDataError("Movie schedule not found");
 
   const conflictedMovieSchedule =
-    await showTimeRepository.getMovieScheduleByMovieIdAndDate(
+    await showTimeRepository.getMovieScheduleByMovieIdAndDateAndTheaterId(
       updatedMovieSchedule.movieId,
-      updatedMovieSchedule.date
+      updatedMovieSchedule.date,
+      updatedMovieSchedule.theaterId
     );
   if (conflictedMovieSchedule)
     throw new BadRequestError(
-      "Movie schedule with this movie and date already exists"
+      "Schedule with the given date, movie, and theater already exists"
     );
 
   const updatedShowTimes = existingMovieSchedule.showTimes.map((st) => {

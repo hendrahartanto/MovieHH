@@ -8,11 +8,13 @@ const createMovie = async (newMovieData: CreateMovieDTO) => {
       title: newMovieData.title,
       synopsis: newMovieData.synopsis,
       posterUrl: newMovieData.posterUrl,
+      bannerUrl: newMovieData.bannerUrl,
       duration: newMovieData.duration,
       director: newMovieData.director,
       writer: newMovieData.writer,
       isFeatured: newMovieData.isFeatured,
       status: newMovieData.status,
+      trailerUrl: newMovieData.trailerUrl,
       genres: {
         create: newMovieData.genreIds.map((genreId) => ({
           genre: { connect: { id: genreId } },

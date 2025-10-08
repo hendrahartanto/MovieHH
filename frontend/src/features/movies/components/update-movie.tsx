@@ -74,11 +74,13 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
       title: movie.title,
       synopsis: movie.synopsis || "",
       poster: undefined,
+      banner: undefined,
       director: movie.director || "",
       writer: movie.writer || "",
       duration: movie.duration || undefined,
       isFeatured: movie.isFeatured || false,
       status: movie.status || "ACTIVE",
+      trailerUrl: movie.trailerUrl,
       genreIds: movie.genres?.map((genre) => genre.id) || [],
     },
   });
@@ -237,6 +239,27 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
 
             <FormField
               control={form.control}
+              name="trailerUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Trailer URL (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://youtube.com/watch?v=..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Enter the YouTube or video URL for the movie trailer.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="isFeatured"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
@@ -338,27 +361,50 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
               />
             )}
 
-            <FormField
-              control={form.control}
-              name="poster"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Poster (optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => field.onChange(e.target.files?.[0])}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="poster"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Poster (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => field.onChange(e.target.files?.[0])}
+                      />
+                    </FormControl>
+                    <FormDescription>Upload movie poster image</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="banner"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Banner (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => field.onChange(e.target.files?.[0])}
+                      />
+                    </FormControl>
+                    <FormDescription>Upload movie banner image</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {form.watch("poster") ? (
               <div className="">
                 <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">New Poster Preview</p>
                   <img
                     src={URL.createObjectURL(form.watch("poster") as File)}
                     alt="Poster preview"
@@ -369,9 +415,38 @@ export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
             ) : movie.posterUrl ? (
               <div className="">
                 <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">
+                    Current Poster Preview
+                  </p>
                   <img
                     src={formatImageUrl(movie.posterUrl)}
                     alt="Current movie poster"
+                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              </div>
+            ) : null}
+
+            {form.watch("banner") ? (
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">New Banner Preview</p>
+                  <img
+                    src={URL.createObjectURL(form.watch("banner") as File)}
+                    alt="banner preview"
+                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              </div>
+            ) : movie.bannerUrl ? (
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">
+                    Current Banner Preview
+                  </p>
+                  <img
+                    src={formatImageUrl(movie.bannerUrl)}
+                    alt="Current movie banner"
                     className="w-32 h-48 object-cover rounded-md mx-auto"
                   />
                 </div>

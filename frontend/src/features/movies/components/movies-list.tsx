@@ -103,7 +103,7 @@ export const MoviesList = () => {
                           {movie.title}
                         </h3>
                         {movie.synopsis && (
-                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                          <p className="text-sm text-muted-foreground mt-1 text-wrap line-clamp-2">
                             {movie.synopsis}
                           </p>
                         )}
@@ -122,18 +122,6 @@ export const MoviesList = () => {
                       {movie.director && (
                         <p className="text-xs text-muted-foreground">
                           Dir: {movie.director}
-                        </p>
-                      )}
-                      {movie.releaseDate && (
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(movie.releaseDate).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )}
                         </p>
                       )}
                     </div>
