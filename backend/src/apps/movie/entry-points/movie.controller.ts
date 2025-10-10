@@ -55,6 +55,14 @@ const getMovie = asyncHandler(async (req, res) => {
   new SuccessResponse("Get movie successful", { movie }).send(res);
 });
 
+const getFeaturedMovies = asyncHandler(async (req, res) => {
+  const featuredMovies = await movieService.getFeaturedMovies();
+
+  new SuccessResponse("Get featured movie successful", { featuredMovies }).send(
+    res
+  );
+});
+
 const updateMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
 
@@ -95,4 +103,5 @@ export default {
   deleteMovie,
   getMovies,
   getMovie,
+  getFeaturedMovies,
 };

@@ -67,6 +67,12 @@ const getMovieById = async (movieId: string) => {
   });
 };
 
+const getFeaturedMovies = async () => {
+  return prisma.movie.findMany({
+    where: { isFeatured: true },
+  });
+};
+
 const updateMovie = async (
   movieId: string,
   data: {
@@ -107,4 +113,5 @@ export default {
   updateMovie,
   updateGenres,
   deleteMovie,
+  getFeaturedMovies,
 };
