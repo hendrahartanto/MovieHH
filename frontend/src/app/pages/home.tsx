@@ -59,7 +59,6 @@ const FeaturedMoviesCarousel = () => {
 
   return (
     <div className="relative w-full h-[650px] overflow-hidden bg-background group">
-      {/* Background Image with Gradient Overlay */}
       <div className="absolute inset-0">
         <img
           src={formatImageUrl(currentMovie.bannerUrl || "")}
@@ -70,10 +69,8 @@ const FeaturedMoviesCarousel = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
 
-      {/* Content */}
       <div className="relative layout-middle h-full flex items-center">
         <div className="max-w-2xl space-y-6 py-12">
-          {/* Featured Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
             <Star className="w-4 h-4 fill-primary text-primary" />
             <span className="text-sm font-medium text-primary">
@@ -81,12 +78,10 @@ const FeaturedMoviesCarousel = () => {
             </span>
           </div>
 
-          {/* Title */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground leading-tight drop-shadow-lg">
             {currentMovie.title}
           </h1>
 
-          {/* Meta Information */}
           <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
             {currentMovie.duration && (
               <div className="flex items-center gap-2">
@@ -105,14 +100,12 @@ const FeaturedMoviesCarousel = () => {
             )}
           </div>
 
-          {/* Synopsis */}
           {currentMovie.synopsis && (
             <p className="text-lg text-muted-foreground line-clamp-3 max-w-xl">
               {currentMovie.synopsis}
             </p>
           )}
 
-          {/* Director & Writer */}
           {(currentMovie.director || currentMovie.writer) && (
             <div className="space-y-1 text-sm">
               {currentMovie.director && (
@@ -130,7 +123,6 @@ const FeaturedMoviesCarousel = () => {
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 pt-4">
             <button className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-colors shadow-lg shadow-primary/20">
               Book Tickets
@@ -144,7 +136,6 @@ const FeaturedMoviesCarousel = () => {
         </div>
       </div>
 
-      {/* Navigation Arrows */}
       {movies.length > 1 && (
         <>
           <button
@@ -164,7 +155,6 @@ const FeaturedMoviesCarousel = () => {
         </>
       )}
 
-      {/* Dots Navigation */}
       {movies.length > 1 && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
           {movies.map((_, index) => (
