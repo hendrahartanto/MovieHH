@@ -30,6 +30,10 @@ const getFeaturedMovies = async () => {
   return movieRepository.getFeaturedMovies();
 };
 
+const getActiveMovies = async () => {
+  return movieRepository.getActiveMovies();
+}
+
 const updateMovie = async (
   movieId: string,
   updateMovieData: UpdateMovieDTO
@@ -61,4 +65,5 @@ export default {
   updateMovie,
   deleteMovie,
   getFeaturedMovies,
+  getActiveMovies,
 };
