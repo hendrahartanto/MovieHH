@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get("/", movieController.getMovies);
 router.get("/featured", movieController.getFeaturedMovies);
+router.get("/active", movieController.getActiveMovies);
 router.get("/:movieId", movieController.getMovie);
 router.post(
   "/",
