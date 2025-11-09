@@ -2,8 +2,29 @@ import { PrismaClient } from "@prisma/client";
 import theaterService from "../src/apps/theater/domain/theater.service";
 import showTimeService from "../src/apps/show-time/domain/show-time.service";
 import { parse, addMinutes, format } from "date-fns";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
+
+async function seedUsers() {
+  const adminEmail = "admin@gmail.com";
+  const adminPassword = "123123";
+
+  const hashedPassword = await bcrypt.hash(adminPassword, 10);
+
+  const admin = await prisma.user.upsert({
+    where: { email: adminEmail },
+    update: {},
+    create: {
+      email: adminEmail,
+      name: "admin",
+      role: "ADMIN",
+      password: hashedPassword,
+    },
+  });
+
+  return admin;
+}
 
 async function seedGenres() {
   const genreNames = [
@@ -182,6 +203,8 @@ async function seedShowtimes(movies: any[], theaters: any[]) {
 
 async function main() {
   console.log("🚀 Starting seeding...");
+
+  const users = seedUsers();
 
   // 1. Genres
   const genres = await seedGenres();
