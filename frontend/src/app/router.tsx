@@ -7,6 +7,10 @@ import { AppRoot } from "./pages/root";
 import { ProtectedRoute } from "@/lib/auth";
 import { AdminRoot } from "./pages/admin/root";
 
+//TODO:
+//error boundary per route
+//role-based admin gurad
+
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
@@ -64,21 +68,21 @@ const createAppRouter = (queryClient: QueryClient) =>
           path: paths.admin.locations.path,
           lazy: () =>
             import("./pages/admin/locations/locations").then(
-              convert(queryClient)
+              convert(queryClient),
             ),
         },
         {
           path: paths.admin.theaters.path,
           lazy: () =>
             import("./pages/admin/theaters/theaters").then(
-              convert(queryClient)
+              convert(queryClient),
             ),
         },
         {
           path: paths.admin.movieSchedules.path,
           lazy: () =>
             import("./pages/admin/movie-schedules/movie-schedules").then(
-              convert(queryClient)
+              convert(queryClient),
             ),
         },
       ],
