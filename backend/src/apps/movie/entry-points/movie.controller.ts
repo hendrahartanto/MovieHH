@@ -69,6 +69,12 @@ const getActiveMovies = asyncHandler(async (req, res) => {
   new SuccessResponse("Get active movies successful", { activeMovies }).send((res));
 })
 
+const getUpcomingMovies = asyncHandler(async (req, res) => {
+  const upcomingMovies = await movieService.getUpcomingMovies();
+
+  new SuccessResponse("Get upcoming movies successful", { upcomingMovies }).send((res));
+})
+
 const updateMovie = asyncHandler(async (req, res) => {
   const { movieId } = req.params;
 
@@ -111,4 +117,5 @@ export default {
   getMovie,
   getFeaturedMovies,
   getActiveMovies,
+  getUpcomingMovies,
 };

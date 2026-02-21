@@ -80,6 +80,13 @@ const getActiveMovies = async () => {
   })
 }
 
+const getUpcomingMovies = async () => {
+  return prisma.movie.findMany({
+    where: { status: "COMING_SOON" },
+    include: { movieSchedules: true }
+  })
+}
+
 const updateMovie = async (
   movieId: string,
   data: {
@@ -122,4 +129,5 @@ export default {
   deleteMovie,
   getFeaturedMovies,
   getActiveMovies,
+  getUpcomingMovies,
 };
