@@ -75,7 +75,8 @@ const getFeaturedMovies = async () => {
 
 const getActiveMovies = async () => {
   return prisma.movie.findMany({
-    where: { status: "ACTIVE" }
+    where: { status: "ACTIVE" },
+    include: { movieSchedules: true }
   })
 }
 

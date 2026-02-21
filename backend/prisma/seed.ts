@@ -55,10 +55,8 @@ async function seedMoviesWithGenres(genreMap: Record<string, string>) {
       title: "Avengers: Endgame",
       synopsis:
         "The Avengers assemble once more to reverse the destruction caused by Thanos.",
-      posterUrl:
-        "https://m.media-amazon.com/images/I/81ExhpBEbHL._AC_SL1500_.jpg",
-      bannerUrl:
-        "https://cdn.marvel.com/content/1x/avengersendgame_lob_crd_05.jpg",
+      posterUrl: "",
+      bannerUrl: "",
       duration: 181,
       director: "Anthony Russo, Joe Russo",
       writer: "Christopher Markus, Stephen McFeely",
@@ -71,10 +69,8 @@ async function seedMoviesWithGenres(genreMap: Record<string, string>) {
       title: "Interstellar",
       synopsis:
         "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-      posterUrl:
-        "https://m.media-amazon.com/images/I/71n58kS7iDL._AC_SL1188_.jpg",
-      bannerUrl:
-        "https://www.joblo.com/wp-content/uploads/2014/07/interstellar-banner-1.jpg",
+      posterUrl: "",
+      bannerUrl: "",
       duration: 169,
       director: "Christopher Nolan",
       writer: "Jonathan Nolan, Christopher Nolan",
@@ -87,9 +83,8 @@ async function seedMoviesWithGenres(genreMap: Record<string, string>) {
       title: "La La Land",
       synopsis:
         "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations.",
-      posterUrl:
-        "https://m.media-amazon.com/images/I/71pD2T6QFiL._AC_SL1500_.jpg",
-      bannerUrl: "https://i.ytimg.com/vi/0pdqf4P9MB8/maxresdefault.jpg",
+      posterUrl: "",
+      bannerUrl: "",
       duration: 128,
       director: "Damien Chazelle",
       writer: "Damien Chazelle",

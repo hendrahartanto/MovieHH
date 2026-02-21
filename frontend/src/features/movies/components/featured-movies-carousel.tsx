@@ -128,9 +128,11 @@ export const FeaturedMoviesCarousel = () => {
               Book Tickets
             </button>
             {currentMovie.trailerUrl && (
-              <button className="px-8 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-lg transition-colors border border-border">
-                Watch Trailer
-              </button>
+              <a href={currentMovie.trailerUrl} target="_blank">
+                <button className="px-8 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-lg transition-colors border border-border">
+                  Watch Trailer
+                </button>
+              </a>
             )}
           </div>
         </div>
