@@ -22,8 +22,8 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="fixed top-0 left-0 right-0 z-50 flex">
-        <div className="layout-middle py-5 flex justify-between items-center">
+      <div className="content-wrapper fixed top-0 left-0 right-0 z-50 flex">
+        <div className="w-full py-5 flex justify-between items-center">
           <img src={moviehhLogo} className="w-35" />
           <div className="right items-center flex gap-6">
             {navItems.map((item, index) => (

@@ -43,7 +43,7 @@ export const FeaturedMoviesCarousel = () => {
 
   if (isLoading) {
     return (
-      <div className="relative w-full h-[650px] bg-gradient-to-b from-background to-card animate-pulse">
+      <div className="relative w-full h-[650px] bg-linear-to-b from-background to-card animate-pulse">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
@@ -65,11 +65,11 @@ export const FeaturedMoviesCarousel = () => {
           alt={currentMovie.title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-background via-background/50 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
       </div>
 
-      <div className="relative layout-middle h-full flex items-center">
+      <div className="content-wrapper relative h-full flex items-center">
         <div className="max-w-2xl space-y-6 py-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
             <Star className="w-4 h-4 fill-primary text-primary" />
