@@ -2,6 +2,7 @@ import { Play, Ticket, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { useActiveMovies } from "../api/get-active-movies";
 import moviePlaceHolder from "@/assets/movie-placeholder.jpg";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const ActiveMoviesCarousel = () => {
   const { data, isLoading, isError } = useActiveMovies({});
@@ -94,10 +95,25 @@ export const ActiveMoviesCarousel = () => {
   };
 
   if (isLoading) {
+    const skeletonCards = Array.from({ length: 5 });
+
     return (
-      <div className="layout-middle py-12 flex justify-center items-center">
-        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin cinema-glow"></div>
-      </div>
+      <section className="layout-middle py-8">
+        <div className="flex items-center justify-between mb-6">
+          <Skeleton className="h-8 md:h-10 w-48 md:w-64" />
+        </div>
+
+        <div className="relative group/carousel">
+          <div className="flex gap-6 overflow-hidden pb-8 pt-2">
+            {skeletonCards.map((_, index) => (
+              <Skeleton
+                key={`skeleton-${index}`}
+                className="w-64 h-96 md:w-72 md:h-112 shrink-0 rounded-xl"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -153,6 +169,12 @@ export const ActiveMoviesCarousel = () => {
                   <h3 className="text-lg font-bold text-foreground mb-4 line-clamp-2">
                     {movie.title}
                   </h3>
+
+                  {movie.synopsis && (
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-5">
+                      {movie.synopsis}
+                    </p>
+                  )}
 
                   <div className="flex flex-col gap-3 w-full mt-auto mb-4">
                     {hasSchedules && (
