@@ -16,7 +16,7 @@ const getTheaterById = async (theaterId: string) => {
 const getTheatersPaginated = async (
   page: number,
   limit: number,
-  search: string
+  search: string,
 ) => {
   const whereClause: Prisma.TheaterWhereInput = {
     name: {
@@ -42,7 +42,13 @@ const getTheatersPaginated = async (
 };
 
 const getTheaters = async () => {
-  return prisma.theater.findMany();
+  return prisma.theater.findMany({
+    include: {
+      seats: true,
+      movieSchedules: true,
+      location: true,
+    },
+  });
 };
 
 const updateTheater = async (theaterId: string, data: { name: string }) => {

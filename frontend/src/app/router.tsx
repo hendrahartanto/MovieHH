@@ -39,6 +39,10 @@ const createAppRouter = (queryClient: QueryClient) =>
           index: true,
           lazy: () => import("./pages/home").then(convert(queryClient)),
         },
+        {
+          path: paths.cinema.path,
+          lazy: () => import("./pages/cinema").then(convert(queryClient)),
+        },
       ],
     },
     {

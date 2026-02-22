@@ -56,10 +56,8 @@ export const paths = {
     getHref: () => "/",
   },
 
-  app: {
-    root: {
-      path: "app",
-      getHref: () => "/app",
-    },
+  cinema: {
+    path: "/cinema",
+    getHref: () => "/cinema",
   },
 } as const;

@@ -5,12 +5,12 @@ import { Role } from "@prisma/client";
 
 const router = express.Router();
 
+router.get("/", theaterController.getTheaters);
+
 //-------------------------------//
 router.use(authenticate, authorize(Role.ADMIN));
 //-------------------------------//
-
 router.post("/", theaterController.createTheater);
-router.get("/", theaterController.getTheaters);
 router.put("/:theaterId", theaterController.updateTheater);
 router.delete("/:theaterId", theaterController.deleteTheater);
 
