@@ -1,15 +1,15 @@
 import { Play, Ticket, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
-import { useActiveMovies } from "../api/get-active-movies";
 import moviePlaceHolder from "@/assets/movie-placeholder.jpg";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUpcomingMovies } from "../api/get-upcoming-movies";
 
-export const ActiveMoviesCarousel = () => {
-  const { data, isLoading, isError } = useActiveMovies({});
+export const UpcomingMoviesCarousel = () => {
+  const { data, isLoading, isError } = useUpcomingMovies({});
   const carouselRef = useRef<HTMLDivElement>(null);
   const [showArrows, setShowArrows] = useState(false);
 
-  const originalMovies = data?.data.activeMovies || [];
+  const originalMovies = data?.data.upcomingMovies || [];
 
   const movies =
     originalMovies.length > 3
@@ -132,11 +132,11 @@ export const ActiveMoviesCarousel = () => {
       <>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-            Now Showing
+            Upcoming Movies
           </h2>
         </div>
         <div className="text-center text-muted-foreground py-12">
-          <p>No movies are currently showing.</p>
+          <p>There are no upcoming movies at the moment.</p>
         </div>
       </>
     );
@@ -146,7 +146,7 @@ export const ActiveMoviesCarousel = () => {
     <>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-          Now Showing
+          Upcoming Movies
         </h2>
       </div>
 

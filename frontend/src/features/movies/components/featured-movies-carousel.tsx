@@ -163,10 +163,11 @@ export const FeaturedMoviesCarousel = () => {
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`h-1.5 rounded-full transition-all ${index === currentIndex
-                ? "w-12 bg-primary"
-                : "w-6 bg-white/40 hover:bg-white/60"
-                }`}
+              className={`h-1.5 rounded-full transition-all ${
+                index === currentIndex
+                  ? "w-12 bg-primary"
+                  : "w-6 bg-white/40 hover:bg-white/60"
+              }`}
               aria-label={`Go to movie ${index + 1}`}
             />
           ))}
