@@ -51,7 +51,7 @@ export default function MoviesPage() {
   const isSearching = searchQuery.trim().length > 0;
 
   return (
-    <div className="content-wrapper mt-24">
+    <div className="content-wrapper py-24">
       <div className="mb-8">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground">
           Explore Movies

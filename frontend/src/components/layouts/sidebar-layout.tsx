@@ -93,7 +93,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
               {!isCollapsed && (
                 <button
                   onClick={toggleSidebar}
-                  className="p-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 flex-shrink-0"
+                  className="p-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 shrink-0"
                   aria-label="Collapse sidebar"
                 >
                   <PanelLeftClose className="w-5 h-5" />
@@ -132,7 +132,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                       </div>
                       <span className="font-medium">{item.name}</span>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
+                    <div className="absolute inset-0 bg-linear-to-r from-orange-500/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
                   </Link>
                 </li>
               ))}
@@ -175,7 +175,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                         </div>
                         <span className="font-medium">Logout</span>
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-r from-destructive/5 to-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
+                      <div className="absolute inset-0 bg-linear-to-r from-destructive/5 to-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
                     </button>
                   }
                 />

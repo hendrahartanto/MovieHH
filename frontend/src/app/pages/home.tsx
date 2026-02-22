@@ -6,7 +6,7 @@ const HomePage = () => {
   return (
     <div>
       <FeaturedMoviesCarousel />
-      <div className="content-wrapper space-y-4 pt-8">
+      <div className="content-wrapper space-y-4 py-8">
         <ActiveMoviesCarousel />
         <UpcomingMoviesCarousel />
       </div>

@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { ConfirmLogout } from "@/features/auth/components/confirm-logout";
 import moviehhLogo from "@/assets/moviehh_logo.png";
 import { cn } from "@/lib/utils";
+import { Footer } from "../ui/footer";
 
 interface NavbarItem {
   name: string;
@@ -111,6 +112,8 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
       </header>
 
       <main className="grow">{children}</main>
+
+      <Footer />
     </div>
   );
 };
