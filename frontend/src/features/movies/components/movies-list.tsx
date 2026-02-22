@@ -95,7 +95,7 @@ export const MoviesList = () => {
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
                       <div
-                        className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0"
+                        className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted shrink-0"
                         onClick={() => {
                           if (movie.posterUrl) openLightbox(movie.posterUrl);
                         }}
@@ -257,7 +257,7 @@ export const MoviesList = () => {
                           {pageNum}
                         </Button>
                       );
-                    }
+                    },
                   )}
                 </div>
 

@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
-import { MapPin, Film, Armchair, Search } from "lucide-react";
+import { MapPin, Film, Armchair } from "lucide-react";
 import { useTheaters } from "../api/get-theaters";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserSearchBox } from "@/components/ui/user-search-box";
 
 export const CinemaList = () => {
   const { data, isLoading, isError } = useTheaters({ all: true });
@@ -31,7 +32,6 @@ export const CinemaList = () => {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        {/* Skeleton untuk Search Bar */}
         <Skeleton className="h-10 w-full max-w-md rounded-md cinema-border" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
@@ -68,19 +68,13 @@ export const CinemaList = () => {
 
   return (
     <div className="space-y-6">
-      {/* Search Bar */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search cinemas by name or location..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 bg-card text-foreground border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent placeholder:text-muted-foreground transition-all"
-        />
-      </div>
+      <UserSearchBox
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search cinemas by name or location..."
+        className="w-full max-w-md"
+      />
 
-      {/* Empty State untuk Search */}
       {filteredTheaters.length === 0 && (
         <div className="py-12 text-center text-muted-foreground bg-card/50 rounded-xl cinema-border">
           <p className="text-lg">
@@ -95,7 +89,6 @@ export const CinemaList = () => {
         </div>
       )}
 
-      {/* Grid Bioskop */}
       {filteredTheaters.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTheaters.map((theater) => (

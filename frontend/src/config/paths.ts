@@ -56,8 +56,13 @@ export const paths = {
     getHref: () => "/",
   },
 
-  cinema: {
-    path: "/cinema",
-    getHref: () => "/cinema",
+  cinemas: {
+    path: "/cinemas",
+    getHref: () => "/cinemas",
+  },
+
+  movies: {
+    path: "/movies",
+    getHref: () => "/movies",
   },
 } as const;
