@@ -15,7 +15,7 @@ import { GetShowTimesByDateRangeDTO } from "./dto/get-show-times-by-date-range.d
 import { UpdateMovieScheduleDTO } from "./dto/update-movie-schedule.dto";
 
 const createMovieSchedule = async (
-  newMovieScheduleData: CreateMovieScheduleDTO
+  newMovieScheduleData: CreateMovieScheduleDTO,
 ) => {
   const { movieId, theaterId, date } = newMovieScheduleData;
 
@@ -29,11 +29,11 @@ const createMovieSchedule = async (
     await showTimeRepository.getMovieScheduleByMovieIdAndDateAndTheaterId(
       movieId,
       date,
-      theaterId
+      theaterId,
     );
   if (existingMovieSchedule)
     throw new BadRequestError(
-      "Schedule with the given date, movie, and theater already exists"
+      "Schedule with the given date, movie, and theater already exists",
     );
 
   return await showTimeRepository.createMovieSchedule(newMovieScheduleData);
@@ -42,49 +42,59 @@ const createMovieSchedule = async (
 const getMovieSchedulesPaginated = async (
   page: number,
   limit: number,
-  search: string
+  search: string,
 ) => {
   return showTimeRepository.getMovieSchedulesPaginated(page, limit, search);
 };
 
 const getMovieScheduleByDateRange = async (
-  query: GetMovieScheduleByDateRangeDTO
+  query: GetMovieScheduleByDateRangeDTO,
 ) => {
   return showTimeRepository.getMovieScheduleByDateRange(
     query.startDate,
-    query.endDate
+    query.endDate,
   );
 };
 
 const getMovieScheduleByMovieIdAndDateRange = async (
   movieId: string,
-  query: GetMovieScheduleByDateRangeDTO
+  query: GetMovieScheduleByDateRangeDTO,
 ) => {
   return showTimeRepository.getMovieScheduleByMovieIdAndDateRange(
     movieId,
     query.startDate,
-    query.endDate
+    query.endDate,
+  );
+};
+
+const getMovieScheduleByTheaterIdAndDateRange = async (
+  theaterId: string,
+  query: GetMovieScheduleByDateRangeDTO,
+) => {
+  return showTimeRepository.getMovieScheduleByTheaterIdAndDateRange(
+    theaterId,
+    query.startDate,
+    query.endDate,
   );
 };
 
 const updateMovieSchedule = async (
   movieScheduleId: string,
-  updatedMovieSchedule: UpdateMovieScheduleDTO
+  updatedMovieSchedule: UpdateMovieScheduleDTO,
 ) => {
-  const existingMovieSchedule = await showTimeRepository.getMovieScheduleById(
-    movieScheduleId
-  );
+  const existingMovieSchedule =
+    await showTimeRepository.getMovieScheduleById(movieScheduleId);
   if (!existingMovieSchedule) throw new NoDataError("Movie schedule not found");
 
   const conflictedMovieSchedule =
     await showTimeRepository.getMovieScheduleByMovieIdAndDateAndTheaterId(
       updatedMovieSchedule.movieId,
       updatedMovieSchedule.date,
-      updatedMovieSchedule.theaterId
+      updatedMovieSchedule.theaterId,
     );
   if (conflictedMovieSchedule)
     throw new BadRequestError(
-      "Schedule with the given date, movie, and theater already exists"
+      "Schedule with the given date, movie, and theater already exists",
     );
 
   const updatedShowTimes = existingMovieSchedule.showTimes.map((st) => {
@@ -97,12 +107,12 @@ const updateMovieSchedule = async (
     const overlapping = await showTimeRepository.getOverlappingShowTime(
       updatedMovieSchedule.theaterId,
       st.startTime,
-      st.endTime
+      st.endTime,
     );
 
     if (overlapping && overlapping.id !== st.id) {
       throw new BadRequestError(
-        `ShowTime conflict detected at (${overlapping.startTime} - ${overlapping.endTime})`
+        `ShowTime conflict detected at (${overlapping.startTime} - ${overlapping.endTime})`,
       );
     }
   }
@@ -118,7 +128,7 @@ const updateMovieSchedule = async (
     const updatedSchedule = await showTimeRepository.updateMovieSchedule(
       tx,
       movieScheduleId,
-      updatedMovieSchedule
+      updatedMovieSchedule,
     );
 
     return updatedSchedule;
@@ -131,17 +141,17 @@ const deleteMovieSchedule = async (movieScheduleId: string) => {
 
 const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   const existingMovieSchedule = await showTimeRepository.getMovieScheduleById(
-    newShowTimeData.movieScheduleId
+    newShowTimeData.movieScheduleId,
   );
   if (!existingMovieSchedule) throw new NoDataError("Movie schedule not found");
 
   const startTime = combineDateAndTime(
     existingMovieSchedule.date,
-    newShowTimeData.startTime
+    newShowTimeData.startTime,
   );
   const endTime = combineDateAndTime(
     existingMovieSchedule.date,
-    newShowTimeData.endTime
+    newShowTimeData.endTime,
   );
 
   if (startTime > endTime)
@@ -150,12 +160,12 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
   const overlappingShowTime = await showTimeRepository.getOverlappingShowTime(
     existingMovieSchedule.theaterId,
     startTime,
-    endTime
+    endTime,
   );
 
   if (overlappingShowTime)
     throw new BadRequestError(
-      "Showtime overlap with existing schedule in given theater"
+      "Showtime overlap with existing schedule in given theater",
     );
 
   const newShowTime = await showTimeRepository.createShowTime({
@@ -180,7 +190,7 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
 const getShowTimeByDateRange = async (query: GetShowTimesByDateRangeDTO) => {
   return showTimeRepository.getShowTimeByDateRange(
     query.startDate,
-    query.endDate
+    query.endDate,
   );
 };
 
@@ -214,4 +224,5 @@ export default {
   getShowTimeByMovieScheduleId,
   deleteShowTime,
   getMovieScheduleByMovieIdAndDateRange,
+  getMovieScheduleByTheaterIdAndDateRange,
 };

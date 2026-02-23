@@ -9,48 +9,55 @@ router.post(
   "/movie-schedule",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.createMovieSchedule
+  showTimeController.createMovieSchedule,
 );
 router.delete(
   "/movie-schedule/:movieScheduleId",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.deleteMovieSchedule
+  showTimeController.deleteMovieSchedule,
 );
 router.put(
   "/movie-schedule/:movieScheduleId",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.updateMovieSchedule
+  showTimeController.updateMovieSchedule,
 );
 router.post(
   "/",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.createShowTime
+  showTimeController.createShowTime,
 );
 router.get(
   "/:showTimeId/seats",
   authenticate,
-  showTimeController.getShowTimeSeats
+  showTimeController.getShowTimeSeats,
 );
 router.get(
   "/movie-schedule",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.getMovieSchedules
+  showTimeController.getMovieSchedules,
 );
 router.delete(
   "/:showTimeId",
   authenticate,
   authorize(Role.ADMIN),
-  showTimeController.deleteShowTime
+  showTimeController.deleteShowTime,
 );
 router.get("/movie-schedule", showTimeController.getMovieScheduleByDateRange);
-router.get("/:movieId/movie-schedule", showTimeController.getMovieScheduleByMovieIdAndDateRange);
+router.get(
+  "/movie-schedule/movie/:movieId",
+  showTimeController.getMovieScheduleByMovieIdAndDateRange,
+);
+router.get(
+  "/movie-schedule/theater/:theaterId",
+  showTimeController.getMovieScheduleByTheaterIdAndDateRange,
+);
 router.get(
   "/:movieScheduleid/show-time",
-  showTimeController.getShowTimeByMovieScheduleId
+  showTimeController.getShowTimeByMovieScheduleId,
 );
 router.get("/", showTimeController.getShowTimeByDateRange);
 

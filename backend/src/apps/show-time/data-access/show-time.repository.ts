@@ -12,7 +12,7 @@ const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {
 const getMovieSchedulesPaginated = async (
   page: number,
   limit: number,
-  search: string
+  search: string,
 ) => {
   const whereClause: Prisma.MovieScheduleWhereInput = {
     movie: {
@@ -49,7 +49,7 @@ const getMovieScheduleById = (movieScheduleId: string) => {
 
 const getMovieScheduleByDateRange = async (
   startDate: string,
-  endDate: string
+  endDate: string,
 ) => {
   const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
   const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
@@ -69,7 +69,7 @@ const getMovieScheduleByDateRange = async (
 const getMovieScheduleByMovieIdAndDateRange = async (
   movieId: string,
   startDate: string,
-  endDate: string
+  endDate: string,
 ) => {
   const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
   const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
@@ -83,13 +83,13 @@ const getMovieScheduleByMovieIdAndDateRange = async (
       movie: true,
       showTimes: {
         include: {
-          seats: true
-        }
+          seats: true,
+        },
       },
       theater: {
         include: {
-          location: true
-        }
+          location: true,
+        },
       },
     },
   });
@@ -98,7 +98,7 @@ const getMovieScheduleByMovieIdAndDateRange = async (
 const getMovieScheduleByMovieIdAndDateAndTheaterId = (
   movieId: string,
   date: Date,
-  theaterId: string
+  theaterId: string,
 ) => {
   const start = startOfDay(date);
   const end = endOfDay(date);
@@ -113,15 +113,15 @@ const getMovieScheduleByMovieIdAndDateAndTheaterId = (
       movie: true,
       showTimes: {
         include: {
-          seats: true
-        }
+          seats: true,
+        },
       },
       theater: {
         include: {
-          location: true
-        }
+          location: true,
+        },
       },
-    }
+    },
   });
 };
 
@@ -133,7 +133,7 @@ const updateMovieSchedule = async (
     theaterId: string;
     date: Date;
     price: number;
-  }
+  },
 ) => {
   return tx.movieSchedule.update({
     where: { id: movieScheduleId },
@@ -145,7 +145,7 @@ const updateMovieSchedule = async (
 const updateShowTime = async (
   tx: PrismaClient | Prisma.TransactionClient = prisma,
   showTimeId: string,
-  data: { startTime: Date; endTime: Date }
+  data: { startTime: Date; endTime: Date },
 ) => {
   return tx.showTime.update({
     where: { id: showTimeId },
@@ -182,7 +182,7 @@ const getShowTimeByDateRange = async (startDate: string, endDate: string) => {
 const getOverlappingShowTime = async (
   theaterId: string,
   startTime: Date,
-  endTime: Date
+  endTime: Date,
 ) => {
   return prisma.showTime.findFirst({
     where: {
@@ -238,7 +238,7 @@ const deleteShowTime = async (showTimeId: string) => {
 const updateSeatStatus = (
   showTimeId: string,
   seatId: string,
-  status: "RESERVED" | "AVAILABLE" | "HOLD"
+  status: "RESERVED" | "AVAILABLE" | "HOLD",
 ) => {
   return prisma.seatsOnShowTimes.update({
     where: { seatId_showTimeId: { seatId, showTimeId } },
@@ -250,11 +250,40 @@ const updateManySeatStatus = async (
   showTimeId: string,
   seatIds: string[],
   status: "RESERVED" | "AVAILABLE" | "HOLD",
-  tx: PrismaClient | Prisma.TransactionClient = prisma
+  tx: PrismaClient | Prisma.TransactionClient = prisma,
 ) => {
   return tx.seatsOnShowTimes.updateMany({
     where: { showTimeId, seatId: { in: seatIds } },
     data: { status },
+  });
+};
+
+const getMovieScheduleByTheaterIdAndDateRange = async (
+  theaterId: string,
+  startDate: string,
+  endDate: string,
+) => {
+  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
+
+  return prisma.movieSchedule.findMany({
+    where: {
+      theaterId: theaterId,
+      date: { gte: startOfDay, lte: endOfDay },
+    },
+    include: {
+      movie: true,
+      showTimes: {
+        include: {
+          seats: true,
+        },
+      },
+      theater: {
+        include: {
+          location: true,
+        },
+      },
+    },
   });
 };
 
@@ -279,4 +308,5 @@ export default {
   getShowTimeByMovieScheduleId,
   deleteShowTime,
   getMovieScheduleByMovieIdAndDateRange,
+  getMovieScheduleByTheaterIdAndDateRange,
 };

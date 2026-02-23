@@ -9,9 +9,8 @@ import showTimeService from "../domain/show-time.service";
 
 const createMovieSchedule = asyncHandler(async (req, res) => {
   const validatedData = createMovieScheduleSchema.parse(req.body);
-  const newMovieSchedule = await showTimeService.createMovieSchedule(
-    validatedData
-  );
+  const newMovieSchedule =
+    await showTimeService.createMovieSchedule(validatedData);
 
   new SuccessResponse("Create movie schedule successful", {
     newMovieSchedule,
@@ -39,13 +38,12 @@ const getMovieSchedules = asyncHandler(async (req, res) => {
 
 const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   const validatedData = getMovieScheduleByDateRangeSchema.parse(req.query);
-  const movieSchedules = await showTimeService.getMovieScheduleByDateRange(
-    validatedData
-  );
+  const movieSchedules =
+    await showTimeService.getMovieScheduleByDateRange(validatedData);
 
-  new SuccessResponse("Get movie schedules successful", { movieSchedules }).send(
-    res
-  );
+  new SuccessResponse("Get movie schedules successful", {
+    movieSchedules,
+  }).send(res);
 });
 
 const getMovieScheduleByMovieIdAndDateRange = asyncHandler(async (req, res) => {
@@ -53,15 +51,34 @@ const getMovieScheduleByMovieIdAndDateRange = asyncHandler(async (req, res) => {
 
   const validatedData = getMovieScheduleByDateRangeSchema.parse(req.query);
 
-  const movieSchedules = await showTimeService.getMovieScheduleByMovieIdAndDateRange(
-    movieId,
-    validatedData
-  );
+  const movieSchedules =
+    await showTimeService.getMovieScheduleByMovieIdAndDateRange(
+      movieId,
+      validatedData,
+    );
 
-  new SuccessResponse("Get movie schedules successful", { movieSchedules }).send(
-    res
-  );
+  new SuccessResponse("Get movie schedules successful", {
+    movieSchedules,
+  }).send(res);
 });
+
+const getMovieScheduleByTheaterIdAndDateRange = asyncHandler(
+  async (req, res) => {
+    const { theaterId } = req.params;
+
+    const validatedData = getMovieScheduleByDateRangeSchema.parse(req.query);
+
+    const movieSchedules =
+      await showTimeService.getMovieScheduleByTheaterIdAndDateRange(
+        theaterId,
+        validatedData,
+      );
+
+    new SuccessResponse("Get movie schedules successful", {
+      movieSchedules,
+    }).send(res);
+  },
+);
 
 const updateMovieSchedule = asyncHandler(async (req, res) => {
   const { movieScheduleId } = req.params;
@@ -69,7 +86,7 @@ const updateMovieSchedule = asyncHandler(async (req, res) => {
 
   const updatedMovieSchedules = await showTimeService.updateMovieSchedule(
     movieScheduleId,
-    validatedData
+    validatedData,
   );
   new SuccessResponse("Updtea movie schedule successful", {
     updatedMovieSchedules,
@@ -79,9 +96,8 @@ const updateMovieSchedule = asyncHandler(async (req, res) => {
 const deleteMovieSchedule = asyncHandler(async (req, res) => {
   const { movieScheduleId } = req.params;
 
-  const deletedMovieSchedule = await showTimeService.deleteMovieSchedule(
-    movieScheduleId
-  );
+  const deletedMovieSchedule =
+    await showTimeService.deleteMovieSchedule(movieScheduleId);
   new SuccessResponse("Delete movie schedule successful", {
     deletedMovieSchedule,
   }).send(res);
@@ -103,9 +119,8 @@ const getShowTimeByDateRange = asyncHandler(async (req, res) => {
 
 const getShowTimeByMovieScheduleId = asyncHandler(async (req, res) => {
   const { movieScheduleId } = req.params;
-  const showTimes = await showTimeService.getShowTimeByMovieScheduleId(
-    movieScheduleId
-  );
+  const showTimes =
+    await showTimeService.getShowTimeByMovieScheduleId(movieScheduleId);
 
   new SuccessResponse("Get showtimes by movie id successful", {
     showTimes,
@@ -117,7 +132,7 @@ const getShowTimeSeats = asyncHandler(async (req, res) => {
   const showTimeSeats = await showTimeService.getShowTimeSeats(showTimeId);
 
   new SuccessResponse("Get showtime seats successful", { showTimeSeats }).send(
-    res
+    res,
   );
 });
 
@@ -126,7 +141,7 @@ const deleteShowTime = asyncHandler(async (req, res) => {
   const deletedShowTime = await showTimeService.deleteShowTime(showTimeId);
 
   new SuccessResponse("Delete showtime successful", { deletedShowTime }).send(
-    res
+    res,
   );
 });
 
@@ -141,5 +156,6 @@ export default {
   updateMovieSchedule,
   getShowTimeByMovieScheduleId,
   deleteShowTime,
-  getMovieScheduleByMovieIdAndDateRange
+  getMovieScheduleByMovieIdAndDateRange,
+  getMovieScheduleByTheaterIdAndDateRange,
 };
