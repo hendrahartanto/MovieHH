@@ -61,10 +61,41 @@ const getMovies = async (page: number, limit: number, search: string) => {
 };
 
 const getMovieById = async (movieId: string) => {
-  return prisma.movie.findUnique({
+  const movieRaw = await prisma.movie.findUnique({
     where: { id: movieId },
-    include: { genres: { include: { genre: true } } },
+    include: {
+      genres: {
+        include: {
+          genre: true
+        }
+      },
+      movieSchedules: {
+        include: {
+          showTimes: {
+            include: {
+              seats: true
+            }
+          },
+          theater: {
+            include: {
+              location: true
+            }
+          },
+        }
+      }
+    },
   });
+
+  if (!movieRaw) {
+    return null;
+  }
+
+  const formattedMovie = {
+    ...movieRaw,
+    genres: movieRaw.genres.map((g) => g.genre),
+  };
+
+  return formattedMovie;
 };
 
 const getFeaturedMovies = async () => {

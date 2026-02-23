@@ -66,6 +66,27 @@ const getMovieScheduleByDateRange = async (
   });
 };
 
+const getMovieScheduleByMovieIdAndDateRange = async (
+  movieId: string,
+  startDate: string,
+  endDate: string
+) => {
+  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
+
+  return prisma.movieSchedule.findMany({
+    where: {
+      movieId: movieId,
+      date: { gte: startOfDay, lte: endOfDay },
+    },
+    include: {
+      movie: true,
+      showTimes: true,
+      theater: true,
+    },
+  });
+};
+
 const getMovieScheduleByMovieIdAndDateAndTheaterId = (
   movieId: string,
   date: Date,
@@ -236,4 +257,5 @@ export default {
   updateShowTime,
   getShowTimeByMovieScheduleId,
   deleteShowTime,
+  getMovieScheduleByMovieIdAndDateRange,
 };

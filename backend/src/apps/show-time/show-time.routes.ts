@@ -47,8 +47,9 @@ router.delete(
   showTimeController.deleteShowTime
 );
 router.get("/movie-schedule", showTimeController.getMovieScheduleByDateRange);
+router.get("/:movieId/movie-schedule", showTimeController.getMovieScheduleByMovieIdAndDateRange);
 router.get(
-  "/:movieScheduleid/movie-schedule",
+  "/:movieScheduleid/show-time",
   showTimeController.getShowTimeByMovieScheduleId
 );
 router.get("/", showTimeController.getShowTimeByDateRange);

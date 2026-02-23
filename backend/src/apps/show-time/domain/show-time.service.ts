@@ -56,6 +56,17 @@ const getMovieScheduleByDateRange = async (
   );
 };
 
+const getMovieScheduleByMovieIdAndDateRange = async (
+  movieId: string,
+  query: GetMovieScheduleByDateRangeDTO
+) => {
+  return showTimeRepository.getMovieScheduleByMovieIdAndDateRange(
+    movieId,
+    query.startDate,
+    query.endDate
+  );
+};
+
 const updateMovieSchedule = async (
   movieScheduleId: string,
   updatedMovieSchedule: UpdateMovieScheduleDTO
@@ -202,4 +213,5 @@ export default {
   updateMovieSchedule,
   getShowTimeByMovieScheduleId,
   deleteShowTime,
+  getMovieScheduleByMovieIdAndDateRange,
 };
