@@ -1,7 +1,7 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { SearchBox } from "@/components/ui/search-box";
-import { CreateMovieSchedule } from "@/features/movie-schedules/components/create-movie-schedule";
-import { MovieSchedulesList } from "@/features/movie-schedules/components/movie-schedules-list";
+import { CreateMovieSchedule } from "@/features/movie-schedules/components/admin/create-movie-schedule";
+import { MovieSchedulesList } from "@/features/movie-schedules/components/admin/movie-schedules-list";
 import { useSearchParams } from "react-router";
 
 const MovieSchedulesPage = () => {

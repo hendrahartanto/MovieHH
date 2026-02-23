@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { useLocations } from "../api/get-locations";
+import { useLocations } from "@/features/locations/api/get-locations";
 import { Eye, MapPin, Building, ChevronLeft, ChevronRight } from "lucide-react";
 
 import {
@@ -63,7 +63,7 @@ export const LocationsList = () => {
                 <TableRow key={location.id}>
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 flex items-center justify-center">
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0 flex items-center justify-center">
                         <Building className="w-6 h-6 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">

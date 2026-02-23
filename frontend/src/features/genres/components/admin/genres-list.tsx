@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { useGenres } from "../api/get-genres";
+import { useGenres } from "../../api/get-genres";
 import { Eye, Tag, ChevronLeft, ChevronRight, Music } from "lucide-react";
 
 import {
@@ -62,7 +62,7 @@ export const GenresList = () => {
                 <TableRow key={genre.name || index}>
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
-                      <div className="relative w-10 h-10 rounded-full bg-muted flex-shrink-0 flex items-center justify-center">
+                      <div className="relative w-10 h-10 rounded-full bg-muted shrink-0 flex items-center justify-center">
                         <Tag className="w-5 h-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">

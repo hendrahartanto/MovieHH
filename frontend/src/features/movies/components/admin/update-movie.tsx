@@ -1,9 +1,9 @@
 import { Authorization, ROLES } from "@/lib/authorization";
 import {
-  useCreateMovie,
-  createMovieInputSchema,
-  CreateMovieInput,
-} from "../api/create-movie";
+  useUpdateMovie,
+  updateMovieInputSchema,
+  UpdateMovieInput,
+} from "../../api/update-movie";
 import { FormSheet } from "@/components/ui/form/form-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Search } from "lucide-react";
+import { Edit, Search } from "lucide-react";
 import {
   SubmitButton,
   SubmitButtonType,
@@ -35,9 +35,15 @@ import {
 import { useMemo, useState } from "react";
 import { useGenres } from "@/features/genres/api/get-genres";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Movie } from "@/lib/api";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+import { formatImageUrl } from "@/helper/image-helper";
 
-export const CreateMovie = () => {
+interface UpdateMovieProps {
+  movie: Movie;
+}
+
+export const UpdateMovie = ({ movie }: UpdateMovieProps) => {
   const [genreSearchTerm, setGenreSearchTerm] = useState("");
   const { data: genresData, isLoading: isLoadingGenres } = useGenres({
     all: true,
@@ -50,7 +56,7 @@ export const CreateMovie = () => {
     );
   }, [genresData?.data.genres, genreSearchTerm]);
 
-  const createMovie = useCreateMovie({
+  const updateMovie = useUpdateMovie({
     mutationConfig: {
       onSuccess: (response) => {
         useNotifications.getState().addNotification({
@@ -58,57 +64,55 @@ export const CreateMovie = () => {
           title: "Success",
           message: response.message,
         });
-        form.reset();
       },
     },
   });
 
-  const form = useForm<CreateMovieInput>({
-    resolver: zodResolver(createMovieInputSchema),
+  const form = useForm<UpdateMovieInput>({
+    resolver: zodResolver(updateMovieInputSchema),
     defaultValues: {
-      title: "",
-      synopsis: "",
+      title: movie.title,
+      synopsis: movie.synopsis || "",
       poster: undefined,
       banner: undefined,
-      director: "",
-      writer: "",
-      duration: undefined,
-      isFeatured: false,
-      status: "ACTIVE",
-      trailerUrl: "",
-      genreIds: [],
+      director: movie.director || "",
+      writer: movie.writer || "",
+      duration: movie.duration || undefined,
+      isFeatured: movie.isFeatured || false,
+      status: movie.status || "ACTIVE",
+      trailerUrl: movie.trailerUrl,
+      genreIds: movie.genres?.map((genre) => genre.id) || [],
     },
   });
 
-  const onSubmit = (data: CreateMovieInput) => {
-    createMovie.mutate({ data });
+  const onSubmit = (data: UpdateMovieInput) => {
+    updateMovie.mutate({ data, movieId: movie.id });
   };
 
   return (
     <Authorization allowedRoles={[ROLES.ADMIN]}>
       <FormSheet
-        title="Create Movie"
-        isDone={createMovie.isSuccess}
+        title="Update Movie"
+        isDone={updateMovie.isSuccess}
         triggerButton={
-          <Button className="flex items-center gap-2">
-            <Plus className="w-4 h-4" />
-            Add Movie
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Edit className="w-4 h-4" />
           </Button>
         }
         submitButton={
           <SubmitButton
-            type={SubmitButtonType.CREATE}
-            form="create-movie-form"
-            isPending={createMovie.isPending}
+            type={SubmitButtonType.UPDATE}
+            form="update-movie-form"
+            isPending={updateMovie.isPending}
           >
-            Create Movie
+            Update Movie
           </SubmitButton>
         }
         size="lg"
       >
         <Form {...form}>
           <form
-            id="create-movie-form"
+            id="update-movie-form"
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
           >
@@ -328,14 +332,14 @@ export const CreateMovie = () => {
                                         onCheckedChange={(checked) => {
                                           return checked
                                             ? field.onChange([
-                                                ...(field.value || []),
-                                                genre.id,
-                                              ])
+                                              ...(field.value || []),
+                                              genre.id,
+                                            ])
                                             : field.onChange(
-                                                field.value?.filter(
-                                                  (id) => id !== genre.id
-                                                )
-                                              );
+                                              field.value?.filter(
+                                                (id) => id !== genre.id
+                                              )
+                                            );
                                         }}
                                         className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                       />
@@ -397,31 +401,57 @@ export const CreateMovie = () => {
               />
             </div>
 
-            {(form.watch("poster") || form.watch("banner")) && (
-              <div className="flex flex-col gap-4">
-                {form.watch("poster") && (
-                  <div className="border border-border rounded-lg p-4 bg-card">
-                    <p className="text-sm font-medium mb-2">Poster Preview</p>
-                    <img
-                      src={URL.createObjectURL(form.watch("poster") as File)}
-                      alt="Poster preview"
-                      className="w-32 h-48 object-cover rounded-md mx-auto"
-                    />
-                  </div>
-                )}
-
-                {form.watch("banner") && (
-                  <div className="border border-border rounded-lg p-4 bg-card">
-                    <p className="text-sm font-medium mb-2">Banner Preview</p>
-                    <img
-                      src={URL.createObjectURL(form.watch("banner") as File)}
-                      alt="Banner preview"
-                      className="w-full h-48 object-cover rounded-md mx-auto"
-                    />
-                  </div>
-                )}
+            {form.watch("poster") ? (
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">New Poster Preview</p>
+                  <img
+                    src={URL.createObjectURL(form.watch("poster") as File)}
+                    alt="Poster preview"
+                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
               </div>
-            )}
+            ) : movie.posterUrl ? (
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">
+                    Current Poster Preview
+                  </p>
+                  <img
+                    src={formatImageUrl(movie.posterUrl)}
+                    alt="Current movie poster"
+                    className="w-32 h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              </div>
+            ) : null}
+
+            {form.watch("banner") ? (
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">New Banner Preview</p>
+                  <img
+                    src={URL.createObjectURL(form.watch("banner") as File)}
+                    alt="banner preview"
+                    className="w-full h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              </div>
+            ) : movie.bannerUrl ? (
+              <div className="">
+                <div className="border border-border rounded-lg p-4 bg-card">
+                  <p className="text-sm font-medium mb-2">
+                    Current Banner Preview
+                  </p>
+                  <img
+                    src={formatImageUrl(movie.bannerUrl)}
+                    alt="Current movie banner"
+                    className="w-full h-48 object-cover rounded-md mx-auto"
+                  />
+                </div>
+              </div>
+            ) : null}
           </form>
         </Form>
       </FormSheet>

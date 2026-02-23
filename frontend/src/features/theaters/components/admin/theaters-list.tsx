@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { useTheaters } from "../api/get-theaters";
+import { useTheaters } from "../../api/get-theaters";
 import {
   Eye,
   Armchair,
@@ -67,7 +67,7 @@ export const TheatersList = () => {
                 <TableRow key={theater.id}>
                   <TableCell className="pl-6">
                     <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted flex-shrink-0 flex items-center justify-center">
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-muted shrink-0 flex items-center justify-center">
                         <Armchair className="w-6 h-6 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -82,7 +82,6 @@ export const TheatersList = () => {
                     </div>
                   </TableCell>
 
-                  {/* Seats */}
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Armchair className="w-4 h-4 text-muted-foreground" />

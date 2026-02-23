@@ -1,9 +1,9 @@
 import { Authorization, ROLES } from "@/lib/authorization";
 import {
-  UpdateMovieScheduleInput,
-  updateMovieScheduleInputSchema,
-  useUpdateMovieSchedule,
-} from "../api/update-movie-schedule";
+  useCreateMovieSchedule,
+  createMovieScheduleInputSchema,
+  CreateMovieScheduleInput,
+} from "@/features/movie-schedules/api/create-movie-schedule";
 import { FormSheet } from "@/components/ui/form/form-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Edit, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import {
   SubmitButton,
   SubmitButtonType,
@@ -37,13 +37,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { MovieSchedule } from "@/lib/api";
 
-interface UpdateMovieScheduleProps {
-  schedule: MovieSchedule;
-}
-
-export const UpdateMovieSchedule = ({ schedule }: UpdateMovieScheduleProps) => {
+export const CreateMovieSchedule = () => {
   const [movieSearchTerm, setMovieSearchTerm] = useState("");
   const { data: moviesData, isLoading: isLoadingMovies } = useMovies({});
   const { data: theatersData, isLoading: isLoadingTheaters } = useTheaters({
@@ -52,114 +47,131 @@ export const UpdateMovieSchedule = ({ schedule }: UpdateMovieScheduleProps) => {
 
   const filteredMovies = useMemo(() => {
     if (!moviesData?.data.movies) return [];
+
     return moviesData.data.movies.filter((movie) =>
       movie.title.toLowerCase().includes(movieSearchTerm.toLowerCase())
     );
   }, [moviesData?.data.movies, movieSearchTerm]);
 
-  const updateMovieSchedule = useUpdateMovieSchedule({
+  const createMovieSchedule = useCreateMovieSchedule({
     mutationConfig: {
-      onSuccess: (response: any) => {
+      onSuccess: (response) => {
         useNotifications.getState().addNotification({
           type: "success",
           title: "Success",
           message: response.message,
         });
+        form.reset();
       },
     },
   });
 
-  const form = useForm<UpdateMovieScheduleInput>({
-    resolver: zodResolver(updateMovieScheduleInputSchema),
+  const form = useForm<CreateMovieScheduleInput>({
+    resolver: zodResolver(createMovieScheduleInputSchema),
     defaultValues: {
-      movieId: schedule.movie.id,
-      theaterId: schedule.theater.id,
-      date: new Date(schedule.date).toISOString().split("T")[0],
-      price: +schedule.price,
+      movieId: "",
+      theaterId: "",
+      date: "",
+      price: 0,
     },
   });
 
-  const onSubmit = (data: UpdateMovieScheduleInput) => {
-    updateMovieSchedule.mutate({ data, movieScheduleId: schedule.id });
+  const onSubmit = (data: CreateMovieScheduleInput) => {
+    createMovieSchedule.mutate({ data });
   };
 
   return (
     <Authorization allowedRoles={[ROLES.ADMIN]}>
       <FormSheet
-        title="Update Movie Schedule"
-        isDone={updateMovieSchedule.isSuccess}
+        title="Create Movie Schedule"
+        isDone={createMovieSchedule.isSuccess}
         triggerButton={
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Edit className="h-4 w-4" />
+          <Button className="flex items-center gap-2">
+            <Plus className="w-4 h-4" />
+            Add Schedule
           </Button>
         }
         submitButton={
           <SubmitButton
-            form="update-movie-schedule-form"
-            type={SubmitButtonType.UPDATE}
-            isPending={updateMovieSchedule.isPending}
+            type={SubmitButtonType.CREATE}
+            form="create-movie-schedule-form"
+            isPending={createMovieSchedule.isPending}
           >
-            Update Schedule
+            Create Schedule
           </SubmitButton>
         }
         size="lg"
       >
         <Form {...form}>
           <form
-            id="update-movie-schedule-form"
+            id="create-movie-schedule-form"
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
           >
-            <FormField
-              control={form.control}
-              name="movieId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Movie</FormLabel>
-                  <FormDescription>
-                    Select the movie for this schedule.
-                  </FormDescription>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                    <Input
-                      placeholder="Search movies..."
-                      value={movieSearchTerm}
-                      onChange={(e) => setMovieSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <ScrollArea className="h-48 w-full rounded-md border p-4">
-                    {isLoadingMovies ? (
-                      <div className="text-sm text-muted-foreground">
-                        Loading movies...
-                      </div>
-                    ) : (
-                      <RadioGroup
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        className="space-y-3"
-                      >
-                        {filteredMovies.map((movie) => (
-                          <div
-                            key={movie.id}
-                            className="flex items-center space-x-3"
-                          >
-                            <RadioGroupItem value={movie.id} id={movie.id} />
-                            <Label
-                              htmlFor={movie.id}
-                              className="cursor-pointer"
+            {moviesData?.data.movies && moviesData.data.movies.length > 0 && (
+              <FormField
+                control={form.control}
+                name="movieId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Movie</FormLabel>
+                    <FormDescription>
+                      Select the movie for this schedule.
+                    </FormDescription>
+
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                      <Input
+                        placeholder="Search movies..."
+                        value={movieSearchTerm}
+                        onChange={(e) => setMovieSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+
+                    <ScrollArea className="h-48 w-full rounded-md border p-4">
+                      {isLoadingMovies ? (
+                        <div className="text-sm text-muted-foreground">
+                          Loading movies...
+                        </div>
+                      ) : filteredMovies.length === 0 ? (
+                        <div className="text-sm text-muted-foreground">
+                          {movieSearchTerm
+                            ? `No movies found matching "${movieSearchTerm}"`
+                            : "No movies available"}
+                        </div>
+                      ) : (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="space-y-3"
+                        >
+                          {filteredMovies.map((movie) => (
+                            <div
+                              key={movie.id}
+                              className="flex items-center space-x-3"
                             >
-                              {movie.title}
-                            </Label>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                    )}
-                  </ScrollArea>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                              <RadioGroupItem
+                                value={movie.id}
+                                id={movie.id}
+                                className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                              />
+                              <Label
+                                htmlFor={movie.id}
+                                className="text-sm font-normal text-foreground cursor-pointer flex-1"
+                              >
+                                {movie.title}
+                              </Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      )}
+                    </ScrollArea>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={form.control}
@@ -181,12 +193,17 @@ export const UpdateMovieSchedule = ({ schedule }: UpdateMovieScheduleProps) => {
                         <div className="text-sm text-muted-foreground p-2">
                           Loading theaters...
                         </div>
-                      ) : (
-                        theatersData?.data.theaters.map((theater) => (
+                      ) : theatersData?.data.theaters &&
+                        theatersData.data.theaters.length > 0 ? (
+                        theatersData.data.theaters.map((theater) => (
                           <SelectItem key={theater.id} value={theater.id}>
                             {theater.name}
                           </SelectItem>
                         ))
+                      ) : (
+                        <div className="text-sm text-muted-foreground p-2">
+                          No theaters available
+                        </div>
                       )}
                     </SelectContent>
                   </Select>

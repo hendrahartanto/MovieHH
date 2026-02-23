@@ -1,6 +1,6 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
-import { GenresList } from "@/features/genres/components/genres-list";
-import { CreateGenre } from "../../../../features/genres/components/create-genre";
+import { GenresList } from "@/features/genres/components/admin/genres-list";
+import { CreateGenre } from "../../../../features/genres/components/admin/create-genre";
 import { useSearchParams } from "react-router";
 import { SearchBox } from "@/components/ui/search-box";
 

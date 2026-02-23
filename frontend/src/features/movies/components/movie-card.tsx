@@ -1,6 +1,7 @@
 import { Play, Ticket } from "lucide-react";
 import moviePlaceHolder from "@/assets/movie-placeholder.jpg";
 import { Movie } from "@/lib/api";
+import { formatImageUrl } from "@/helper/image-helper";
 
 interface MovieCardProps {
   movie: Movie;
@@ -13,7 +14,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   return (
     <div className="relative group w-64 h-96 md:w-72 md:h-112 shrink-0 snap-start rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:border-primary hover:cinema-glow">
       <img
-        src={movie.posterUrl || moviePlaceHolder}
+        src={formatImageUrl(movie.posterUrl || "") || moviePlaceHolder}
         alt={movie.title}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
       />

@@ -1,7 +1,7 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { SearchBox } from "@/components/ui/search-box";
-import { CreateLocation } from "@/features/locations/components/create-location";
-import { LocationsList } from "@/features/locations/components/locations-list";
+import { CreateLocation } from "@/features/locations/components/admin/create-location";
+import { LocationsList } from "@/features/locations/components/admin/locations-list";
 import { useSearchParams } from "react-router";
 
 const LocationsPage = () => {

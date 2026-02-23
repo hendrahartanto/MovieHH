@@ -5,12 +5,16 @@ import {
 } from "@/components/ui/form/submit-button";
 import { Authorization, ROLES } from "@/lib/authorization";
 import { Trash2 } from "lucide-react";
-import { useDeleteTheater } from "../api/delete-theater";
 import { Button } from "@/components/ui/button";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+import { useDeleteMovieSchedule } from "@/features/movie-schedules/api/delete-movie-schedule";
 
-export const DeleteTheater = ({ theaterId }: { theaterId: string }) => {
-  const deleteTheater = useDeleteTheater({
+export const DeleteMovieSchedule = ({
+  movieScheduleId,
+}: {
+  movieScheduleId: string;
+}) => {
+  const deleteGenre = useDeleteMovieSchedule({
     mutationConfig: {
       onSuccess: (response) => {
         useNotifications.getState().addNotification({
@@ -25,8 +29,8 @@ export const DeleteTheater = ({ theaterId }: { theaterId: string }) => {
   return (
     <Authorization allowedRoles={[ROLES.ADMIN]}>
       <ConfirmationDialog
-        title="Delete theater"
-        body="Are you sure you want to delete this theater?"
+        title="Delete movie schedule"
+        body="Are you sure you want to delete this movie schedule?"
         triggerButton={
           <Button
             variant="ghost"
@@ -38,10 +42,10 @@ export const DeleteTheater = ({ theaterId }: { theaterId: string }) => {
         }
         confirmButton={
           <SubmitButton
-            isPending={deleteTheater.isPending}
+            isPending={deleteGenre.isPending}
             type={SubmitButtonType.DELETE}
             variant={"destructive"}
-            onClick={() => deleteTheater.mutate({ theaterId })}
+            onClick={() => deleteGenre.mutate({ movieScheduleId })}
           >
             Delete
           </SubmitButton>

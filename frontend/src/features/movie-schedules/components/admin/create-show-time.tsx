@@ -4,7 +4,7 @@ import {
   createShowTimeInputSchema,
   CreateShowTimeInput,
   useCreateShowTime,
-} from "../api/create-show-time";
+} from "@/features/movie-schedules/api/create-show-time";
 import { Modal } from "@/components/ui/modal";
 import {
   Form,

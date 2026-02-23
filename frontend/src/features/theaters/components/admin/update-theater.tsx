@@ -3,7 +3,7 @@ import {
   useUpdateTheater,
   updateTheaterInputSchema,
   UpdateTheaterInput,
-} from "../api/update-theater";
+} from "../../api/update-theater";
 import { FormSheet } from "@/components/ui/form/form-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

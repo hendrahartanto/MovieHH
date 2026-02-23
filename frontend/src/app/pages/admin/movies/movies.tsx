@@ -1,7 +1,7 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { SearchBox } from "@/components/ui/search-box";
-import { CreateMovie } from "@/features/movies/components/create-movie";
-import { MoviesList } from "@/features/movies/components/movies-list";
+import { CreateMovie } from "@/features/movies/components/admin/create-movie";
+import { MoviesList } from "@/features/movies/components/admin/movies-list";
 import { useSearchParams } from "react-router";
 
 const MoviesPage = () => {

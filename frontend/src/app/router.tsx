@@ -41,11 +41,11 @@ const createAppRouter = (queryClient: QueryClient) =>
         },
         {
           path: paths.cinemas.path,
-          lazy: () => import("./pages/cinemas").then(convert(queryClient)),
+          lazy: () => import("./pages/cinemas/cinemas").then(convert(queryClient)),
         },
         {
           path: paths.movies.path,
-          lazy: () => import("./pages/movies").then(convert(queryClient)),
+          lazy: () => import("./pages/movies/movies").then(convert(queryClient)),
         },
       ],
     },

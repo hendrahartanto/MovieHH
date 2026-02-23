@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/form/submit-button";
 import { Authorization, ROLES } from "@/lib/authorization";
 import { Button } from "@/components/ui/button";
-import { useDeleteShowTime } from "../api/delete-show-time";
+import { useDeleteShowTime } from "@/features/movie-schedules/api/delete-show-time";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 import { MinusCircle } from "lucide-react";
 

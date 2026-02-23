@@ -1,7 +1,7 @@
 import { SidebarContentLayout } from "@/components/layouts/sidebar-content-layout";
 import { SearchBox } from "@/components/ui/search-box";
-import { CreateTheater } from "@/features/theaters/components/create-theater";
-import { TheatersList } from "@/features/theaters/components/theaters-list";
+import { CreateTheater } from "@/features/theaters/components/admin/create-theater";
+import { TheatersList } from "@/features/theaters/components/admin/theaters-list";
 import { useSearchParams } from "react-router";
 
 const TheatersPage = () => {

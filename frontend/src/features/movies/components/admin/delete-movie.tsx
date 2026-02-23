@@ -5,12 +5,12 @@ import {
 } from "@/components/ui/form/submit-button";
 import { Authorization, ROLES } from "@/lib/authorization";
 import { Trash2 } from "lucide-react";
+import { useDeleteMovie } from "../../api/delete-movie";
 import { Button } from "@/components/ui/button";
-import { useDeleteGenre } from "../api/delete-genre";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 
-export const DeleteGenre = ({ genreId }: { genreId: string }) => {
-  const deleteGenre = useDeleteGenre({
+export const DeleteMovie = ({ movieId }: { movieId: string }) => {
+  const deleteMovie = useDeleteMovie({
     mutationConfig: {
       onSuccess: (response) => {
         useNotifications.getState().addNotification({
@@ -25,8 +25,8 @@ export const DeleteGenre = ({ genreId }: { genreId: string }) => {
   return (
     <Authorization allowedRoles={[ROLES.ADMIN]}>
       <ConfirmationDialog
-        title="Delete genre"
-        body="Are you sure you want to delete this genre?"
+        title="Delete movie"
+        body="Are you sure you want to delete this movie?"
         triggerButton={
           <Button
             variant="ghost"
@@ -38,10 +38,10 @@ export const DeleteGenre = ({ genreId }: { genreId: string }) => {
         }
         confirmButton={
           <SubmitButton
-            isPending={deleteGenre.isPending}
+            isPending={deleteMovie.isPending}
             type={SubmitButtonType.DELETE}
             variant={"destructive"}
-            onClick={() => deleteGenre.mutate({ genreId })}
+            onClick={() => deleteMovie.mutate({ movieId })}
           >
             Delete
           </SubmitButton>

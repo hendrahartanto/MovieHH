@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router";
-import { useMovieSchedules } from "../api/get-movie-schedules";
+import { useMovieSchedules } from "../../api/get-movie-schedules";
 import {
   Eye,
   Calendar,
@@ -104,7 +104,7 @@ export const MovieSchedulesList = () => {
                     </TableCell>
                     <TableCell className="pl-0">
                       <div className="flex items-center gap-4">
-                        <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted flex-shrink-0">
+                        <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-muted shrink-0">
                           {schedule.movie.posterUrl ? (
                             <img
                               src={formatImageUrl(schedule.movie.posterUrl)}

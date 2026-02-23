@@ -29,7 +29,7 @@ export const ShowTimesListDropdown = ({
           {showTimes.map((showtime, index) => (
             <div key={showtime.id} className="flex gap-2 items-center">
               <div className="flex items-center gap-4 bg-background border rounded-lg px-5 py-3 w-fit">
-                <span className="text-sm font-medium text-muted-foreground min-w-[20px]">
+                <span className="text-sm font-medium text-muted-foreground min-w-5">
                   {index + 1}.
                 </span>
                 <div className="flex items-center gap-2 flex-1">

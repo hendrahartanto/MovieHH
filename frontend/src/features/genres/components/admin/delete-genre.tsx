@@ -6,11 +6,11 @@ import {
 import { Authorization, ROLES } from "@/lib/authorization";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useDeleteLocation } from "../api/delete-location";
+import { useDeleteGenre } from "../../api/delete-genre";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 
-export const DeleteLocation = ({ locationId }: { locationId: string }) => {
-  const deleteLocation = useDeleteLocation({
+export const DeleteGenre = ({ genreId }: { genreId: string }) => {
+  const deleteGenre = useDeleteGenre({
     mutationConfig: {
       onSuccess: (response) => {
         useNotifications.getState().addNotification({
@@ -25,8 +25,8 @@ export const DeleteLocation = ({ locationId }: { locationId: string }) => {
   return (
     <Authorization allowedRoles={[ROLES.ADMIN]}>
       <ConfirmationDialog
-        title="Delete location"
-        body="Are you sure you want to delete this location?"
+        title="Delete genre"
+        body="Are you sure you want to delete this genre?"
         triggerButton={
           <Button
             variant="ghost"
@@ -38,10 +38,10 @@ export const DeleteLocation = ({ locationId }: { locationId: string }) => {
         }
         confirmButton={
           <SubmitButton
-            isPending={deleteLocation.isPending}
+            isPending={deleteGenre.isPending}
             type={SubmitButtonType.DELETE}
             variant={"destructive"}
-            onClick={() => deleteLocation.mutate({ locationId })}
+            onClick={() => deleteGenre.mutate({ genreId })}
           >
             Delete
           </SubmitButton>

@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router";
-import { useMovies } from "../api/get-movies";
+import { useMovies } from "../../api/get-movies";
 import {
   Eye,
   Calendar,
