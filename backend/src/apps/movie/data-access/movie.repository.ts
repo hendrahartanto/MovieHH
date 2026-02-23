@@ -69,20 +69,6 @@ const getMovieById = async (movieId: string) => {
           genre: true
         }
       },
-      movieSchedules: {
-        include: {
-          showTimes: {
-            include: {
-              seats: true
-            }
-          },
-          theater: {
-            include: {
-              location: true
-            }
-          },
-        }
-      }
     },
   });
 

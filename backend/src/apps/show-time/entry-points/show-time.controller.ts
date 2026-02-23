@@ -43,7 +43,7 @@ const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
     validatedData
   );
 
-  new SuccessResponse("Get movie schedules successful", movieSchedules).send(
+  new SuccessResponse("Get movie schedules successful", { movieSchedules }).send(
     res
   );
 });
@@ -58,7 +58,7 @@ const getMovieScheduleByMovieIdAndDateRange = asyncHandler(async (req, res) => {
     validatedData
   );
 
-  new SuccessResponse("Get movie schedules successful", movieSchedules).send(
+  new SuccessResponse("Get movie schedules successful", { movieSchedules }).send(
     res
   );
 });

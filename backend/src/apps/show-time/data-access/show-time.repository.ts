@@ -81,8 +81,16 @@ const getMovieScheduleByMovieIdAndDateRange = async (
     },
     include: {
       movie: true,
-      showTimes: true,
-      theater: true,
+      showTimes: {
+        include: {
+          seats: true
+        }
+      },
+      theater: {
+        include: {
+          location: true
+        }
+      },
     },
   });
 };
@@ -101,6 +109,19 @@ const getMovieScheduleByMovieIdAndDateAndTheaterId = (
       movieId,
       theaterId,
     },
+    include: {
+      movie: true,
+      showTimes: {
+        include: {
+          seats: true
+        }
+      },
+      theater: {
+        include: {
+          location: true
+        }
+      },
+    }
   });
 };
 

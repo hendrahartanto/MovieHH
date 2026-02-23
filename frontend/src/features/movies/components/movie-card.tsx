@@ -2,17 +2,24 @@ import { Play, Ticket } from "lucide-react";
 import moviePlaceHolder from "@/assets/movie-placeholder.jpg";
 import { Movie } from "@/lib/api";
 import { formatImageUrl } from "@/helper/image-helper";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
 interface MovieCardProps {
   movie: Movie;
 }
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
+  const navigate = useNavigate();
   const hasSchedules = movie.movieSchedules && movie.movieSchedules.length > 0;
   const hasTrailer = !!movie.trailerUrl;
 
+  const handleCardClick = () => {
+    navigate(paths.movie.getHref(movie.id));
+  };
+
   return (
-    <div className="relative group w-64 h-96 md:w-72 md:h-112 shrink-0 snap-start rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:border-primary hover:cinema-glow">
+    <div onClick={handleCardClick} className="relative group w-64 h-96 md:w-72 md:h-112 shrink-0 snap-start rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:border-primary hover:cinema-glow cursor-pointer">
       <img
         src={formatImageUrl(movie.posterUrl || "") || moviePlaceHolder}
         alt={movie.title}
@@ -32,7 +39,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
         <div className="flex flex-col gap-3 w-full mt-auto mb-4">
           {hasSchedules && (
-            <button className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-md bg-primary text-primary-foreground font-semibold transition-all hover:bg-primary/90 hover:scale-105 active:scale-95 cinema-glow">
+            <button onClick={handleCardClick} className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-md bg-primary text-primary-foreground font-semibold transition-all hover:bg-primary/90 hover:scale-105 active:scale-95 cinema-glow">
               <Ticket className="w-4 h-4" />
               Buy Ticket
             </button>
@@ -43,6 +50,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
               href={movie.trailerUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
             >
               <button className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-md bg-transparent border-2 border-primary text-primary font-semibold transition-all hover:bg-primary/10 hover:scale-105 active:scale-95">
                 <Play className="w-4 h-4 fill-current" />
