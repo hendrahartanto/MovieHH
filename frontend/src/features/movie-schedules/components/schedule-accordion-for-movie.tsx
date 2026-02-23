@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/helper/format-helper";
-import { MovieSchedule, SeatStatus, Showtime } from "@/lib/api"
+import { MovieSchedule, SeatStatus, Showtime } from "@/lib/api";
 import { format } from "date-fns";
 import { ChevronRight, MapPin, Ticket } from "lucide-react";
 
-interface ScheduleAccordionProps {
+interface ScheduleAccordionForMovieProps {
   schedule: MovieSchedule;
   selectedScheduleId: string | null;
   selectedShowtimeId: string | null;
@@ -12,23 +12,30 @@ interface ScheduleAccordionProps {
   setSelectedShowtimeId: (showtimeId: string | null) => void;
 }
 
-export const ScheduleAccordion = ({ schedule, selectedScheduleId, selectedShowtimeId, setSelectedScheduleId, setSelectedShowtimeId }: ScheduleAccordionProps) => {
+export const ScheduleAccordionForMovie = ({
+  schedule,
+  selectedScheduleId,
+  selectedShowtimeId,
+  setSelectedScheduleId,
+  setSelectedShowtimeId,
+}: ScheduleAccordionForMovieProps) => {
   const isOpen = selectedScheduleId === schedule.id;
   const theater = schedule.theater;
 
   const getAvailableSeatCount = (showtime: Showtime): number => {
-    return showtime.seats.filter((s: any) =>
-      !s.status || s.status === SeatStatus.AVAILABLE
+    return showtime.seats.filter(
+      (s: any) => !s.status || s.status === SeatStatus.AVAILABLE,
     ).length;
-  }
+  };
 
   return (
     <div
       key={schedule.id}
-      className={`rounded-xl border transition-all duration-200 overflow-hidden ${isOpen
-        ? "cinema-border cinema-glow"
-        : "border-border hover:border-primary/40"
-        }`}
+      className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+        isOpen
+          ? "cinema-border cinema-glow"
+          : "border-border hover:border-primary/40"
+      }`}
     >
       <button
         className="w-full flex items-center justify-between px-5 py-4 bg-card hover:bg-accent/30 transition-colors text-left"
@@ -38,17 +45,13 @@ export const ScheduleAccordion = ({ schedule, selectedScheduleId, selectedShowti
         }}
       >
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold text-foreground">
-            {theater.name}
-          </span>
+          <span className="font-semibold text-foreground">{theater.name}</span>
           {theater.location && (
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
               <MapPin className="w-3 h-3" />
               {theater.location.name}
               {theater.location.address && (
-                <span className="opacity-60">
-                  — {theater.location.address}
-                </span>
+                <span className="opacity-60">— {theater.location.address}</span>
               )}
             </span>
           )}
@@ -58,8 +61,9 @@ export const ScheduleAccordion = ({ schedule, selectedScheduleId, selectedShowti
             {formatPrice(schedule.price)}
           </span>
           <ChevronRight
-            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${isOpen ? "rotate-90" : ""
-              }`}
+            className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+              isOpen ? "rotate-90" : ""
+            }`}
           />
         </div>
       </button>
@@ -84,12 +88,13 @@ export const ScheduleAccordion = ({ schedule, selectedScheduleId, selectedShowti
                   onClick={() =>
                     setSelectedShowtimeId(isSelected ? null : showtime.id)
                   }
-                  className={`flex flex-col items-center px-5 py-3 rounded-lg border text-sm transition-all duration-200 min-w-[90px] ${isFull
-                    ? "opacity-40 cursor-not-allowed border-border bg-muted"
-                    : isSelected
-                      ? "cinema-gradient border-transparent text-white shadow-lg scale-105"
-                      : "border-border bg-card hover:border-primary/60 hover:bg-accent/20"
-                    }`}
+                  className={`flex flex-col items-center px-5 py-3 rounded-lg border text-sm transition-all duration-200 min-w-[90px] ${
+                    isFull
+                      ? "opacity-40 cursor-not-allowed border-border bg-muted"
+                      : isSelected
+                        ? "cinema-gradient border-transparent text-white shadow-lg scale-105"
+                        : "border-border bg-card hover:border-primary/60 hover:bg-accent/20"
+                  }`}
                 >
                   <span className="font-bold text-base tabular-nums">
                     {format(new Date(showtime.startTime), "HH:mm")}
@@ -99,14 +104,15 @@ export const ScheduleAccordion = ({ schedule, selectedScheduleId, selectedShowti
                   </span>
                   {totalSeats > 0 && (
                     <span
-                      className={`text-xs mt-1.5 font-medium ${isFull
-                        ? "text-destructive"
-                        : availableSeats <= 10
-                          ? "text-amber-400"
-                          : isSelected
-                            ? "text-white/80"
-                            : "text-green-400"
-                        }`}
+                      className={`text-xs mt-1.5 font-medium ${
+                        isFull
+                          ? "text-destructive"
+                          : availableSeats <= 10
+                            ? "text-amber-400"
+                            : isSelected
+                              ? "text-white/80"
+                              : "text-green-400"
+                      }`}
                     >
                       {isFull ? "Full" : `${availableSeats}/${totalSeats}`}
                     </span>
@@ -136,6 +142,4 @@ export const ScheduleAccordion = ({ schedule, selectedScheduleId, selectedShowti
       )}
     </div>
   );
-}
-
-
+};

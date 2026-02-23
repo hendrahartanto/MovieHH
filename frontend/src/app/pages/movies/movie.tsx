@@ -1,10 +1,7 @@
 import { useMovie } from "@/features/movies/api/get-movie";
 import { MovieStatus } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Calendar,
-  Ticket,
-} from "lucide-react";
+import { Calendar, Ticket } from "lucide-react";
 import { useState, useMemo } from "react";
 import { format, addDays, startOfDay, isSameDay } from "date-fns";
 import { useParams } from "react-router";
@@ -12,8 +9,9 @@ import { useMovieSchedulesByMovieIdAndDate } from "@/features/movie-schedules/ap
 import { MovieHero } from "@/features/movies/components/movie-hero";
 import { MovieInfo } from "@/features/movies/components/movie-info";
 import { DateTab } from "@/features/movie-schedules/components/date-tab";
-import { ScheduleAccordion } from "@/features/movie-schedules/components/schedule-accordion";
+import { ScheduleAccordionForMovie } from "@/features/movie-schedules/components/schedule-accordion-for-movie";
 import { TrailerModal } from "@/features/movies/components/trailer-modal";
+import { toApiDateString } from "@/helper/format-helper";
 
 const MovieDetailSkeleton = () => {
   return (
@@ -26,7 +24,7 @@ const MovieDetailSkeleton = () => {
       </div>
     </div>
   );
-}
+};
 
 const ScheduleSkeleton = () => {
   return (
@@ -36,7 +34,7 @@ const ScheduleSkeleton = () => {
       ))}
     </div>
   );
-}
+};
 
 const EmptyScheduleState = ({ date }: { date: Date }) => {
   return (
@@ -49,19 +47,30 @@ const EmptyScheduleState = ({ date }: { date: Date }) => {
         </span>
       </p>
     </div>
-  )
-}
+  );
+};
 
 const MoviePage = () => {
+  const generateDateTabs = (): Date[] => {
+    const today = startOfDay(new Date());
+    return Array.from({ length: 7 }, (_, i) => addDays(today, i));
+  };
+
   const { movieId } = useParams<{ movieId: string }>();
 
   const dateTabs = useMemo(() => generateDateTabs(), []);
   const [selectedDate, setSelectedDate] = useState<Date>(dateTabs[0]);
-  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(null);
-  const [selectedShowtimeId, setSelectedShowtimeId] = useState<string | null>(null);
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
+    null,
+  );
+  const [selectedShowtimeId, setSelectedShowtimeId] = useState<string | null>(
+    null,
+  );
   const [showTrailer, setShowTrailer] = useState(false);
 
-  const { data: movieData, isLoading: isMovieLoading } = useMovie({ movieId: movieId! });
+  const { data: movieData, isLoading: isMovieLoading } = useMovie({
+    movieId: movieId!,
+  });
 
   const selectedDateStr = toApiDateString(selectedDate);
   const { data: schedulesData, isLoading: isSchedulesLoading } =
@@ -94,26 +103,15 @@ const MoviePage = () => {
 
   const datesWithSchedules = new Set(
     (weekSchedulesData?.data?.movieSchedules ?? []).map((s) =>
-      toApiDateString(new Date(s.date))
-    )
+      toApiDateString(new Date(s.date)),
+    ),
   );
-
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
     setSelectedScheduleId(null);
     setSelectedShowtimeId(null);
   };
-
-
-  function generateDateTabs(): Date[] {
-    const today = startOfDay(new Date());
-    return Array.from({ length: 7 }, (_, i) => addDays(today, i));
-  }
-
-  function toApiDateString(date: Date): string {
-    return format(date, "yyyy-MM-dd");
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -152,12 +150,16 @@ const MoviePage = () => {
             ) : (
               <div className="space-y-3">
                 {schedules.map((schedule) => (
-                  <ScheduleAccordion
+                  <ScheduleAccordionForMovie
                     schedule={schedule}
                     selectedScheduleId={selectedScheduleId}
                     selectedShowtimeId={selectedShowtimeId}
-                    setSelectedScheduleId={(scheduleId) => setSelectedScheduleId(scheduleId)}
-                    setSelectedShowtimeId={(showtimeId) => setSelectedShowtimeId(showtimeId)}
+                    setSelectedScheduleId={(scheduleId) =>
+                      setSelectedScheduleId(scheduleId)
+                    }
+                    setSelectedShowtimeId={(showtimeId) =>
+                      setSelectedShowtimeId(showtimeId)
+                    }
                   />
                 ))}
               </div>
@@ -172,7 +174,8 @@ const MoviePage = () => {
             </div>
             <p className="text-2xl font-bold mb-2">Coming Soon</p>
             <p className="text-muted-foreground max-w-sm mx-auto">
-              This movie is not yet available for booking. Stay tuned for the schedule!
+              This movie is not yet available for booking. Stay tuned for the
+              schedule!
             </p>
           </div>
         )}
@@ -181,7 +184,7 @@ const MoviePage = () => {
       <TrailerModal
         isOpen={showTrailer}
         movie={movie}
-        onClose={() => setShowTrailer((false))}
+        onClose={() => setShowTrailer(false)}
       />
     </div>
   );
