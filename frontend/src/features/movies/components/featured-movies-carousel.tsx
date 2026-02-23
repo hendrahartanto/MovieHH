@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Clock, Star } from "lucide-react";
 import { useFeaturedMovies } from "@/features/movies/api/get-featured-movies";
 import { formatImageUrl } from "@/helper/image-helper";
+import { TrailerModal } from "./trailer-modal";
+import { Movie } from "@/lib/api";
 
 export const FeaturedMoviesCarousel = () => {
   const { data, isLoading } = useFeaturedMovies({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [selectetMovie, setSelectedMovie] = useState<Movie>();
 
   const movies = data?.data?.featuredMovies || [];
 
@@ -128,11 +132,15 @@ export const FeaturedMoviesCarousel = () => {
               Book Tickets
             </button>
             {currentMovie.trailerUrl && (
-              <a href={currentMovie.trailerUrl} target="_blank">
-                <button className="px-8 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-lg transition-colors border border-border">
-                  Watch Trailer
-                </button>
-              </a>
+              <button
+                onClick={() => {
+                  setSelectedMovie(currentMovie);
+                  setShowTrailer(true);
+                }}
+                className="px-8 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-lg transition-colors border border-border"
+              >
+                Watch Trailer
+              </button>
             )}
           </div>
         </div>
@@ -173,6 +181,12 @@ export const FeaturedMoviesCarousel = () => {
           ))}
         </div>
       )}
+
+      <TrailerModal
+        isOpen={showTrailer}
+        movie={selectetMovie}
+        onClose={() => setShowTrailer(false)}
+      />
     </div>
   );
 };

@@ -1,15 +1,15 @@
 import { Movie } from "@/lib/api";
 
 interface TrailerModalProps {
-  movie: Movie
+  movie: Movie | undefined;
   isOpen: boolean;
-  onClose: () => void
+  onClose: () => void;
 }
 
 export const TrailerModal = ({ isOpen, movie, onClose }: TrailerModalProps) => {
   return (
     <>
-      {isOpen && movie.trailerUrl && (
+      {isOpen && movie && movie.trailerUrl && (
         <div
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={onClose}
@@ -29,5 +29,5 @@ export const TrailerModal = ({ isOpen, movie, onClose }: TrailerModalProps) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
