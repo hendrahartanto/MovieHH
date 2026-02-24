@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
-import { CinemaInfo } from "@/features/movie-schedules/components/cinema-info";
+import { CinemaInfo } from "@/features/theaters/components/cinema-info";
 import { CinemaInfoSkeleton } from "@/features/theaters/components/cinema-info-skeleton";
-import { CinemaBookingSection } from "@/features/theaters/components/cinema-booking-section";
+import { CinemaBookingSection } from "@/features/movie-schedules/components/cinema-booking-section";
 import { useTheater } from "@/features/theaters/api/get-theater";
 
 const CinemaDetailPage = () => {
