@@ -9,7 +9,7 @@ const createTheater = async (newTheaterData: CreateTheaterDTO) => {
 const getTheaterById = async (theaterId: string) => {
   return prisma.theater.findUnique({
     where: { id: theaterId },
-    include: { seats: true },
+    include: { seats: true, location: true },
   });
 };
 

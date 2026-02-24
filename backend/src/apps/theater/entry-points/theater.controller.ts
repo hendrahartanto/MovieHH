@@ -51,6 +51,12 @@ const getTheaters = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const getTheater = asyncHandler(async (req, res) => {
+  const { theaterId } = req.params;
+  const theater = await theaterService.getTheater(theaterId);
+  new SuccessResponse("Get theater successful", { theater }).send(res);
+});
+
 const deleteTheater = asyncHandler(async (req, res) => {
   const { theaterId } = req.params;
 
@@ -65,4 +71,5 @@ export default {
   updateTheater,
   deleteTheater,
   getTheaters,
+  getTheater,
 };

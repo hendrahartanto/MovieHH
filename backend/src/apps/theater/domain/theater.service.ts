@@ -34,6 +34,12 @@ const getTheaters = async () => {
   return theaterRepisotry.getTheaters();
 };
 
+const getTheater = async (theaterId: string) => {
+  const theater = await theaterRepisotry.getTheaterById(theaterId);
+  if (!theater) throw new Error("Theater not found");
+  return theater;
+};
+
 const updateTheater = async (
   theaterId: string,
   updateTheaterData: UpdateTheaterDTO
@@ -57,4 +63,5 @@ export default {
   deleteTheater,
   getTheatersPaginated,
   getTheaters,
+  getTheater,
 };
