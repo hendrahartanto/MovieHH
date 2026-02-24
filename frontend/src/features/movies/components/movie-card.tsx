@@ -23,16 +23,17 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
   };
 
   return (
-    <>
-      <div
-        onClick={handleCardClick}
-        className="relative group w-64 h-96 md:w-72 md:h-112 shrink-0 snap-start rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:border-primary hover:cinema-glow cursor-pointer"
-      >
-        <img
-          src={formatImageUrl(movie.posterUrl || "") || moviePlaceHolder}
-          alt={movie.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+    <div
+      onClick={handleCardClick}
+      className="relative group w-64 h-96 md:w-72 md:h-112 shrink-0 snap-start rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:border-primary hover:cinema-glow cursor-pointer"
+    >
+      <img
+        src={
+          movie.posterUrl ? formatImageUrl(movie.posterUrl) : moviePlaceHolder
+        }
+        alt={movie.title}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
 
         <div className="absolute inset-0 bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-6 text-center z-10">
           <h3 className="text-lg font-bold text-foreground mb-4 line-clamp-2">

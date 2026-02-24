@@ -6,6 +6,7 @@ import { Role } from "@prisma/client";
 const router = express.Router();
 
 router.get("/", theaterController.getTheaters);
+router.get("/:theaterId", theaterController.getTheater);
 
 //-------------------------------//
 router.use(authenticate, authorize(Role.ADMIN));
