@@ -28,7 +28,9 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
       className="relative group w-64 h-96 md:w-72 md:h-112 shrink-0 snap-start rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:border-primary hover:cinema-glow cursor-pointer"
     >
       <img
-        src={formatImageUrl(movie.posterUrl || "") || moviePlaceHolder}
+        src={
+          movie.posterUrl ? formatImageUrl(movie.posterUrl) : moviePlaceHolder
+        }
         alt={movie.title}
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
       />
