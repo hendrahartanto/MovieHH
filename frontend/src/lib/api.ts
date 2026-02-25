@@ -1,19 +1,5 @@
+import { Seat, Showtime } from "@/features/movie-schedules";
 import { ROLES } from "./authorization";
-import type { Showtime } from "@/features/movie-schedules/types";
-import type { Seat } from "@/features/theaters/types";
-
-// Re-export types for backward compatibility
-export type { Genre } from "@/features/genres/types";
-export type { Movie } from "@/features/movies/types";
-export { MovieStatus } from "@/features/movies/types";
-export type {
-  MovieSchedule,
-  Showtime,
-  SeatsOnShowtimes,
-} from "@/features/movie-schedules/types";
-export type { Location } from "@/features/locations/types";
-export type { Seat, Theater } from "@/features/theaters/types";
-export { SeatStatus } from "@/features/theaters/types";
 
 export type ApiResponse<T> = {
   message: string;
@@ -65,4 +51,3 @@ export type AuthResponse = ApiResponse<{
   token: string;
   user: User;
 }>;
-

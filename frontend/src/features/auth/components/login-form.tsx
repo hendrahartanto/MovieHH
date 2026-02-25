@@ -11,7 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link, useSearchParams } from "react-router";
 import { paths } from "@/config/paths";
-import { LoginInput, loginInputSchema, useLogin } from "@/lib/auth";
+import { useLogin } from "@/lib/auth";
+import { LoginInput, loginInputSchema } from "@/features/auth";
 import {
   SubmitButton,
   SubmitButtonType,

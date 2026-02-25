@@ -249,7 +249,7 @@ export const CreateMovieSchedule = () => {
                       placeholder="Enter ticket price"
                       value={field.value === 0 ? "" : String(field.value)}
                       onChange={(e) => {
-                        let val = e.target.value;
+                        const val = e.target.value;
                         if (val === "") {
                           field.onChange(0);
                           return;

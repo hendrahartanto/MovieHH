@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { paths } from "@/config/paths";
-import { RegisterInput, registerInputSchmea, useRegister } from "@/lib/auth";
+import { useRegister } from "@/lib/auth";
+import { RegisterInput, registerInputSchema } from "@/features/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router";
@@ -35,7 +36,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const redirectTo = searchParams.get("redirectTo");
 
   const form = useForm<RegisterInput>({
-    resolver: zodResolver(registerInputSchmea),
+    resolver: zodResolver(registerInputSchema),
     defaultValues: {
       email: "",
       name: "",
