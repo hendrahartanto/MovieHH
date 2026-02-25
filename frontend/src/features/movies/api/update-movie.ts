@@ -1,9 +1,11 @@
-import { ApiResponse, Movie } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Movie } from "../types";
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { getMoviesQueryOptions } from "./get-movies";
+
 
 export const movieStatusEnum = z.enum(["ACTIVE", "INACTIVE", "COMING_SOON"]);
 

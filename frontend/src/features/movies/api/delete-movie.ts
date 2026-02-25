@@ -2,7 +2,9 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getMoviesQueryOptions } from "./get-movies";
-import { ApiResponse, Movie } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Movie } from "../types";
+
 
 export const deleteMovie = ({
   movieId,

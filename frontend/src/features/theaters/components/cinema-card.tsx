@@ -1,5 +1,5 @@
 import { paths } from "@/config/paths";
-import { Theater } from "@/lib/api";
+import { Theater } from "../types";
 import { Armchair, Film, MapPin } from "lucide-react";
 import { Link } from "react-router";
 

@@ -35,7 +35,7 @@ import {
 import { useMemo, useState } from "react";
 import { useGenres } from "@/features/genres/api/get-genres";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Movie } from "@/lib/api";
+import { Movie } from "../../types";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 import { formatImageUrl } from "@/helper/image-helper";
 

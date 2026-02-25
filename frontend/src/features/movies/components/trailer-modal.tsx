@@ -1,4 +1,4 @@
-import { Movie } from "@/lib/api";
+import { Movie } from "../types";
 
 interface TrailerModalProps {
   movie: Movie | undefined;

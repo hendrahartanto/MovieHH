@@ -1,7 +1,9 @@
 import { z } from "zod";
-import { ApiResponse, Theater } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Theater } from "../types";
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTheatersQueryOptions } from "./get-theaters";
 

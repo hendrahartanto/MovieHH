@@ -1,4 +1,4 @@
-import { Theater } from "@/lib/api";
+import { Theater } from "../types";
 import { Film, MapPin } from "lucide-react";
 
 interface CinemaInfoProps {

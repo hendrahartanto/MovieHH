@@ -23,7 +23,7 @@ import { Authorization, ROLES } from "@/lib/authorization";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Location } from "@/lib/api";
+import { Location } from "../../types";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 
 interface UpdateLocationProps {

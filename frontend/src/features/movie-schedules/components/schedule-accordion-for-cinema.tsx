@@ -2,9 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/helper/format-helper";
 import { formatImageUrl } from "@/helper/image-helper";
-import { MovieSchedule, SeatStatus, Showtime } from "@/lib/api";
+import { MovieSchedule, SeatStatus, Showtime } from "../types";
 import { format } from "date-fns";
 import { ChevronDown, ChevronRight, Clock, Film, Ticket } from "lucide-react";
+
 
 interface ScheduleAccordionForCinemaProps {
   schedule: MovieSchedule;

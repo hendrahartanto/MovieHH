@@ -4,8 +4,9 @@ import { Loader2, Search } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMovies } from "@/features/movies/api/get-movies";
 import { MovieCard } from "@/features/movies/components/movie-card";
-import { MovieStatus } from "@/lib/api";
+import { MovieStatus } from "@/features/movies";
 import { UserSearchBox } from "@/components/ui/user-search-box";
+
 
 type TabValue = "now-showing" | "upcoming";
 

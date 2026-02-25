@@ -1,6 +1,8 @@
-import { ApiResponse, Showtime } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Showtime } from "../types";
 import { api } from "@/lib/api-client";
 import { QueryConfig } from "@/lib/react-query";
+
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getShowTimes = (

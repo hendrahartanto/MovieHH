@@ -1,6 +1,8 @@
-import { ApiResponse, MovieSchedule, Pagination } from "@/lib/api";
+import { ApiResponse, Pagination } from "@/lib/api";
+import { MovieSchedule } from "../types";
 import { api } from "@/lib/api-client";
 import { queryConfig, QueryConfig } from "@/lib/react-query";
+
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getMovieSchedules = (

@@ -37,7 +37,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { MovieSchedule } from "@/lib/api";
+import { MovieSchedule } from "../../types";
+
 
 interface UpdateMovieScheduleProps {
   schedule: MovieSchedule;

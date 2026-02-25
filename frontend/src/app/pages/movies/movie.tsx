@@ -1,6 +1,7 @@
 import { useMovie } from "@/features/movies/api/get-movie";
-import { MovieStatus } from "@/lib/api";
+import { MovieStatus } from "@/features/movies";
 import { Calendar } from "lucide-react";
+
 import { useState } from "react";
 import { useParams } from "react-router";
 import { MovieHero } from "@/features/movies/components/movie-hero";

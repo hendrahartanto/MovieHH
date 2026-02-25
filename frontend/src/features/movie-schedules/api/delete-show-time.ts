@@ -1,8 +1,10 @@
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse, Showtime } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Showtime } from "../types";
 import { getMovieSchedulesQueryOptions } from "./get-movie-schedules";
+
 
 export const deleteShowTime = ({
   showTimeId,

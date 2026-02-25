@@ -1,5 +1,5 @@
 import { formatImageUrl } from "@/helper/image-helper"
-import { Movie } from "@/lib/api"
+import { Movie } from "../types"
 import { Clock, PenLine, Play, Star, User } from "lucide-react"
 import moviePlaceHolder from "@/assets/movie-placeholder.jpg"
 import { Badge } from "@/components/ui/badge"

@@ -1,5 +1,7 @@
-import { ApiResponse, Pagination, Theater } from "@/lib/api";
+import { ApiResponse, Pagination } from "@/lib/api";
+import { Theater } from "../types";
 import { api } from "@/lib/api-client";
+
 import { QueryConfig } from "@/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 

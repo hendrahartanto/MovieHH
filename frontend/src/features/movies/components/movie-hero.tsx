@@ -1,5 +1,5 @@
 import { formatImageUrl } from "@/helper/image-helper"
-import { Movie } from "@/lib/api"
+import { Movie } from "../types"
 import { Play } from "lucide-react";
 
 interface MovieHeroProps {

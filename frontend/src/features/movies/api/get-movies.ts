@@ -1,7 +1,9 @@
-import { ApiResponse, Movie, Pagination } from "@/lib/api";
+import { ApiResponse, Pagination } from "@/lib/api";
+import { Movie } from "../types";
 import { api } from "@/lib/api-client";
 import { QueryConfig } from "@/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
+
 
 export const getMovies = (
   page = 1,

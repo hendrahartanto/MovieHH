@@ -1,5 +1,7 @@
-import { ApiResponse, Location, Pagination } from "@/lib/api";
+import { ApiResponse, Pagination } from "@/lib/api";
+import { Location } from "../types";
 import { api } from "@/lib/api-client";
+
 import { QueryConfig } from "@/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 

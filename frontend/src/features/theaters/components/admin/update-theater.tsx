@@ -31,7 +31,7 @@ import {
   SubmitButtonType,
 } from "@/components/ui/form/submit-button";
 import { useLocations } from "@/features/locations/api/get-locations";
-import { Theater } from "@/lib/api";
+import { Theater } from "../../types";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 
 interface UpdateTheaterProps {

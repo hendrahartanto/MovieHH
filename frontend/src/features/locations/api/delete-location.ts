@@ -3,6 +3,8 @@ import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getLocationsQueryOptions } from "./get-locations";
 import { ApiResponse } from "@/lib/api";
+import { Location } from "../types";
+
 
 export const deleteLocation = ({
   locationId,

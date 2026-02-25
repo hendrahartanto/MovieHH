@@ -2,7 +2,9 @@ import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getGenresQueryOptions } from "./get-genres";
-import { ApiResponse, Genre } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Genre } from "../types";
+
 
 export const deleteGenre = ({
   genreId,

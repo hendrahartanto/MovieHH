@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
-import { Theater } from "@/lib/api";
+import { Theater } from "../types";
+
 
 export const getTheater = ({ theaterId }: { theaterId: string }) => {
   return api.get<{ theater: Theater }>(`/theaters/${theaterId}`);

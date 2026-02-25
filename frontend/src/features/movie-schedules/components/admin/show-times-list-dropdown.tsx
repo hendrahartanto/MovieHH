@@ -1,7 +1,8 @@
-import { Showtime } from "@/lib/api";
+import { Showtime } from "../../types";
 import { CreateShowTime } from "./create-show-time";
 import { Clock, CalendarX } from "lucide-react";
 import { DeleteShowTime } from "./delete-show-time";
+
 
 interface ShowTimesListDropdownProps {
   showTimes: Showtime[];

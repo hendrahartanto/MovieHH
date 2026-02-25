@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/helper/format-helper";
-import { MovieSchedule, SeatStatus, Showtime } from "@/lib/api";
+import { MovieSchedule, SeatStatus, Showtime } from "../types";
 import { format } from "date-fns";
 import { ChevronRight, MapPin, Ticket } from "lucide-react";
+
 
 interface ScheduleAccordionForMovieProps {
   schedule: MovieSchedule;

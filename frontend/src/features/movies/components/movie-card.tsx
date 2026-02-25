@@ -1,6 +1,6 @@
 import { Play, Ticket } from "lucide-react";
 import moviePlaceHolder from "@/assets/movie-placeholder.jpg";
-import { Movie } from "@/lib/api";
+import { Movie } from "../types";
 import { formatImageUrl } from "@/helper/image-helper";
 import { useNavigate } from "react-router";
 import { paths } from "@/config/paths";

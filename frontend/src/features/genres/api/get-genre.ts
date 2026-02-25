@@ -1,6 +1,8 @@
-import { ApiResponse, Genre } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { Genre } from "../types";
 import { api } from "@/lib/api-client";
 import { QueryConfig } from "@/lib/react-query";
+
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getGenre = ({

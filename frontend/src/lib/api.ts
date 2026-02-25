@@ -1,4 +1,19 @@
 import { ROLES } from "./authorization";
+import type { Showtime } from "@/features/movie-schedules/types";
+import type { Seat } from "@/features/theaters/types";
+
+// Re-export types for backward compatibility
+export type { Genre } from "@/features/genres/types";
+export type { Movie } from "@/features/movies/types";
+export { MovieStatus } from "@/features/movies/types";
+export type {
+  MovieSchedule,
+  Showtime,
+  SeatsOnShowtimes,
+} from "@/features/movie-schedules/types";
+export type { Location } from "@/features/locations/types";
+export type { Seat, Theater } from "@/features/theaters/types";
+export { SeatStatus } from "@/features/theaters/types";
 
 export type ApiResponse<T> = {
   message: string;
@@ -10,18 +25,6 @@ export enum ReservationStatus {
   CONFIRMED = "CONFIRMED",
   CANCELLED = "CANCELLED",
   EXPIRED = "EXPIRED",
-}
-
-export enum SeatStatus {
-  AVAILABLE = "AVAILABLE",
-  HOLD = "HOLD",
-  RESERVED = "RESERVED",
-}
-
-export enum MovieStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  COMING_SOON = "COMING_SOON",
 }
 
 export type Pagination = {
@@ -39,84 +42,6 @@ export type User = {
   password: string;
   createdAt: Date;
   updatedAt: Date;
-};
-
-export type Movie = {
-  id: string;
-  title: string;
-  synopsis?: string;
-  posterUrl?: string;
-  bannerUrl?: string;
-  duration: number;
-  director?: string;
-  writer?: string;
-  isFeatured: boolean;
-  status: MovieStatus;
-  trailerUrl?: string;
-  genres: Genre[];
-  movieSchedules: MovieSchedule[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Genre = {
-  id: string;
-  name: string;
-  movie: Movie[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Theater = {
-  id: string;
-  name: string;
-  seats: Seat[];
-  location: Location;
-  movieSchedules: MovieSchedule[];
-  createdAt: Date;
-};
-
-export type Seat = {
-  id: string;
-  seatNumber: string;
-  seatRow: string;
-  //theater
-  //reservations
-  //showTimes
-};
-
-export type MovieSchedule = {
-  id: string;
-  movie: Movie;
-  theater: Theater;
-  price: number;
-  date: Date;
-  showTimes: Showtime[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Showtime = {
-  id: string;
-  startTime: Date;
-  endTime: Date;
-  seats: Seat[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type Location = {
-  id: string;
-  name: string;
-  address: string;
-  theaters: Theater[];
-  createdAt: Date;
-};
-
-export type SeatsOnShowtimes = {
-  seat: Seat;
-  showtime: Showtime;
-  status: SeatStatus;
 };
 
 export type Reservation = {
@@ -140,3 +65,4 @@ export type AuthResponse = ApiResponse<{
   token: string;
   user: User;
 }>;
+

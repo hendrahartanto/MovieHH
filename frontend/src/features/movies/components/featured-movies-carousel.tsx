@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, Clock, Star } from "lucide-react";
 import { useFeaturedMovies } from "@/features/movies/api/get-featured-movies";
 import { formatImageUrl } from "@/helper/image-helper";
 import { TrailerModal } from "./trailer-modal";
-import { Movie } from "@/lib/api";
+import { Movie } from "../types";
 
 export const FeaturedMoviesCarousel = () => {
   const { data, isLoading } = useFeaturedMovies({});

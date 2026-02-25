@@ -1,6 +1,8 @@
-import { ApiResponse, MovieSchedule } from "@/lib/api";
+import { ApiResponse } from "@/lib/api";
+import { MovieSchedule } from "../types";
 import { api } from "@/lib/api-client";
 import { MutationConfig } from "@/lib/react-query";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { getMovieSchedulesQueryOptions } from "./get-movie-schedules";
