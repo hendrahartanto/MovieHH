@@ -43,6 +43,7 @@ MovieHH is a monorepo movie reservation system.
 
 ### General
 - **TypeScript**: Strict typing is enabled. Avoid `any`. Use interfaces/types for all data structures.
+- **Quotes**: Strictly use double quotes (`"`) for strings across the entire codebase (both frontend and backend). Avoid using single quotes (`'`).
 - **Imports**: Use absolute paths or clean relative imports. Group imports by third-party vs. local.
 - **Formatting**: Prettier is likely implied (standard JS/TS formatting).
 
