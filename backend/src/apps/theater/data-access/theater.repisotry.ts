@@ -51,7 +51,7 @@ const getTheaters = async () => {
   });
 };
 
-const updateTheater = async (theaterId: string, data: { name: string }) => {
+const updateTheater = async (theaterId: string, data: { name?: string, layout?: any }) => {
   return prisma.theater.update({
     where: { id: theaterId },
     data,

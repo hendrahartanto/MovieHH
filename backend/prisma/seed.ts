@@ -136,6 +136,17 @@ async function seedLocationsAndTheaters() {
     },
   ];
 
+  const dummyLayout: (0 | 1)[][] = [
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1], // Row A
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1], // Row B
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1], // Row C
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1], // Row D
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Walkway
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1], // Row E
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1], // Row F
+    [1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1]  // Row G
+  ];
+
   const createdTheaters = [];
   for (const loc of locations) {
     const location = await prisma.location.upsert({
@@ -151,6 +162,7 @@ async function seedLocationsAndTheaters() {
       const theater = await theaterService.createTheater({
         name: t,
         locationId: location.id,
+        layout: dummyLayout,
       });
       createdTheaters.push(theater);
     }

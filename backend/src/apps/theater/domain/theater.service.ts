@@ -5,19 +5,36 @@ import { UpdateTheaterDTO } from "./dto/update-theater.dto";
 
 const createTheater = async (newTheaterData: CreateTheaterDTO) => {
   const theater = await theaterRepisotry.createTheater(newTheaterData);
+  const layout = newTheaterData.layout as number[][];
 
   const seats = [];
-  for (let row = 1; row <= 3; row++) {
-    for (let number = 1; number <= 10; number++) {
-      seats.push({
-        theaterId: theater.id,
-        seatNumber: `${number}`,
-        seatRow: String.fromCharCode(64 + row),
-      });
+  let validRowCount = 0;
+
+  for (let rowIndex = 0; rowIndex < layout.length; rowIndex++) {
+    const row = layout[rowIndex];
+
+    const isCorridorRow = row.every((val) => val === 0);
+    if (isCorridorRow) continue;
+
+    const seatRowChar = String.fromCharCode(65 + validRowCount); // A, B, C...
+    validRowCount++;
+
+    let seatNumberCounter = 1;
+    for (let colIndex = 0; colIndex < row.length; colIndex++) {
+      if (row[colIndex] === 1) {
+        seats.push({
+          theaterId: theater.id,
+          seatRow: seatRowChar,
+          seatNumber: `${seatNumberCounter}`,
+        });
+        seatNumberCounter++;
+      }
     }
   }
 
-  await seatRepository.createSeats(seats);
+  if (seats.length > 0) {
+    await seatRepository.createSeats(seats);
+  }
 
   return theater;
 };
@@ -25,7 +42,7 @@ const createTheater = async (newTheaterData: CreateTheaterDTO) => {
 const getTheatersPaginated = async (
   page: number,
   limit: number,
-  search: string
+  search: string,
 ) => {
   return theaterRepisotry.getTheatersPaginated(page, limit, search);
 };
@@ -42,7 +59,7 @@ const getTheater = async (theaterId: string) => {
 
 const updateTheater = async (
   theaterId: string,
-  updateTheaterData: UpdateTheaterDTO
+  updateTheaterData: UpdateTheaterDTO,
 ) => {
   const existingTheater = await theaterRepisotry.getTheaterById(theaterId);
   if (!existingTheater) throw new Error("Theater not found");

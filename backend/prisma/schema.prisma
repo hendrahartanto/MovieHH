@@ -83,6 +83,7 @@ model Location {
 model Theater {
   id         String   @id @default(uuid()) @db.Uuid
   name       String
+  layout     Json
   location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId String   @db.Uuid
 
