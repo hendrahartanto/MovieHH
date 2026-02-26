@@ -1,5 +1,5 @@
 import { Queue, Worker } from "bullmq";
-import { redisConnection } from "../core/redis";
+import { redisConnection } from "../infrastructure/redis";
 import showTimeRepository from "../apps/show-time/data-access/show-time.repository";
 import reservationRepository from "../apps/reservation/data-access/reservation.repository";
 

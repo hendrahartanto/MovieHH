@@ -3,7 +3,7 @@ import {
   BadRequestError,
   BadTokenError,
   TokenExpireError,
-} from "../../../core/api-error";
+} from "../../../lib/exceptions/api-error";
 import userRepository from "../../user/data-access/user.repository";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import bcrypt from "bcrypt";
@@ -12,7 +12,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
-} from "../../../core/utils/jwt";
+} from "../../../lib/utils/jwt.util";
 
 const register = async (registerUserData: CreateUserDTO) => {
   const passwordHash = await bcrypt.hash(registerUserData.password, 10);

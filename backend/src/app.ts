@@ -4,9 +4,9 @@ import {
   BadRequestError,
   ErrorType,
   InternalError,
-} from "./core/api-error";
+} from "./lib/exceptions/api-error";
 import loggerMiddleware from "./middlewares/logger.middleware";
-import logger from "./core/utils/logger";
+import logger from "./lib/utils/logger";
 import routes from "./routes/index";
 import cookieParser from "cookie-parser";
 import { ZodError } from "zod";

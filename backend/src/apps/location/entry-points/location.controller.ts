@@ -1,5 +1,5 @@
-import { SuccessResponse } from "../../../core/api-response";
-import asyncHandler from "../../../core/helpers/async-handler";
+import { SuccessResponse } from "../../../lib/http/api-response";
+import asyncHandler from "../../../lib/utils/async.util";
 import { createLocationSchema } from "../domain/dto/create-location.dto";
 import { updateLocationSchema } from "../domain/dto/update-location.dto";
 import locationService from "../domain/location.service";

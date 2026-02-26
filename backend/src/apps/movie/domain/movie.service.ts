@@ -1,4 +1,4 @@
-import { BadRequestError, NoDataError } from "../../../core/api-error";
+import { BadRequestError, NoDataError } from "../../../lib/exceptions/api-error";
 import genreRepository from "../../genre/data-access/genre.repository";
 import movieRepository from "../data-access/movie.repository";
 import { CreateMovieDTO } from "./dto/create-movie.dto";

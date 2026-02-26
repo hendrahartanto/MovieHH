@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { ForbiddenError, NoDataError } from "../../../core/api-error";
+import { ForbiddenError, NoDataError } from "../../../lib/exceptions/api-error";
 import reservationRepository from "../../reservation/data-access/reservation.repository";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";

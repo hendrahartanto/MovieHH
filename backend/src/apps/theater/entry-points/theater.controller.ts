@@ -1,5 +1,5 @@
-import { SuccessResponse } from "../../../core/api-response";
-import asyncHandler from "../../../core/helpers/async-handler";
+import { SuccessResponse } from "../../../lib/http/api-response";
+import asyncHandler from "../../../lib/utils/async.util";
 import { createTheaterSchema } from "../domain/dto/create-theater.dto";
 import theaterService from "../domain/theater.service";
 

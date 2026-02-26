@@ -1,4 +1,4 @@
-import { BadRequestError } from "../../../core/api-error";
+import { BadRequestError } from "../../../lib/exceptions/api-error";
 import locationRepository from "../data-access/location.repository";
 import { CreateLocationDTO } from "./dto/create-location.dto";
 import { UpdateLocationDTO } from "./dto/update-location.dto";

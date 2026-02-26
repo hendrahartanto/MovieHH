@@ -1,5 +1,5 @@
 import pinoHttp from "pino-http";
-import logger from "../core/utils/logger";
+import logger from "../lib/utils/logger";
 
 const loggerMiddleware = pinoHttp({
   logger,

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import asyncHandler from "../core/helpers/async-handler";
-import { AccessTokenError, AuthFailureError } from "../core/api-error";
-import { verifyAccessToken } from "../core/utils/jwt";
+import asyncHandler from "../lib/utils/async.util";
+import { AccessTokenError, AuthFailureError } from "../lib/exceptions/api-error";
+import { verifyAccessToken } from "../lib/utils/jwt.util";
 import { ProtectedRequest } from "../types/app-requests";
 import { TokenExpiredError } from "jsonwebtoken";
 import userRepository from "../apps/user/data-access/user.repository";

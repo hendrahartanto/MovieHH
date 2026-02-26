@@ -5,7 +5,7 @@ import {
   ForbiddenResponse,
   InternalErrorResponse,
   NotFoundResponse,
-} from "./api-response";
+} from "../http/api-response";
 
 export enum ErrorType {
   BAD_TOKEN = "BadTokenError",
