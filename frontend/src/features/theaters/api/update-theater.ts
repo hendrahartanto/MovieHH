@@ -6,10 +6,12 @@ import { MutationConfig } from "@/lib/react-query";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTheatersQueryOptions } from "./get-theaters";
+import { layoutSchema } from "./create-theater";
 
 export const updateTheaterInputSchema = z.object({
   name: z.string().min(1, "Name is required"),
   locationId: z.string().uuid("Invalid location ID"),
+  layout: layoutSchema.optional(),
 });
 
 export type UpdateTheaterInput = z.infer<typeof updateTheaterInputSchema>;

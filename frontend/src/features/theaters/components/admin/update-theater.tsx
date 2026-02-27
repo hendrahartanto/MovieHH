@@ -33,10 +33,15 @@ import {
 import { useLocations } from "@/features/locations/api/get-locations";
 import { Theater } from "../../types";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+import { TheaterLayoutEditor } from "./theater-layout-editor";
 
 interface UpdateTheaterProps {
   theater: Theater;
 }
+
+const generateDefaultLayout = (rows: number, cols: number): (0 | 1)[][] => {
+  return Array(rows).fill(Array(cols).fill(1));
+};
 
 export const UpdateTheater = ({ theater }: UpdateTheaterProps) => {
   const { data: locationsData, isLoading: isLoadingLocations } = useLocations({
@@ -60,6 +65,7 @@ export const UpdateTheater = ({ theater }: UpdateTheaterProps) => {
     defaultValues: {
       name: theater.name,
       locationId: theater.location?.id || "",
+      layout: theater.layout || generateDefaultLayout(8, 10),
     },
   });
 
@@ -150,6 +156,26 @@ export const UpdateTheater = ({ theater }: UpdateTheaterProps) => {
                   </Select>
                   <FormDescription>
                     Choose the location where this theater is located.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="layout"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Theater Layout</FormLabel>
+                  <FormControl>
+                    <TheaterLayoutEditor
+                      value={field.value ?? []}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Design the seating layout. + for seat, empty for corridor.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

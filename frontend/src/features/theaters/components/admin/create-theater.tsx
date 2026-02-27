@@ -32,6 +32,11 @@ import {
 } from "@/components/ui/form/submit-button";
 import { useLocations } from "@/features/locations/api/get-locations";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+import { TheaterLayoutEditor } from "./theater-layout-editor";
+
+const generateDefaultLayout = (rows: number, cols: number): (0 | 1)[][] => {
+  return Array(rows).fill(Array(cols).fill(1));
+};
 
 export const CreateTheater = () => {
   const { data: locationsData, isLoading: isLoadingLocations } = useLocations({
@@ -56,6 +61,7 @@ export const CreateTheater = () => {
     defaultValues: {
       name: "",
       locationId: "",
+      layout: generateDefaultLayout(8, 10),
     },
   });
 
@@ -153,6 +159,26 @@ export const CreateTheater = () => {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="layout"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Theater Layout</FormLabel>
+                  <FormControl>
+                    <TheaterLayoutEditor
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Design the seating layout. + for seat, empty for corridor.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {form.watch("locationId") && locationsData?.data.locations && (
               <div className="space-y-2">
                 <FormLabel className="text-foreground font-medium">
@@ -188,3 +214,4 @@ export const CreateTheater = () => {
     </Authorization>
   );
 };
+
