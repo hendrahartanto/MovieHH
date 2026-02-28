@@ -29,6 +29,7 @@ import { formatImageUrl } from "@/helper/image-helper";
 import { getStatusLabel, getStatusVariant } from "@/helper/enum-display-helper";
 import { useState } from "react";
 import { Lightbox } from "@/components/ui/lightbox";
+import moviePlaceholder from "@/assets/movie-placeholder.jpg";
 
 export const MoviesList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -100,17 +101,15 @@ export const MoviesList = () => {
                           if (movie.posterUrl) openLightbox(movie.posterUrl);
                         }}
                       >
-                        {movie.posterUrl ? (
-                          <img
-                            src={formatImageUrl(movie.posterUrl)}
-                            alt={movie.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <ImageIcon className="w-5 h-5 text-muted-foreground" />
-                          </div>
-                        )}
+                        <img
+                          src={
+                            movie.posterUrl
+                              ? formatImageUrl(movie.posterUrl)
+                              : moviePlaceholder
+                          }
+                          alt={movie.title}
+                          className="w-full h-full object-cover"
+                        />
                         {movie.isFeatured && (
                           <div className="absolute top-1 right-1 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
                             <Star className="w-3 h-3 text-white fill-white" />
