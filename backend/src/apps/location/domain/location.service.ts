@@ -1,7 +1,7 @@
 import { BadRequestError } from "../../../lib/exceptions/api-error";
 import locationRepository from "../data-access/location.repository";
-import { CreateLocationDTO } from "./dto/create-location.dto";
-import { UpdateLocationDTO } from "./dto/update-location.dto";
+import { CreateLocationDTO } from "../dto/create-location.dto";
+import { UpdateLocationDTO } from "../dto/update-location.dto";
 
 const createLocation = async (createLocationData: CreateLocationDTO) => {
   const existingLocation = await locationRepository.getLocationByName(

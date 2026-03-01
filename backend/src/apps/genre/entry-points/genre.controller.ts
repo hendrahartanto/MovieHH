@@ -1,6 +1,6 @@
 import { SuccessResponse } from "../../../lib/http/api-response";
 import asyncHandler from "../../../lib/utils/async.util";
-import { createGenreSchema } from "../domain/dto/create-genre.dto";
+import { createGenreSchema } from "../dto/create-genre.dto";
 import genreService from "../domain/genre.service";
 
 const createGenre = asyncHandler(async (req, res) => {

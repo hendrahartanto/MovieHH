@@ -1,8 +1,8 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import prisma from "../../../db";
-import { CreateShowTimeSeatsDTO } from "../domain/dto/create-show-time-seats.dto.ts";
-import { CreateShowTimeDTO } from "../domain/dto/create-show-time.dto";
-import { CreateMovieScheduleDTO } from "../domain/dto/create-movie-schedule.dto";
+import { CreateShowTimeSeatsDTO } from "../dto/create-show-time-seats.dto";
+import { CreateShowTimeDTO } from "../dto/create-show-time.dto";
+import { CreateMovieScheduleDTO } from "../dto/create-movie-schedule.dto";
 import { endOfDay, startOfDay } from "date-fns";
 
 const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {

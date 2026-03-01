@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
-import { CreateLocationDTO } from "../domain/dto/create-location.dto";
-import { UpdateLocationDTO } from "../domain/dto/update-location.dto";
+import { CreateLocationDTO } from "../dto/create-location.dto";
+import { UpdateLocationDTO } from "../dto/update-location.dto";
 
 const createLocation = async (newLocationData: CreateLocationDTO) => {
   return prisma.location.create({

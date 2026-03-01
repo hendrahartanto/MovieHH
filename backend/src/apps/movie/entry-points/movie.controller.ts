@@ -1,7 +1,7 @@
 import { SuccessResponse } from "../../../lib/http/api-response";
 import asyncHandler from "../../../lib/utils/async.util";
-import { createMovieSchema } from "../domain/dto/create-movie.dto";
-import { updateMovieSchema } from "../domain/dto/update-movie.dto";
+import { createMovieSchema } from "../dto/create-movie.dto";
+import { updateMovieSchema } from "../dto/update-movie.dto";
 import movieService from "../domain/movie.service";
 
 const createMovie = asyncHandler(async (req, res) => {

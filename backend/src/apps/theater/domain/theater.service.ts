@@ -1,10 +1,10 @@
 import seatRepository from "../../seat/data-access/seat.repository";
-import theaterRepisotry from "../data-access/theater.repisotry";
-import { CreateTheaterDTO } from "./dto/create-theater.dto";
-import { UpdateTheaterDTO } from "./dto/update-theater.dto";
+import theaterRepository from "../data-access/theater.repository";
+import { CreateTheaterDTO } from "../dto/create-theater.dto";
+import { UpdateTheaterDTO } from "../dto/update-theater.dto";
 
 const createTheater = async (newTheaterData: CreateTheaterDTO) => {
-  const theater = await theaterRepisotry.createTheater(newTheaterData);
+  const theater = await theaterRepository.createTheater(newTheaterData);
   const layout = newTheaterData.layout as number[][];
 
   const seats = [];
@@ -44,15 +44,15 @@ const getTheatersPaginated = async (
   limit: number,
   search: string,
 ) => {
-  return theaterRepisotry.getTheatersPaginated(page, limit, search);
+  return theaterRepository.getTheatersPaginated(page, limit, search);
 };
 
 const getTheaters = async () => {
-  return theaterRepisotry.getTheaters();
+  return theaterRepository.getTheaters();
 };
 
 const getTheater = async (theaterId: string) => {
-  const theater = await theaterRepisotry.getTheaterById(theaterId);
+  const theater = await theaterRepository.getTheaterById(theaterId);
   if (!theater) throw new Error("Theater not found");
   return theater;
 };
@@ -61,17 +61,17 @@ const updateTheater = async (
   theaterId: string,
   updateTheaterData: UpdateTheaterDTO,
 ) => {
-  const existingTheater = await theaterRepisotry.getTheaterById(theaterId);
+  const existingTheater = await theaterRepository.getTheaterById(theaterId);
   if (!existingTheater) throw new Error("Theater not found");
 
-  return theaterRepisotry.updateTheater(theaterId, updateTheaterData);
+  return theaterRepository.updateTheater(theaterId, updateTheaterData);
 };
 
 const deleteTheater = async (theaterId: string) => {
-  const existingTheater = await theaterRepisotry.getTheaterById(theaterId);
+  const existingTheater = await theaterRepository.getTheaterById(theaterId);
   if (!existingTheater) throw new Error("Theater not found");
 
-  return theaterRepisotry.deleteTheater(theaterId);
+  return theaterRepository.deleteTheater(theaterId);
 };
 
 export default {

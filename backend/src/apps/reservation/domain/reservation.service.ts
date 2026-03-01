@@ -5,7 +5,7 @@ import prisma from "../../../db";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import reservationRepository from "../data-access/reservation.repository";
-import { CreateReservationHoldDTO } from "./dto/create-reservation-hold.dto";
+import { CreateReservationHoldDTO } from "../dto/create-reservation-hold.dto";
 
 const createReservationHold = async (
   newReservationHoldData: CreateReservationHoldDTO,

@@ -1,6 +1,6 @@
 import { SuccessResponse } from "../../../lib/http/api-response";
 import asyncHandler from "../../../lib/utils/async.util";
-import { createTheaterSchema } from "../domain/dto/create-theater.dto";
+import { createTheaterSchema } from "../dto/create-theater.dto";
 import theaterService from "../domain/theater.service";
 
 const createTheater = asyncHandler(async (req, res) => {

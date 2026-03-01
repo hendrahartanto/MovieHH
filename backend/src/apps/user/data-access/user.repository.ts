@@ -1,5 +1,5 @@
 import prisma from "../../../db";
-import { CreateUserDTO } from "../../auth/domain/dto/create-user.dto";
+import { CreateUserDTO } from "../../auth/dto/create-user.dto";
 
 const createUser = async (newUserData: CreateUserDTO) => {
   return prisma.user.create({ data: newUserData });

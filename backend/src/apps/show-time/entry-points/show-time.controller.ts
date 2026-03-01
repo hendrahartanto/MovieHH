@@ -1,10 +1,10 @@
 import { SuccessResponse } from "../../../lib/http/api-response";
 import asyncHandler from "../../../lib/utils/async.util";
-import { createMovieScheduleSchema } from "../domain/dto/create-movie-schedule.dto";
-import { createShowTimeSchema } from "../domain/dto/create-show-time.dto";
-import { getMovieScheduleByDateRangeSchema } from "../domain/dto/get-movie-schedule-by-date-range.dto";
-import { getShowTimesByDateRangeSchema } from "../domain/dto/get-show-times-by-date-range.dto";
-import { updateMovieScheduleSchema } from "../domain/dto/update-movie-schedule.dto";
+import { createMovieScheduleSchema } from "../dto/create-movie-schedule.dto";
+import { createShowTimeSchema } from "../dto/create-show-time.dto";
+import { getMovieScheduleByDateRangeSchema } from "../dto/get-movie-schedule-by-date-range.dto";
+import { getShowTimesByDateRangeSchema } from "../dto/get-show-times-by-date-range.dto";
+import { updateMovieScheduleSchema } from "../dto/update-movie-schedule.dto";
 import showTimeService from "../domain/show-time.service";
 
 const createMovieSchedule = asyncHandler(async (req, res) => {

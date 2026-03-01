@@ -5,14 +5,14 @@ import {
   updateDateOnly,
 } from "../../../lib/utils/date.util";
 import movieRepository from "../../movie/data-access/movie.repository";
-import theaterRepisotry from "../../theater/data-access/theater.repisotry";
+import theaterRepository from "../../theater/data-access/theater.repository";
 import showTimeRepository from "../data-access/show-time.repository";
-import { CreateMovieScheduleDTO } from "./dto/create-movie-schedule.dto";
-import { CreateShowTimeSeatsDTO } from "./dto/create-show-time-seats.dto.ts";
-import { CreateShowTimeDTO } from "./dto/create-show-time.dto";
-import { GetMovieScheduleByDateRangeDTO } from "./dto/get-movie-schedule-by-date-range.dto";
-import { GetShowTimesByDateRangeDTO } from "./dto/get-show-times-by-date-range.dto";
-import { UpdateMovieScheduleDTO } from "./dto/update-movie-schedule.dto";
+import { CreateMovieScheduleDTO } from "../dto/create-movie-schedule.dto";
+import { CreateShowTimeSeatsDTO } from "../dto/create-show-time-seats.dto";
+import { CreateShowTimeDTO } from "../dto/create-show-time.dto";
+import { GetMovieScheduleByDateRangeDTO } from "../dto/get-movie-schedule-by-date-range.dto";
+import { GetShowTimesByDateRangeDTO } from "../dto/get-show-times-by-date-range.dto";
+import { UpdateMovieScheduleDTO } from "../dto/update-movie-schedule.dto";
 
 const createMovieSchedule = async (
   newMovieScheduleData: CreateMovieScheduleDTO,
@@ -22,7 +22,7 @@ const createMovieSchedule = async (
   const existingMovie = await movieRepository.getMovieById(movieId);
   if (!existingMovie) throw new NoDataError("Movie not found");
 
-  const existingTheater = await theaterRepisotry.getTheaterById(theaterId);
+  const existingTheater = await theaterRepository.getTheaterById(theaterId);
   if (!existingTheater) throw new NoDataError("Theater not found");
 
   const existingMovieSchedule =

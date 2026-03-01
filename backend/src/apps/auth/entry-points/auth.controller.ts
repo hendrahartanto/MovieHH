@@ -1,11 +1,11 @@
 import asyncHandler from "../../../lib/utils/async.util";
-import { createUserSchema } from "../domain/dto/create-user.dto";
+import { createUserSchema } from "../dto/create-user.dto";
 import authService from "../domain/auth.service";
 import {
   SuccessMsgResponse,
   SuccessResponse,
 } from "../../../lib/http/api-response";
-import { loginUserSchema } from "../domain/dto/login-user.dto";
+import { loginUserSchema } from "../dto/login-user.dto";
 import { BadTokenError, TokenExpireError } from "../../../lib/exceptions/api-error";
 import { ProtectedRequest } from "../../../types/app-requests";
 import { verifyAccessToken } from "../../../lib/utils/jwt.util";

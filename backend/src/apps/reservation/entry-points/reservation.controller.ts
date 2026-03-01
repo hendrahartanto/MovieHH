@@ -1,9 +1,9 @@
 import { SuccessResponse } from "../../../lib/http/api-response";
 import asyncHandler from "../../../lib/utils/async.util";
 import { ProtectedRequest } from "../../../types/app-requests";
-import { cancelReservationSchema } from "../domain/dto/cancel-reservation.dto";
-import { createReservationHoldSchema } from "../domain/dto/create-reservation-hold.dto";
-import { createReservationPaymentSchema } from "../domain/dto/create-reservation-payment.dto";
+import { cancelReservationSchema } from "../dto/cancel-reservation.dto";
+import { createReservationHoldSchema } from "../dto/create-reservation-hold.dto";
+import { createReservationPaymentSchema } from "../dto/create-reservation-payment.dto";
 import reservationService from "../domain/reservation.service";
 
 const createReservationHold = asyncHandler<ProtectedRequest>(

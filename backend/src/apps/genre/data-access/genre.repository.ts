@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
-import { CreateGenreDTO } from "../domain/dto/create-genre.dto";
+import { CreateGenreDTO } from "../dto/create-genre.dto";
 
 const createGenre = async (newGenreData: CreateGenreDTO) => {
   return prisma.genre.create({

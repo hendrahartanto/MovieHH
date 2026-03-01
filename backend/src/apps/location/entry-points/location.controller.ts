@@ -1,7 +1,7 @@
 import { SuccessResponse } from "../../../lib/http/api-response";
 import asyncHandler from "../../../lib/utils/async.util";
-import { createLocationSchema } from "../domain/dto/create-location.dto";
-import { updateLocationSchema } from "../domain/dto/update-location.dto";
+import { createLocationSchema } from "../dto/create-location.dto";
+import { updateLocationSchema } from "../dto/update-location.dto";
 import locationService from "../domain/location.service";
 
 const createLocation = asyncHandler(async (req, res) => {

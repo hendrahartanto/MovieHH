@@ -1,6 +1,6 @@
 import { BadRequestError } from "../../../lib/exceptions/api-error";
 import genreRepository from "../data-access/genre.repository";
-import { CreateGenreDTO, createGenreSchema } from "./dto/create-genre.dto";
+import { CreateGenreDTO, createGenreSchema } from "../dto/create-genre.dto";
 
 const createGenre = async (createGenreData: CreateGenreDTO) => {
   const existingGenre = await genreRepository.getGenreByName(

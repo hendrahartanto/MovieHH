@@ -5,9 +5,9 @@ import {
   TokenExpireError,
 } from "../../../lib/exceptions/api-error";
 import userRepository from "../../user/data-access/user.repository";
-import { CreateUserDTO } from "./dto/create-user.dto";
+import { CreateUserDTO } from "../dto/create-user.dto";
 import bcrypt from "bcrypt";
-import { LoginUserDTO } from "./dto/login-user.dto";
+import { LoginUserDTO } from "../dto/login-user.dto";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -52,8 +52,8 @@ const refreshAccessToken = async (refreshToken: string) => {
     const user = await userRepository.getUserById(decoded.userId);
     if (!user) throw new BadTokenError();
 
-    const newAccessTooken = generateAccessToken(user.id);
-    return newAccessTooken;
+    const newAccessToken = generateAccessToken(user.id);
+    return newAccessToken;
   } catch (error) {
     throw new TokenExpireError("Session expired");
   }
