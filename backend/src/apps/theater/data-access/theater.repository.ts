@@ -62,6 +62,22 @@ const deleteTheater = async (theaterId: string) => {
   return prisma.theater.delete({ where: { id: theaterId } });
 };
 
+const getTheaterByShowTimeId = async (showTimeId: string) => {
+  return prisma.theater.findFirst({
+    where: {
+      movieSchedules: {
+        some: {
+          showTimes: {
+            some: {
+              id: showTimeId,
+            },
+          },
+        },
+      },
+    },
+  });
+};
+
 export default {
   createTheater,
   getTheaterById,
@@ -69,4 +85,5 @@ export default {
   getTheaters,
   updateTheater,
   deleteTheater,
+  getTheaterByShowTimeId,
 };

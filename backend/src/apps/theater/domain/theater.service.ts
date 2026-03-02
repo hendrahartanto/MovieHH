@@ -74,6 +74,13 @@ const deleteTheater = async (theaterId: string) => {
   return theaterRepository.deleteTheater(theaterId);
 };
 
+const getTheaterByShowTimeId = async (showTimeId: string) => {
+  const theater = await theaterRepository.getTheaterByShowTimeId(showTimeId);
+  if (!theater) throw new Error("Theater not found for this showtime");
+
+  return theater;
+};
+
 export default {
   createTheater,
   updateTheater,
@@ -81,4 +88,5 @@ export default {
   getTheatersPaginated,
   getTheaters,
   getTheater,
+  getTheaterByShowTimeId,
 };
