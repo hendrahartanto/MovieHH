@@ -4,6 +4,7 @@ export * from "./api/get-movie-schedules-by-date";
 export * from "./api/get-movie-schedules-by-movieid-and-date";
 export * from "./api/get-movie-schedules-by-theaterid-and-date";
 export * from "./api/get-show-times-by-movie-schedule-id";
+export * from "./api/get-show-time-seats";
 export * from "./api/create-movie-schedule";
 export * from "./api/create-show-time";
 export * from "./api/update-movie-schedule";
