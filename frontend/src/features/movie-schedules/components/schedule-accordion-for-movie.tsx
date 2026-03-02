@@ -3,7 +3,9 @@ import { formatPrice } from "@/helper/format-helper";
 import { MovieSchedule, SeatStatus, Showtime } from "../types";
 import { format } from "date-fns";
 import { ChevronRight, MapPin, Ticket } from "lucide-react";
-
+import { useUser } from "@/lib/auth";
+import { useState } from "react";
+import { AuthAlertModal } from "@/components/ui/auth-alert-modal";
 
 interface ScheduleAccordionForMovieProps {
   schedule: MovieSchedule;
@@ -20,6 +22,8 @@ export const ScheduleAccordionForMovie = ({
   setSelectedScheduleId,
   setSelectedShowtimeId,
 }: ScheduleAccordionForMovieProps) => {
+  const user = useUser();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const isOpen = selectedScheduleId === schedule.id;
   const theater = schedule.theater;
 
@@ -27,6 +31,15 @@ export const ScheduleAccordionForMovie = ({
     return showtime.seats.filter(
       (s: any) => !s.status || s.status === SeatStatus.AVAILABLE,
     ).length;
+  };
+
+  const handleSelectSeats = () => {
+    if (!user.data) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    //TODO: redirect user to seat selectmen page
   };
 
   return (
@@ -132,7 +145,10 @@ export const ScheduleAccordionForMovie = ({
                   </span>
                   <span className="ml-1">/ seat</span>
                 </div>
-                <Button className="cinema-gradient cinema-glow text-white font-semibold gap-2 px-6">
+                <Button
+                  onClick={handleSelectSeats}
+                  className="cinema-gradient cinema-glow text-white font-semibold gap-2 px-6"
+                >
                   <Ticket className="w-4 h-4" />
                   Select Seats
                   <ChevronRight className="w-4 h-4" />
@@ -141,6 +157,10 @@ export const ScheduleAccordionForMovie = ({
             )}
         </div>
       )}
+      <AuthAlertModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
   );
 };
