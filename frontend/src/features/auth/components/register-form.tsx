@@ -123,6 +123,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             <SubmitButton
               isPending={register.isPending}
               type={SubmitButtonType.REGISTER}
+              variant={"glow"}
             >
               Register
             </SubmitButton>

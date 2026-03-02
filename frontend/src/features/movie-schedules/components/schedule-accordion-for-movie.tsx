@@ -6,6 +6,8 @@ import { ChevronRight, MapPin, Ticket } from "lucide-react";
 import { useUser } from "@/lib/auth";
 import { useState } from "react";
 import { AuthAlertModal } from "@/components/ui/auth-alert-modal";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
 interface ScheduleAccordionForMovieProps {
   schedule: MovieSchedule;
@@ -23,6 +25,7 @@ export const ScheduleAccordionForMovie = ({
   setSelectedShowtimeId,
 }: ScheduleAccordionForMovieProps) => {
   const user = useUser();
+  const navigate = useNavigate();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const isOpen = selectedScheduleId === schedule.id;
   const theater = schedule.theater;
@@ -39,7 +42,9 @@ export const ScheduleAccordionForMovie = ({
       return;
     }
 
-    //TODO: redirect user to seat selectmen page
+    if (selectedShowtimeId) {
+      navigate(paths.seatSelection.getHref(selectedShowtimeId));
+    }
   };
 
   return (

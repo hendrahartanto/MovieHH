@@ -24,8 +24,11 @@ export type MovieSchedule = {
   updatedAt: Date;
 };
 
-export type SeatsOnShowtimes = {
-  seat: Seat;
-  showtime: Showtime;
+export type ShowtimeSeat = {
+  id: string;
+  showTimeId: string;
   status: SeatStatus;
+  seatNumber: string;
+  seatRow: string;
+  theaterId: string;
 };

@@ -5,6 +5,11 @@ import { formatImageUrl } from "@/helper/image-helper";
 import { MovieSchedule, SeatStatus, Showtime } from "../types";
 import { format } from "date-fns";
 import { ChevronDown, ChevronRight, Clock, Film, Ticket } from "lucide-react";
+import { useUser } from "@/lib/auth";
+import { useState } from "react";
+import { AuthAlertModal } from "@/components/ui/auth-alert-modal";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
 
 interface ScheduleAccordionForCinemaProps {
@@ -22,12 +27,26 @@ export const ScheduleAccordionForCinema = ({
   onToggle,
   onShowtimeSelect,
 }: ScheduleAccordionForCinemaProps) => {
+  const user = useUser();
+  const navigate = useNavigate();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const movie = schedule.movie;
 
   const getAvailableSeatCount = (showtime: Showtime): number => {
     return showtime.seats.filter(
       (s: any) => !s.status || s.status === SeatStatus.AVAILABLE,
     ).length;
+  };
+
+  const handleSelectSeats = () => {
+    if (!user.data) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    if (selectedShowtimeId) {
+      navigate(paths.seatSelection.getHref(selectedShowtimeId));
+    }
   };
 
   return (
@@ -152,7 +171,7 @@ export const ScheduleAccordionForCinema = ({
                   </span>
                   <span className="ml-1">/ seat</span>
                 </div>
-                <Button variant="glow" className="gap-2 px-6">
+                <Button variant="glow" onClick={handleSelectSeats} className="gap-2 px-6">
                   <Ticket className="w-4 h-4" />
                   Select Seats
                   <ChevronRight className="w-4 h-4" />
@@ -161,6 +180,10 @@ export const ScheduleAccordionForCinema = ({
             )}
         </div>
       )}
+      <AuthAlertModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
   );
 };

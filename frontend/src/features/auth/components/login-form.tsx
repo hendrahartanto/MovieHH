@@ -73,6 +73,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             <SubmitButton
               type={SubmitButtonType.LOGIN}
               isPending={login.isPending}
+              variant={"glow"}
             >
               Login
             </SubmitButton>

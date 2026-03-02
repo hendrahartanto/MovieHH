@@ -75,4 +75,14 @@ export const paths = {
     path: "/movies/:movieId",
     getHref: (id: string) => `/movies/${id}`,
   },
+
+  showtime: {
+    path: "/showtimes/:showtimeId",
+    getHref: (id: string) => `/showtimes/${id}`,
+  },
+
+  seatSelection: {
+    path: "/showtimes/:showtimeId/seats",
+    getHref: (id: string) => `/showtimes/${id}/seats`,
+  },
 } as const;
