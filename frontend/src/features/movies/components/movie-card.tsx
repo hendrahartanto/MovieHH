@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { paths } from "@/config/paths";
 import { useState } from "react";
 import { TrailerModal } from "./trailer-modal";
+import { Button } from "@/components/ui/button";
 
 interface MovieCardProps {
   movie: Movie;
@@ -48,13 +49,14 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
 
         <div className="flex flex-col gap-3 w-full mt-auto mb-4">
           {hasSchedules && (
-            <button
+            <Button
+              variant="glow"
               onClick={handleCardClick}
-              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-md bg-primary text-primary-foreground font-semibold transition-all hover:bg-primary/90 hover:scale-105 active:scale-95 cinema-glow"
+              className="w-full"
             >
               <Ticket className="w-4 h-4" />
               Buy Ticket
-            </button>
+            </Button>
           )}
 
           {hasTrailer && (

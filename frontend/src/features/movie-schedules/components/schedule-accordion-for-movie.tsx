@@ -146,8 +146,9 @@ export const ScheduleAccordionForMovie = ({
                   <span className="ml-1">/ seat</span>
                 </div>
                 <Button
+                  variant="glow"
                   onClick={handleSelectSeats}
-                  className="cinema-gradient cinema-glow text-white font-semibold gap-2 px-6"
+                  className="gap-2 px-6"
                 >
                   <Ticket className="w-4 h-4" />
                   Select Seats

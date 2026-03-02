@@ -98,8 +98,8 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
                   </Link>
                   <Link to={paths.auth.register.getHref()}>
                     <Button
+                      variant="glow"
                       size="sm"
-                      className="cinema-gradient text-white font-semibold shadow-md hover:opacity-90 transition-opacity cinema-glow"
                     >
                       Sign Up
                     </Button>

@@ -33,7 +33,8 @@ export const AuthAlertModal = ({ isOpen, onClose }: AuthAlertModalProps) => {
         <div className="flex flex-col gap-3 mt-6">
           <Button
             asChild
-            className="w-full cinema-gradient cinema-glow text-white font-semibold"
+            variant="glow"
+            className="w-full"
           >
             <Link to={paths.auth.login.getHref(location.pathname)}>
               <LogIn className="w-4 h-4 mr-2" />

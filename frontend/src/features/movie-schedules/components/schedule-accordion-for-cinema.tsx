@@ -152,7 +152,7 @@ export const ScheduleAccordionForCinema = ({
                   </span>
                   <span className="ml-1">/ seat</span>
                 </div>
-                <Button className="cinema-gradient cinema-glow text-white font-semibold gap-2 px-6">
+                <Button variant="glow" className="gap-2 px-6">
                   <Ticket className="w-4 h-4" />
                   Select Seats
                   <ChevronRight className="w-4 h-4" />

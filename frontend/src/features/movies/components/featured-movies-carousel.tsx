@@ -4,6 +4,7 @@ import { useFeaturedMovies } from "@/features/movies/api/get-featured-movies";
 import { formatImageUrl } from "@/helper/image-helper";
 import { TrailerModal } from "./trailer-modal";
 import { Movie } from "../types";
+import { Button } from "@/components/ui/button";
 
 export const FeaturedMoviesCarousel = () => {
   const { data, isLoading } = useFeaturedMovies({});
@@ -128,9 +129,9 @@ export const FeaturedMoviesCarousel = () => {
           )}
 
           <div className="flex flex-wrap gap-4 pt-4">
-            <button className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-colors shadow-lg shadow-primary/20">
+            <Button variant="glow" className="px-8 py-6 text-base rounded-lg shadow-lg">
               Book Tickets
-            </button>
+            </Button>
             {currentMovie.trailerUrl && (
               <button
                 onClick={() => {
