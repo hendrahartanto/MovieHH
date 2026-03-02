@@ -129,7 +129,18 @@ const getShowTimeByMovieScheduleId = asyncHandler(async (req, res) => {
 
 const getShowTimeSeats = asyncHandler(async (req, res) => {
   const showTimeId = req.params.showTimeId;
-  const showTimeSeats = await showTimeService.getShowTimeSeats(showTimeId);
+  const rawShowTimeSeats = await showTimeService.getShowTimeSeats(showTimeId);
+
+  const showTimeSeats = rawShowTimeSeats.map((sts) => {
+    const { seat, seatId, ...rest } = sts;
+    return {
+      ...rest,
+      id: seatId,
+      seatNumber: seat.seatNumber,
+      seatRow: seat.seatRow,
+      theaterId: seat.theaterId,
+    };
+  });
 
   new SuccessResponse("Get showtime seats successful", { showTimeSeats }).send(
     res,
