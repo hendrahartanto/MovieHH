@@ -212,11 +212,18 @@ const deleteShowTime = async (showTimeId: string) => {
   return showTimeRepository.deleteShowTime(showTimeId);
 };
 
+const getShowTimeById = async (showTimeId: string) => {
+  const showTime = await showTimeRepository.getShowTimeById(showTimeId);
+  if (!showTime) throw new NoDataError("Showtime not found");
+  return showTime;
+};
+
 export default {
   createMovieSchedule,
   createShowTime,
   getMovieScheduleByDateRange,
   getShowTimeByDateRange,
+  getShowTimeById,
   getShowTimeSeats,
   getMovieSchedulesPaginated,
   deleteMovieSchedule,

@@ -127,6 +127,13 @@ const getShowTimeByMovieScheduleId = asyncHandler(async (req, res) => {
   }).send(res);
 });
 
+const getShowTimeById = asyncHandler(async (req, res) => {
+  const { showTimeId } = req.params;
+  const showTime = await showTimeService.getShowTimeById(showTimeId);
+  
+  new SuccessResponse("Get showtime successful", { showTime }).send(res);
+});
+
 const getShowTimeSeats = asyncHandler(async (req, res) => {
   const showTimeId = req.params.showTimeId;
   const rawShowTimeSeats = await showTimeService.getShowTimeSeats(showTimeId);
@@ -162,6 +169,7 @@ export default {
   getMovieScheduleByDateRange,
   getShowTimeByDateRange,
   getShowTimeSeats,
+  getShowTimeById,
   getMovieSchedules,
   deleteMovieSchedule,
   updateMovieSchedule,

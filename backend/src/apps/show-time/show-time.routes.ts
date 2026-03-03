@@ -59,6 +59,7 @@ router.get(
   "/:movieScheduleid/show-time",
   showTimeController.getShowTimeByMovieScheduleId,
 );
+router.get("/:showTimeId", showTimeController.getShowTimeById);
 router.get("/", showTimeController.getShowTimeByDateRange);
 
 export default router;
