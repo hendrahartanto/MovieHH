@@ -196,7 +196,14 @@ const getOverlappingShowTime = async (
 const getShowTimeById = async (showTimeId: string) => {
   return prisma.showTime.findUnique({
     where: { id: showTimeId },
-    include: { movieSchedule: { include: { theater: true, movie: true } } },
+    include: {
+      movieSchedule: {
+        include: {
+          theater: { include: { location: true } },
+          movie: true,
+        },
+      },
+    },
   });
 };
 

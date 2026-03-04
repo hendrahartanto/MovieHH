@@ -63,10 +63,12 @@ export default function SeatSelectionRoute() {
                 <Film className="w-5 h-5 text-primary shrink-0" />
                 <span className="font-medium text-foreground">{theater.name}</span>
               </div>
-              <div className="flex items-start gap-2 text-muted-foreground">
-                <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
-                <span className="text-sm">{theater.location.name} - {theater.location.address}</span>
-              </div>
+              {theater.location && (
+                <div className="flex items-start gap-2 text-muted-foreground">
+                  <MapPin className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                  <span className="text-sm">{theater.location.name} - {theater.location.address}</span>
+                </div>
+              )}
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Clock className="w-5 h-5 text-primary shrink-0" />
                 <span className="text-sm font-medium bg-secondary/80 px-3 py-1 rounded-full border border-border">
