@@ -11,7 +11,7 @@ export const SeatGrid = ({ layout, seats }: SeatGridProps) => {
   let seatIndex = 0;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center min-w-max">
       <div className="flex flex-col gap-2 mt-8 items-center">
         <div className="w-full h-12 bg-primary/20 rounded-t-full flex items-center justify-center text-primary/50 text-sm font-semibold tracking-widest cinema-glow mb-8">
           SCREEN
@@ -30,7 +30,7 @@ export const SeatGrid = ({ layout, seats }: SeatGridProps) => {
                   return (
                     <div
                       key={`empty-${rowIndex}-${colIndex}`}
-                      className="w-8 h-8"
+                      className="w-8 h-8 shrink-0"
                     />
                   );
                 }
@@ -48,7 +48,7 @@ export const SeatGrid = ({ layout, seats }: SeatGridProps) => {
                   <div
                     key={`seat-${currentSeat.id}`}
                     className={cn(
-                      "w-8 h-8 rounded-t-lg rounded-b-sm border flex items-center justify-center text-xs transition-colors select-none",
+                      "w-8 h-8 shrink-0 rounded-t-lg rounded-b-sm border flex items-center justify-center text-xs transition-colors select-none",
                       isAvailable &&
                         "bg-muted border-border text-muted-foreground hover:border-primary/50 cursor-pointer",
                       isReserved &&
