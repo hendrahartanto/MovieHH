@@ -33,6 +33,7 @@ const getTheatersPaginated = async (
       include: {
         seats: true,
         movieSchedules: { include: { showTimes: true } },
+        location: true,
       },
     }),
     prisma.theater.count({ where: whereClause }),

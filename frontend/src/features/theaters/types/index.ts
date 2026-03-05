@@ -21,7 +21,8 @@ export type Theater = {
   name: string;
   seats: Seat[];
   layout?: (0 | 1)[][];
-  location: Location;
+  locationId: string;
+  location?: Location;
   movieSchedules: MovieSchedule[];
   createdAt: Date;
 };

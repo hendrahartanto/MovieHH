@@ -64,7 +64,7 @@ export const UpdateTheater = ({ theater }: UpdateTheaterProps) => {
     resolver: zodResolver(updateTheaterInputSchema),
     defaultValues: {
       name: theater.name,
-      locationId: theater.location?.id || "",
+      locationId: theater.location?.id || theater.locationId || "",
       layout: theater.layout || generateDefaultLayout(8, 10),
     },
   });
