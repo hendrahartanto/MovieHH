@@ -5,8 +5,11 @@ import { formatImageUrl } from "@/helper/image-helper";
 import { TrailerModal } from "./trailer-modal";
 import { Movie } from "../types";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
 export const FeaturedMoviesCarousel = () => {
+  const navigate = useNavigate();
   const { data, isLoading } = useFeaturedMovies({});
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -44,6 +47,10 @@ export const FeaturedMoviesCarousel = () => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}h ${mins}m`;
+  };
+
+  const handleBookTicket = (movieId: string) => {
+    navigate(paths.movie.getHref(movieId));
   };
 
   if (isLoading) {
@@ -129,7 +136,11 @@ export const FeaturedMoviesCarousel = () => {
           )}
 
           <div className="flex flex-wrap gap-4 pt-4">
-            <Button variant="glow" className="px-8 py-6 text-base rounded-lg shadow-lg">
+            <Button
+              onClick={() => handleBookTicket(currentMovie.id)}
+              variant="glow"
+              className="px-8 py-6 text-base rounded-lg shadow-lg"
+            >
               Book Tickets
             </Button>
             {currentMovie.trailerUrl && (
