@@ -38,7 +38,7 @@ import { useNotifications } from "@/components/ui/notification/notification-stor
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MovieSchedule } from "../../types";
-
+import { DatePicker } from "@/components/ui/date-picker";
 
 interface UpdateMovieScheduleProps {
   schedule: MovieSchedule;
@@ -54,7 +54,7 @@ export const UpdateMovieSchedule = ({ schedule }: UpdateMovieScheduleProps) => {
   const filteredMovies = useMemo(() => {
     if (!moviesData?.data.movies) return [];
     return moviesData.data.movies.filter((movie) =>
-      movie.title.toLowerCase().includes(movieSearchTerm.toLowerCase())
+      movie.title.toLowerCase().includes(movieSearchTerm.toLowerCase()),
     );
   }, [moviesData?.data.movies, movieSearchTerm]);
 
@@ -203,15 +203,17 @@ export const UpdateMovieSchedule = ({ schedule }: UpdateMovieScheduleProps) => {
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      {...field}
-                      min={new Date().toISOString().split("T")[0]}
-                    />
-                  </FormControl>
+                  <DatePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={(date) => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return date < today;
+                    }}
+                  />
                   <FormDescription>
                     Select the date for this movie schedule.
                   </FormDescription>

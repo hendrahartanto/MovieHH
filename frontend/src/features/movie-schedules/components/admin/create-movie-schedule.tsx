@@ -37,6 +37,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { DatePicker } from "@/components/ui/date-picker";
 
 export const CreateMovieSchedule = () => {
   const [movieSearchTerm, setMovieSearchTerm] = useState("");
@@ -219,15 +220,17 @@ export const CreateMovieSchedule = () => {
               control={form.control}
               name="date"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="date"
-                      {...field}
-                      min={new Date().toISOString().split("T")[0]}
-                    />
-                  </FormControl>
+                  <DatePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    disabled={(date) => {
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return date < today;
+                    }}
+                  />
                   <FormDescription>
                     Select the date for this movie schedule.
                   </FormDescription>
