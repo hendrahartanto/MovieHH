@@ -5,9 +5,11 @@ import { cn } from "@/lib/utils";
 type SeatGridProps = {
   layout: (0 | 1)[][];
   seats: ShowtimeSeat[];
+  selectedSeats: string[];
+  onSeatToggle: (seatId: string) => void;
 };
 
-export const SeatGrid = ({ layout, seats }: SeatGridProps) => {
+export const SeatGrid = ({ layout, seats, selectedSeats, onSeatToggle }: SeatGridProps) => {
   let seatIndex = 0;
 
   return (
@@ -43,18 +45,22 @@ export const SeatGrid = ({ layout, seats }: SeatGridProps) => {
                 const isAvailable = currentSeat.status === SeatStatus.AVAILABLE;
                 const isReserved = currentSeat.status === SeatStatus.RESERVED;
                 const isHold = currentSeat.status === SeatStatus.HOLD;
+                const isSelected = selectedSeats.includes(currentSeat.id);
 
                 return (
                   <div
                     key={`seat-${currentSeat.id}`}
+                    onClick={() => isAvailable && onSeatToggle(currentSeat.id)}
                     className={cn(
-                      "w-8 h-8 shrink-0 rounded-t-lg rounded-b-sm border flex items-center justify-center text-xs transition-colors select-none",
-                      isAvailable &&
-                        "bg-muted border-border text-muted-foreground hover:border-primary/50 cursor-pointer",
+                      "w-8 h-8 shrink-0 rounded-t-lg rounded-b-sm border flex items-center justify-center text-xs transition-all duration-200 select-none",
+                      isAvailable && !isSelected &&
+                        "bg-muted border-border text-muted-foreground hover:border-primary/50 cursor-pointer hover:-translate-y-0.5",
+                      isSelected &&
+                        "bg-primary text-primary-foreground border-primary cinema-glow scale-110 cursor-pointer z-10",
                       isReserved &&
-                        "bg-primary/20 border-primary/50 text-primary cursor-not-allowed",
+                        "bg-primary/20 border-primary/50 text-primary cursor-not-allowed opacity-50",
                       isHold &&
-                        "bg-yellow-500/20 border-yellow-500/50 text-yellow-500 cursor-not-allowed",
+                        "bg-yellow-500/20 border-yellow-500/50 text-yellow-500 cursor-not-allowed opacity-50",
                     )}
                   >
                     {currentSeat.seatRow}
