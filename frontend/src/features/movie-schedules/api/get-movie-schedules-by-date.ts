@@ -3,19 +3,19 @@ import { MovieSchedule } from "../types";
 import { api } from "@/lib/api-client";
 import { queryConfig, QueryConfig } from "@/lib/react-query";
 
-import { queryOptions, useQuery } from "@tanstack/react-query"
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
 export const getMovieSchedulesByDate = (
   startDate: string,
   endDate: string,
 ): Promise<ApiResponse<{ movieSchedules: MovieSchedule[] }>> => {
-  return api.get("show-times/movie-schedule", {
+  return api.get("show-times/movie-schedule/date-range", {
     params: {
       startDate,
       endDate,
-    }
-  })
-}
+    },
+  });
+};
 
 export const getMovieSchedulesByDateQueryOptions = ({
   startDate,
@@ -28,7 +28,7 @@ export const getMovieSchedulesByDateQueryOptions = ({
     queryKey: ["movie-schedules", { startDate, endDate }],
     queryFn: () => getMovieSchedulesByDate(startDate, endDate),
   });
-}
+};
 
 type UseMovieSchedulesByDateOptions = {
   startDate: string;
@@ -36,9 +36,12 @@ type UseMovieSchedulesByDateOptions = {
   queryConfig?: QueryConfig<typeof getMovieSchedulesByDateQueryOptions>;
 };
 
-export const useMovieSchedulesByDate = ({ startDate, endDate }: UseMovieSchedulesByDateOptions) => {
+export const useMovieSchedulesByDate = ({
+  startDate,
+  endDate,
+}: UseMovieSchedulesByDateOptions) => {
   return useQuery({
     ...getMovieSchedulesByDateQueryOptions({ startDate, endDate }),
     ...queryConfig,
   });
-}
+};
