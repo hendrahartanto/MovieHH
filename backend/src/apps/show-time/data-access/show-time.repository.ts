@@ -5,6 +5,8 @@ import { CreateShowTimeDTO } from "../dto/create-show-time.dto";
 import { CreateMovieScheduleDTO } from "../dto/create-movie-schedule.dto";
 import { endOfDay, startOfDay } from "date-fns";
 
+type PrismaClientOrTransaction = PrismaClient | Prisma.TransactionClient;
+
 const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {
   return prisma.movieSchedule.create({ data: newMovieScheduleData });
 };
@@ -257,11 +259,26 @@ const updateManySeatStatus = async (
   showTimeId: string,
   seatIds: string[],
   status: "RESERVED" | "AVAILABLE" | "HOLD",
-  tx: PrismaClient | Prisma.TransactionClient = prisma,
+  tx: PrismaClientOrTransaction = prisma,
 ) => {
   return tx.seatsOnShowTimes.updateMany({
     where: { showTimeId, seatId: { in: seatIds } },
     data: { status },
+  });
+};
+
+const holdAvailableSeats = async (
+  showTimeId: string,
+  seatIds: string[],
+  tx: PrismaClientOrTransaction = prisma,
+) => {
+  return tx.seatsOnShowTimes.updateMany({
+    where: {
+      showTimeId,
+      seatId: { in: seatIds },
+      status: "AVAILABLE",
+    },
+    data: { status: "HOLD" },
   });
 };
 
@@ -308,6 +325,7 @@ export default {
   getShowTimeSeat,
   updateSeatStatus,
   updateManySeatStatus,
+  holdAvailableSeats,
   getMovieSchedulesPaginated,
   deleteMovieSchedule,
   updateMovieSchedule,

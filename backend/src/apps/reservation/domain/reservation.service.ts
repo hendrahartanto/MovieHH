@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
-import { BadRequestError, NoDataError } from "../../../lib/exceptions/api-error";
+import {
+  BadRequestError,
+  NoDataError,
+} from "../../../lib/exceptions/api-error";
 import { midtransSnap } from "../../../infrastructure/midtrans";
 import prisma from "../../../db";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
@@ -9,7 +12,7 @@ import { CreateReservationHoldDTO } from "../dto/create-reservation-hold.dto";
 
 const createReservationHold = async (
   newReservationHoldData: CreateReservationHoldDTO,
-  userId: string
+  userId: string,
 ) => {
   const { showTimeId, seatIds, count } = newReservationHoldData;
   const RESERVATION_HOLD_MINUTES =
@@ -25,8 +28,8 @@ const createReservationHold = async (
 
     const seats = await Promise.all(
       seatIds.map((seatId) =>
-        showTimeRepository.getShowTimeSeat(showTimeId, seatId)
-      )
+        showTimeRepository.getShowTimeSeat(showTimeId, seatId),
+      ),
     );
     if (seats.some((seat) => !seat))
       throw new NoDataError("One or more seats not found");
@@ -34,12 +37,12 @@ const createReservationHold = async (
       throw new BadRequestError("One or more seats already reserved");
     if (seats.some((seat) => seat!.status === "HOLD"))
       throw new BadRequestError(
-        "Some seats are currently on hold by another user"
+        "Some seats are currently on hold by another user",
       );
 
     const totalPrice = seats.length * Number(showTime.movieSchedule.price);
     const expiresAt = new Date(
-      Date.now() + RESERVATION_HOLD_MINUTES * 60 * 1000
+      Date.now() + RESERVATION_HOLD_MINUTES * 60 * 1000,
     );
 
     const reservation = await reservationRepository.createReservation(
@@ -53,15 +56,17 @@ const createReservationHold = async (
           create: seatIds.map((seatId) => ({ seatId })),
         },
       },
-      tx
+      tx,
     );
 
-    await showTimeRepository.updateManySeatStatus(
+    const holdResult = await showTimeRepository.holdAvailableSeats(
       showTimeId,
       seatIds,
-      "HOLD",
-      tx
+      tx,
     );
+    if (holdResult.count !== seatIds.length) {
+      throw new BadRequestError("One or more seats are no longer available");
+    }
 
     await reservationHoldQueue.add(
       "releaseReservationHold",
@@ -73,7 +78,7 @@ const createReservationHold = async (
       {
         jobId: reservation.id,
         delay: 1000 * 60 * RESERVATION_HOLD_MINUTES,
-      }
+      },
     );
 
     return reservation;
@@ -84,9 +89,8 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
   const RESERVATION_HOLD_MINUTES =
     Number(process.env.RESERVATION_HOLD_MINUTES) || 10;
 
-  const reservation = await reservationRepository.getReservationById(
-    reservationId
-  );
+  const reservation =
+    await reservationRepository.getReservationById(reservationId);
   if (!reservation) throw new NoDataError("Reservation not found");
   if (reservation.userId !== userId)
     throw new BadRequestError("Unauthorized access to reservation");
@@ -125,9 +129,8 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
 };
 
 const cancelReservation = async (reservationId: string, userId: string) => {
-  const reservation = await reservationRepository.getReservationById(
-    reservationId
-  );
+  const reservation =
+    await reservationRepository.getReservationById(reservationId);
   if (!reservation) throw new NoDataError("Reservation not found");
   if (reservation.userId !== userId)
     throw new BadRequestError("Unauthorized access to reservation");
@@ -143,12 +146,12 @@ const cancelReservation = async (reservationId: string, userId: string) => {
     const cancelledReservation =
       await reservationRepository.updateReservationStatus(
         reservationId,
-        "CANCELLED"
+        "CANCELLED",
       );
     await showTimeRepository.updateManySeatStatus(
       reservation.showTimeId,
       reservation.reservationDetails.map((detail) => detail.seatId),
-      "AVAILABLE"
+      "AVAILABLE",
     );
 
     return cancelledReservation;
