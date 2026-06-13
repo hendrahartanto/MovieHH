@@ -86,14 +86,21 @@ const createReservationHold = async (
 };
 
 const createPaymentToken = async (reservationId: string, userId: string) => {
-  const RESERVATION_HOLD_MINUTES =
-    Number(process.env.RESERVATION_HOLD_MINUTES) || 10;
-
   const reservation =
     await reservationRepository.getReservationById(reservationId);
   if (!reservation) throw new NoDataError("Reservation not found");
   if (reservation.userId !== userId)
     throw new BadRequestError("Unauthorized access to reservation");
+  if (reservation.status !== "PENDING")
+    throw new BadRequestError("Reservation is not payable");
+
+  const now = new Date();
+  if (reservation.expiresAt <= now)
+    throw new BadRequestError("Reservation has expired");
+
+  const remainingHoldMinutes = Math.ceil(
+    (reservation.expiresAt.getTime() - now.getTime()) / (60 * 1000),
+  );
 
   const parameter = {
     transaction_details: {
@@ -116,7 +123,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
     expiry: {
       start_time: dayjs().format("YYYY-MM-DD HH:mm:ss Z"),
       unit: "minute",
-      duration: RESERVATION_HOLD_MINUTES,
+      duration: remainingHoldMinutes,
     },
   };
 

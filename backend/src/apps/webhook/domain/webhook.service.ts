@@ -1,5 +1,9 @@
 import crypto from "crypto";
-import { ForbiddenError, NoDataError } from "../../../lib/exceptions/api-error";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NoDataError,
+} from "../../../lib/exceptions/api-error";
 import reservationRepository from "../../reservation/data-access/reservation.repository";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
@@ -28,6 +32,11 @@ const handleMidtransNotification = async (notification: any) => {
   console.log("transaction status: ", transaction_status);
 
   if (transaction_status === "settlement" || transaction_status === "capture") {
+    if (reservation.status !== "PENDING")
+      throw new BadRequestError("Reservation is not payable");
+    if (reservation.expiresAt <= new Date())
+      throw new BadRequestError("Reservation has expired");
+
     const jobToRemove = await reservationHoldQueue.getJob(reservation.id);
     if (jobToRemove) {
       await jobToRemove.remove();
