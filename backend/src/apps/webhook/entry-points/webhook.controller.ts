@@ -6,7 +6,7 @@ const handleMidtransNotification = asyncHandler(async (req, res) => {
   const notification = req.body;
   await webhookService.handleMidtransNotification(notification);
 
-  new SuccessMsgResponse("Payment successful");
+  new SuccessMsgResponse("Payment successful").send(res);
 });
 
 export default {
