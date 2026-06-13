@@ -35,8 +35,11 @@ const expirePendingReservation = async (
   });
 };
 
-const getReservationById = async (reservationId: string) => {
-  return prisma.reservation.findUnique({
+const getReservationById = async (
+  reservationId: string,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.reservation.findUnique({
     where: { id: reservationId },
     include: {
       showTime: { include: { movieSchedule: true } },
@@ -46,9 +49,41 @@ const getReservationById = async (reservationId: string) => {
   });
 };
 
+const getPaymentByReservationId = async (
+  reservationId: string,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.payment.findUnique({
+    where: { reservationId },
+  });
+};
+
+const createPayment = async (
+  data: Prisma.PaymentCreateInput,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.payment.create({
+    data,
+  });
+};
+
+const updatePaymentStatusByReservationId = async (
+  reservationId: string,
+  status: "PENDING" | "PAID" | "CANCELLED" | "EXPIRED" | "FAILED",
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.payment.updateMany({
+    where: { reservationId },
+    data: { status },
+  });
+};
+
 export default {
   createReservation,
   updateReservationStatus,
   expirePendingReservation,
   getReservationById,
+  getPaymentByReservationId,
+  createPayment,
+  updatePaymentStatusByReservationId,
 };

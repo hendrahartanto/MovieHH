@@ -49,6 +49,10 @@ const handleMidtransNotification = async (notification: any) => {
     );
 
     await reservationRepository.updateReservationStatus(order_id, "CONFIRMED");
+    await reservationRepository.updatePaymentStatusByReservationId(
+      order_id,
+      "PAID"
+    );
   }
 
   //TODO: handle cancel, expire, dll
