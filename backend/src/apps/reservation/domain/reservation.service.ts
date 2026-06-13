@@ -98,6 +98,13 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
       if (reservation.userId !== userId)
         throw new BadRequestError("Unauthorized access to reservation");
 
+      if (reservation.status !== "PENDING")
+        throw new BadRequestError("Reservation is not payable");
+
+      const now = new Date();
+      if (reservation.expiresAt <= now)
+        throw new BadRequestError("Reservation has expired");
+
       const existingPayment =
         await reservationRepository.getPaymentByReservationId(
           reservationId,
@@ -106,13 +113,6 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
       if (existingPayment) {
         return existingPayment;
       }
-
-      if (reservation.status !== "PENDING")
-        throw new BadRequestError("Reservation is not payable");
-
-      const now = new Date();
-      if (reservation.expiresAt <= now)
-        throw new BadRequestError("Reservation has expired");
 
       const remainingHoldMinutes = Math.ceil(
         (reservation.expiresAt.getTime() - now.getTime()) / (60 * 1000),
