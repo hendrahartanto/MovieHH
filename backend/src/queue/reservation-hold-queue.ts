@@ -1,4 +1,5 @@
 import { Queue, Worker } from "bullmq";
+import prisma from "../db";
 import { redisConnection } from "../infrastructure/redis";
 import showTimeRepository from "../apps/show-time/data-access/show-time.repository";
 import reservationRepository from "../apps/reservation/data-access/reservation.repository";
@@ -12,16 +13,19 @@ new Worker(
   async (job) => {
     const { reservationId, seatIds, showTimeId } = job.data;
 
-    await reservationRepository.updateReservationStatus(
-      reservationId,
-      "EXPIRED"
-    );
+    await prisma.$transaction(async (tx) => {
+      const expiredReservation =
+        await reservationRepository.expirePendingReservation(
+          reservationId,
+          tx
+        );
 
-    await showTimeRepository.updateManySeatStatus(
-      showTimeId,
-      seatIds,
-      "AVAILABLE"
-    );
+      if (expiredReservation.count === 0) {
+        return;
+      }
+
+      await showTimeRepository.releaseHeldSeats(showTimeId, seatIds, tx);
+    });
 
     //TODO: handle io socket for real time seat status update
   },

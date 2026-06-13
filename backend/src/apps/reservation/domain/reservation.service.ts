@@ -121,7 +121,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
       secure: true,
     },
     expiry: {
-      start_time: dayjs().format("YYYY-MM-DD HH:mm:ss Z"),
+      start_time: dayjs(now).format("YYYY-MM-DD HH:mm:ss Z"),
       unit: "minute",
       duration: remainingHoldMinutes,
     },

@@ -267,6 +267,21 @@ const updateManySeatStatus = async (
   });
 };
 
+const releaseHeldSeats = async (
+  showTimeId: string,
+  seatIds: string[],
+  tx: PrismaClientOrTransaction = prisma,
+) => {
+  return tx.seatsOnShowTimes.updateMany({
+    where: {
+      showTimeId,
+      seatId: { in: seatIds },
+      status: "HOLD",
+    },
+    data: { status: "AVAILABLE" },
+  });
+};
+
 const holdAvailableSeats = async (
   showTimeId: string,
   seatIds: string[],
@@ -325,6 +340,7 @@ export default {
   getShowTimeSeat,
   updateSeatStatus,
   updateManySeatStatus,
+  releaseHeldSeats,
   holdAvailableSeats,
   getMovieSchedulesPaginated,
   deleteMovieSchedule,

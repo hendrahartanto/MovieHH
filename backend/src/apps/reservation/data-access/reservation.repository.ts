@@ -22,6 +22,19 @@ const updateReservationStatus = async (
   });
 };
 
+const expirePendingReservation = async (
+  reservationId: string,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.reservation.updateMany({
+    where: {
+      id: reservationId,
+      status: "PENDING",
+    },
+    data: { status: "EXPIRED" },
+  });
+};
+
 const getReservationById = async (reservationId: string) => {
   return prisma.reservation.findUnique({
     where: { id: reservationId },
@@ -36,5 +49,6 @@ const getReservationById = async (reservationId: string) => {
 export default {
   createReservation,
   updateReservationStatus,
+  expirePendingReservation,
   getReservationById,
 };
