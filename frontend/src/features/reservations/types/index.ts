@@ -15,7 +15,19 @@ export type Reservation = {
   updatedAt: string;
 };
 
+export type PaymentStatus =
+  | "PENDING"
+  | "PAID"
+  | "CANCELLED"
+  | "EXPIRED"
+  | "FAILED";
+
 export type PaymentToken = {
+  id: string;
+  reservationId: string;
   token: string;
   redirectUrl: string;
+  status: PaymentStatus;
+  createdAt: string;
+  updatedAt: string;
 };

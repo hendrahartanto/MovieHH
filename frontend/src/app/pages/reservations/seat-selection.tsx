@@ -2,15 +2,34 @@ import { useParams } from "react-router";
 import { SeatGrid } from "@/features/reservations/components/seat-grid";
 import { SeatLegend } from "@/features/reservations/components/seat-legend";
 import { BookingSummary } from "@/features/reservations/components/booking-summary";
-import { useShowTime, useShowTimeSeats } from "@/features/movie-schedules";
+import {
+  getShowTimeQueryOptions,
+  getShowTimeSeatsQueryOptions,
+  useShowTime,
+  useShowTimeSeats,
+} from "@/features/movie-schedules";
+import {
+  useCancelReservation,
+  useCreateReservationHold,
+  useCreateReservationPayment,
+} from "@/features/reservations/api";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { formatImageUrl } from "@/helper/image-helper";
+import { loadMidtransSnap } from "@/lib/midtrans-snap";
+import { useNotifications } from "@/components/ui/notification/notification-store";
 
 export default function SeatSelectionRoute() {
   const { showtimeId } = useParams();
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [isCheckoutPending, setIsCheckoutPending] = useState(false);
+  const addNotification = useNotifications((state) => state.addNotification);
+  const queryClient = useQueryClient();
+  const createReservationHold = useCreateReservationHold();
+  const createReservationPayment = useCreateReservationPayment();
+  const cancelReservation = useCancelReservation();
 
   const { data: showTimeData, isLoading: isLoadingShowTime } = useShowTime({
     showTimeId: showtimeId as string,
@@ -43,6 +62,112 @@ export default function SeatSelectionRoute() {
         ? prev.filter((id) => id !== seatId)
         : [...prev, seatId],
     );
+  };
+
+  const refreshShowTime = () => {
+    if (!showtimeId) return;
+
+    void queryClient.invalidateQueries({
+      queryKey: getShowTimeQueryOptions(showtimeId).queryKey,
+    });
+    void queryClient.invalidateQueries({
+      queryKey: getShowTimeSeatsQueryOptions(showtimeId).queryKey,
+    });
+  };
+
+  const handleCheckout = async () => {
+    if (!showtimeId || selectedSeats.length === 0 || isCheckoutPending) return;
+
+    let reservationId: string | null = null;
+    let canCancelHold = true;
+
+    const cancelCurrentHold = () => {
+      if (!reservationId || !canCancelHold) return;
+
+      canCancelHold = false;
+      cancelReservation.mutate({ reservationId });
+      refreshShowTime();
+    };
+
+    try {
+      setIsCheckoutPending(true);
+
+      const holdResponse = await createReservationHold.mutateAsync({
+        showTimeId: showtimeId,
+        seatIds: selectedSeats,
+        count: selectedSeats.length,
+      });
+
+      reservationId = holdResponse.data.newReservationHold.id;
+
+      const paymentResponse = await createReservationPayment.mutateAsync({
+        reservationId,
+      });
+
+      await loadMidtransSnap();
+
+      if (!window.snap) {
+        throw new Error("Midtrans Snap is not available");
+      }
+
+      window.snap.pay(paymentResponse.data.token, {
+        onSuccess: () => {
+          canCancelHold = false;
+          setIsCheckoutPending(false);
+          setSelectedSeats([]);
+          refreshShowTime();
+          addNotification({
+            type: "success",
+            title: "Payment submitted",
+            message:
+              "Your reservation will be confirmed after Midtrans sends the payment notification.",
+          });
+        },
+        onPending: () => {
+          canCancelHold = false;
+          setIsCheckoutPending(false);
+          setSelectedSeats([]);
+          refreshShowTime();
+          addNotification({
+            type: "info",
+            title: "Payment pending",
+            message:
+              "Complete the payment before the reservation hold expires.",
+          });
+        },
+        onError: () => {
+          setIsCheckoutPending(false);
+          cancelCurrentHold();
+          addNotification({
+            type: "error",
+            title: "Payment failed",
+            message: "The selected seats have been released.",
+          });
+        },
+        onClose: () => {
+          setIsCheckoutPending(false);
+          if (!canCancelHold) return;
+
+          cancelCurrentHold();
+          addNotification({
+            type: "warning",
+            title: "Payment cancelled",
+            message: "The selected seats have been released.",
+          });
+        },
+      });
+    } catch (error) {
+      setIsCheckoutPending(false);
+      cancelCurrentHold();
+      addNotification({
+        type: "error",
+        title: "Checkout failed",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unable to start payment. Please try again.",
+      });
+    }
   };
 
   return (
@@ -115,7 +240,12 @@ export default function SeatSelectionRoute() {
         </div>
       </div>
 
-      <BookingSummary price={price} selectedCount={selectedSeats.length} />
+      <BookingSummary
+        price={price}
+        selectedCount={selectedSeats.length}
+        isCheckoutPending={isCheckoutPending}
+        onCheckout={handleCheckout}
+      />
     </div>
   );
 }
