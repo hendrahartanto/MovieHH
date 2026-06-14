@@ -149,6 +149,13 @@ const getShowTimeSeats = asyncHandler(async (req, res) => {
     };
   });
 
+  showTimeSeats.sort((a, b) => {
+    if (a.seatRow !== b.seatRow) {
+      return a.seatRow.localeCompare(b.seatRow);
+    }
+    return parseInt(a.seatNumber) - parseInt(b.seatNumber);
+  });
+
   new SuccessResponse("Get showtime seats successful", { showTimeSeats }).send(
     res,
   );
