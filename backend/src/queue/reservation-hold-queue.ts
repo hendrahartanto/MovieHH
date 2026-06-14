@@ -24,6 +24,11 @@ new Worker(
         return;
       }
 
+      await reservationRepository.updatePaymentStatusByReservationId(
+        reservationId,
+        "EXPIRED",
+        tx
+      );
       await showTimeRepository.releaseHeldSeats(showTimeId, seatIds, tx);
     });
 

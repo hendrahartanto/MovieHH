@@ -14,7 +14,7 @@ const createReservation = async (
 const updateReservationStatus = async (
   reservationId: string,
   status: "PENDING" | "CONFIRMED" | "CANCELLED" | "EXPIRED",
-  tx = prisma
+  tx: PrismaClient | Prisma.TransactionClient = prisma
 ) => {
   return tx.reservation.update({
     where: { id: reservationId },
@@ -44,8 +44,41 @@ const getReservationById = async (
     include: {
       showTime: { include: { movieSchedule: true } },
       user: true,
+      payment: true,
       reservationDetails: { include: { seat: true } },
     },
+  });
+};
+
+const getActivePendingReservationByUserId = async (
+  userId: string,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.reservation.findFirst({
+    where: {
+      userId,
+      status: "PENDING",
+      expiresAt: { gt: new Date() },
+      OR: [
+        { payment: { is: null } },
+        { payment: { is: { status: "PENDING" } } },
+      ],
+    },
+    include: {
+      payment: true,
+      reservationDetails: { include: { seat: true } },
+      showTime: {
+        include: {
+          movieSchedule: {
+            include: {
+              movie: true,
+              theater: { include: { location: true } },
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createAt: "desc" },
   });
 };
 
@@ -83,6 +116,7 @@ export default {
   updateReservationStatus,
   expirePendingReservation,
   getReservationById,
+  getActivePendingReservationByUserId,
   getPaymentByReservationId,
   createPayment,
   updatePaymentStatusByReservationId,

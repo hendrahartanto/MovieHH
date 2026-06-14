@@ -3,7 +3,10 @@ import {
   BadRequestError,
   NoDataError,
 } from "../../../lib/exceptions/api-error";
-import { midtransSnap } from "../../../infrastructure/midtrans";
+import {
+  cancelMidtransTransaction,
+  midtransSnap,
+} from "../../../infrastructure/midtrans";
 import prisma from "../../../db";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
@@ -23,6 +26,19 @@ const createReservationHold = async (
   }
 
   return prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
+
+    const activeReservation =
+      await reservationRepository.getActivePendingReservationByUserId(
+        userId,
+        tx,
+      );
+    if (activeReservation) {
+      throw new BadRequestError(
+        "You already have an ongoing payment. Complete or cancel it first",
+      );
+    }
+
     const showTime = await showTimeRepository.getShowTimeById(showTimeId);
     if (!showTime) throw new NoDataError("Showtime not found");
 
@@ -158,6 +174,22 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
   );
 };
 
+const getActiveReservationPayment = async (userId: string) => {
+  const activeReservation =
+    await reservationRepository.getActivePendingReservationByUserId(userId);
+
+  if (!activeReservation) {
+    return null;
+  }
+
+  const { payment, ...reservation } = activeReservation;
+
+  return {
+    reservation,
+    payment,
+  };
+};
+
 const cancelReservation = async (reservationId: string, userId: string) => {
   const reservation =
     await reservationRepository.getReservationById(reservationId);
@@ -166,8 +198,40 @@ const cancelReservation = async (reservationId: string, userId: string) => {
     throw new BadRequestError("Unauthorized access to reservation");
   if (reservation.status !== "PENDING")
     throw new BadRequestError("Reservation status is not valid");
+  if (reservation.payment?.status === "PAID")
+    throw new BadRequestError("Paid reservation cannot be cancelled");
+
+  if (reservation.payment?.status === "PENDING") {
+    try {
+      await cancelMidtransTransaction(reservationId);
+    } catch (error: any) {
+      // 404 means the transaction was never fully created in Midtrans (Snap popup closed before picking a method).
+      // 412 means it cannot be cancelled (e.g., already expired or cancelled).
+      const statusCode = error.httpStatusCode || error.ApiResponse?.status_code;
+      if (
+        statusCode !== 404 &&
+        statusCode !== 412 &&
+        statusCode !== "404" &&
+        statusCode !== "412"
+      ) {
+        throw new BadRequestError(
+          `Failed to cancel payment at Midtrans: ${error.message}`
+        );
+      }
+    }
+  }
 
   return prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${reservationId}))`;
+
+    const currentReservation =
+      await reservationRepository.getReservationById(reservationId, tx);
+    if (!currentReservation) throw new NoDataError("Reservation not found");
+    if (currentReservation.status !== "PENDING")
+      throw new BadRequestError("Reservation status is not valid");
+    if (currentReservation.payment?.status === "PAID")
+      throw new BadRequestError("Paid reservation cannot be cancelled");
+
     const jobToRemove = await reservationHoldQueue.getJob(reservation.id);
     if (jobToRemove) {
       await jobToRemove.remove();
@@ -177,11 +241,18 @@ const cancelReservation = async (reservationId: string, userId: string) => {
       await reservationRepository.updateReservationStatus(
         reservationId,
         "CANCELLED",
+        tx,
       );
+    await reservationRepository.updatePaymentStatusByReservationId(
+      reservationId,
+      "CANCELLED",
+      tx,
+    );
     await showTimeRepository.updateManySeatStatus(
-      reservation.showTimeId,
-      reservation.reservationDetails.map((detail) => detail.seatId),
+      currentReservation.showTimeId,
+      currentReservation.reservationDetails.map((detail) => detail.seatId),
       "AVAILABLE",
+      tx,
     );
 
     return cancelledReservation;
@@ -191,5 +262,6 @@ const cancelReservation = async (reservationId: string, userId: string) => {
 export default {
   createReservationHold,
   createPaymentToken,
+  getActiveReservationPayment,
   cancelReservation,
 };

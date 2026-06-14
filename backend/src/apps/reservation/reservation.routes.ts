@@ -8,6 +8,7 @@ const router = express.Router();
 router.use(authenticate);
 //-------------------------------//
 
+router.get("/active-payment", reservationController.getActiveReservationPayment);
 router.post("/hold", reservationController.createReservationHold);
 router.post("/payment", reservationController.createReservationPayment);
 router.post("/cancel", reservationController.cancelReservation);
