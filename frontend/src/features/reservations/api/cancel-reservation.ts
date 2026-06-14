@@ -5,6 +5,7 @@ import { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { getShowTimeQueryOptions } from "@/features/movie-schedules/api/get-show-time";
+import { getActiveReservationPaymentQueryOptions } from "./get-active-reservation-payment";
 
 export const cancelReservationSchema = z.object({
   reservationId: z.string().uuid("Invalid reservation id format"),
@@ -32,6 +33,10 @@ export const useCancelReservation = ({
     onSuccess: (...args) => {
       const [response] = args;
       const showTimeId = response.data?.cancelledReservation?.showTimeId;
+      queryClient.invalidateQueries({
+        queryKey: getActiveReservationPaymentQueryOptions().queryKey,
+      });
+
       if (showTimeId) {
         queryClient.invalidateQueries({
           queryKey: getShowTimeQueryOptions(showTimeId).queryKey,

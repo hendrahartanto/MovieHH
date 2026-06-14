@@ -6,6 +6,8 @@ type BookingSummaryProps = {
   price: number;
   selectedCount: number;
   isCheckoutPending?: boolean;
+  isCheckoutDisabled?: boolean;
+  checkoutDisabledReason?: string;
   onCheckout: () => void;
 };
 
@@ -13,6 +15,8 @@ export const BookingSummary = ({
   price,
   selectedCount,
   isCheckoutPending = false,
+  isCheckoutDisabled = false,
+  checkoutDisabledReason,
   onCheckout,
 }: BookingSummaryProps) => {
   const totalPrice = selectedCount > 0 ? price * selectedCount : price;
@@ -39,7 +43,7 @@ export const BookingSummary = ({
         <Button
           size="lg"
           className="cinema-gradient cinema-glow text-white font-semibold gap-2"
-          disabled={selectedCount === 0 || isCheckoutPending}
+          disabled={selectedCount === 0 || isCheckoutPending || isCheckoutDisabled}
           onClick={onCheckout}
         >
           {isCheckoutPending ? (
@@ -49,6 +53,11 @@ export const BookingSummary = ({
           )}
           {isCheckoutPending ? "Processing..." : "Checkout"}
         </Button>
+        {checkoutDisabledReason && (
+          <p className="max-w-xs text-xs text-amber-400 sm:text-right">
+            {checkoutDisabledReason}
+          </p>
+        )}
       </div>
     </div>
   );

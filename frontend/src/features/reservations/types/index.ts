@@ -15,6 +15,41 @@ export type Reservation = {
   updatedAt: string;
 };
 
+export type ReservationSeat = {
+  id: string;
+  seatNumber: string;
+  seatRow: string;
+  theaterId?: string;
+};
+
+export type ReservationDetail = {
+  id: string;
+  reservationId: string;
+  seatId: string;
+  seat: ReservationSeat;
+};
+
+export type ActiveReservation = Omit<Reservation, "createdAt"> & {
+  createdAt?: string;
+  createAt?: string;
+  reservationDetails: ReservationDetail[];
+  showTime: {
+    id: string;
+    startTime: string;
+    endTime: string;
+    movieSchedule: {
+      price: string | number;
+      date: string;
+      movie?: {
+        title: string;
+      };
+      theater?: {
+        name: string;
+      };
+    };
+  };
+};
+
 export type PaymentStatus =
   | "PENDING"
   | "PAID"
@@ -30,4 +65,9 @@ export type PaymentToken = {
   status: PaymentStatus;
   createdAt: string;
   updatedAt: string;
+};
+
+export type ActiveReservationPayment = {
+  reservation: ActiveReservation;
+  payment: PaymentToken | null;
 };
