@@ -133,8 +133,7 @@ export default function SeatSelectionRoute() {
         addNotification({
           type: "error",
           title: "Payment failed",
-          message:
-            "Use Resume Payment to retry, or Cancel Reservation to release your seats.",
+          message: "Please try again",
         });
       },
       onClose: () => {
@@ -187,6 +186,7 @@ export default function SeatSelectionRoute() {
 
       const paymentResponse = await createReservationPayment.mutateAsync({
         reservationId,
+        returnUrl: window.location.href,
       });
 
       paymentCreated = true;

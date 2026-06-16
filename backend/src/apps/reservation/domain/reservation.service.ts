@@ -101,7 +101,11 @@ const createReservationHold = async (
   });
 };
 
-const createPaymentToken = async (reservationId: string, userId: string) => {
+const createPaymentToken = async (
+  reservationId: string,
+  userId: string,
+  returnUrl?: string
+) => {
   return prisma.$transaction(
     async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${reservationId}))`;
@@ -134,7 +138,7 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
         (reservation.expiresAt.getTime() - now.getTime()) / (60 * 1000),
       );
 
-      const parameter = {
+      const parameter: any = {
         transaction_details: {
           order_id: reservationId,
           gross_amount: Number(reservation.totalPrice),
@@ -158,6 +162,14 @@ const createPaymentToken = async (reservationId: string, userId: string) => {
           duration: remainingHoldMinutes,
         },
       };
+
+      if (returnUrl) {
+        parameter.callbacks = {
+          finish: returnUrl,
+          unfinish: returnUrl,
+          error: returnUrl,
+        };
+      }
 
       const transaction = await midtransSnap.createTransaction(parameter);
 

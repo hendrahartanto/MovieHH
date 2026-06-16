@@ -24,12 +24,13 @@ const createReservationHold = asyncHandler<ProtectedRequest>(
 const createReservationPayment = asyncHandler<ProtectedRequest>(
   async (req, res) => {
     const validatedData = createReservationPaymentSchema.parse(req.body);
-    const { reservationId } = validatedData;
+    const { reservationId, returnUrl } = validatedData;
     const userId = req.user.id;
 
     const paymentToken = await reservationService.createPaymentToken(
       reservationId,
-      userId
+      userId,
+      returnUrl
     );
 
     new SuccessResponse("Create payment token successful", paymentToken).send(

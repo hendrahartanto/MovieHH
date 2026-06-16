@@ -1,0 +1,3 @@
+Gunanya untuk wrapped seluruh controller dengan HOC (High order Function), agar async function tidak perlu secara manual dan ribet" menulis try catch disetiap operation yang butuh error handling
+
+Function ini akan menerima asynchronous function yaitu dibaigan controller nya yang diterima sebagai execution lalu akan ada .catch di execution ini, hal ini agar seluruh error yang di throw mau itu dilapisan controller / service akan dapat ditangkap oleh async handler ini, lalu kemudian akan dipanggil next, agar dioper ke middleware yang selanjutnya yaitu error.middleware.ts, sesuai urutan middleware yang sudah di use di app.ts
