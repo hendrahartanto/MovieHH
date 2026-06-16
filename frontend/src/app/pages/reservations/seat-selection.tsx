@@ -194,16 +194,8 @@ export default function SeatSelectionRoute() {
       refreshReservationState();
 
       await openSnapPayment(paymentResponse.data.token);
-    } catch (error) {
+    } catch {
       await cancelReservationWithoutPayment();
-      addNotification({
-        type: "error",
-        title: "Checkout failed",
-        message:
-          error instanceof Error
-            ? error.message
-            : "Unable to start payment. Please try again.",
-      });
     } finally {
       setIsCheckoutPending(false);
     }
@@ -250,17 +242,11 @@ export default function SeatSelectionRoute() {
       addNotification({
         type: "success",
         title: "Reservation cancelled",
-        message: "The Midtrans payment was cancelled and your seats were released.",
-      });
-    } catch (error) {
-      addNotification({
-        type: "error",
-        title: "Unable to cancel reservation",
         message:
-          error instanceof Error
-            ? error.message
-            : "Please try cancelling the reservation again.",
+          "The Midtrans payment was cancelled and your seats were released.",
       });
+    } catch {
+      // Error handled by API interceptor
     }
   };
 
