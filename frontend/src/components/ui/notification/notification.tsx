@@ -26,10 +26,10 @@ const typeStyles: Record<
 > = {
   info: {
     bg: "bg-card border-border",
-    icon: "text-primary",
+    icon: "text-blue-500",
     title: "text-foreground",
     message: "text-muted-foreground",
-    progress: "bg-primary",
+    progress: "bg-blue-500",
   },
   success: {
     bg: "bg-card border-border",
