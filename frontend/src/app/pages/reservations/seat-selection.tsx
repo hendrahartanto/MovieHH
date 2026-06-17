@@ -20,9 +20,40 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Calendar, Clock, MapPin } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatImageUrl } from "@/helper/image-helper";
 import { loadMidtransSnap } from "@/lib/midtrans-snap";
 import { useNotifications } from "@/components/ui/notification/notification-store";
+
+const MovieInfoSkeleton = () => (
+  <div className="mb-10 flex flex-col md:flex-row gap-6 items-start p-6 bg-card/50 border border-border rounded-xl">
+    <Skeleton className="w-24 h-36 md:w-32 md:h-48 rounded-lg shrink-0" />
+    <div className="flex-1 space-y-4 pt-1">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-3/4" />
+        <Skeleton className="h-4 w-1/2" />
+      </div>
+      <div className="flex gap-3">
+        <Skeleton className="h-7 w-28" />
+        <Skeleton className="h-7 w-36" />
+        <Skeleton className="h-7 w-32" />
+      </div>
+    </div>
+  </div>
+);
+
+const SeatGridSkeleton = () => (
+  <div className="bg-card/30 p-8 border border-border/50 flex flex-col items-center gap-3 min-h-80 justify-center">
+    <Skeleton className="h-4 w-48 mb-4" />
+    {Array.from({ length: 6 }).map((_, i) => (
+      <div key={i} className="flex gap-2">
+        {Array.from({ length: 10 }).map((__, j) => (
+          <Skeleton key={j} className="w-8 h-8 rounded-t-lg rounded-b-sm" />
+        ))}
+      </div>
+    ))}
+  </div>
+);
 
 export default function SeatSelectionRoute() {
   const { showtimeId } = useParams();
@@ -43,7 +74,7 @@ export default function SeatSelectionRoute() {
     showTimeId: showtimeId as string,
   });
 
-  const { data: activePaymentData, isLoading: isLoadingActivePayment } =
+  const { data: activePaymentData } =
     useActiveReservationPayment();
 
   const activePayment = activePaymentData?.data.activePayment ?? null;
@@ -56,26 +87,15 @@ export default function SeatSelectionRoute() {
     }
   }, [activePaymentId]);
 
-  if (isLoadingShowTime || isLoadingSeats || isLoadingActivePayment) {
-    return (
-      <div className="content-wrapper py-24 flex justify-center">
-        <p className="text-muted-foreground animate-pulse">
-          Loading seats for you...
-        </p>
-      </div>
-    );
-  }
-
   const showTime = showTimeData?.data.showTime;
-  const layout = showTime?.movieSchedule.theater.layout || [];
-  const price = showTime?.movieSchedule.price || 0;
-  const seats = seatsData?.data.showTimeSeats || [];
+  const layout = showTime?.movieSchedule.theater.layout ?? [];
+  const price = showTime?.movieSchedule.price ?? 0;
+  const seats = seatsData?.data.showTimeSeats ?? [];
   const movie = showTime?.movieSchedule.movie;
   const theater = showTime?.movieSchedule.theater;
 
   const handleSeatToggle = (seatId: string) => {
     if (hasActivePayment) return;
-
     setSelectedSeats((prev) =>
       prev.includes(seatId)
         ? prev.filter((id) => id !== seatId)
@@ -85,7 +105,6 @@ export default function SeatSelectionRoute() {
 
   const refreshShowTime = () => {
     if (!showtimeId) return;
-
     void queryClient.invalidateQueries({
       queryKey: getShowTimeQueryOptions(showtimeId).queryKey,
     });
@@ -165,11 +184,10 @@ export default function SeatSelectionRoute() {
 
     const cancelReservationWithoutPayment = async () => {
       if (!reservationId || paymentCreated) return;
-
       try {
         await cancelReservation.mutateAsync({ reservationId });
       } catch {
-        // The API interceptor already shows the cancellation error.
+        // Error handled by API interceptor
       }
     };
 
@@ -232,7 +250,6 @@ export default function SeatSelectionRoute() {
 
   const handleCancelActivePayment = async () => {
     if (!activePayment) return;
-
     try {
       await cancelReservation.mutateAsync({
         reservationId: activePayment.reservation.id,
@@ -252,57 +269,61 @@ export default function SeatSelectionRoute() {
 
   return (
     <div className="content-wrapper py-12 md:py-24 max-w-5xl">
-      {movie && theater && showTime && (
-        <div className="mb-10 flex flex-col md:flex-row gap-6 items-start md:items-center bg-card/50 p-6 border border-border backdrop-blur-sm">
-          {movie.posterUrl ? (
-            <img
-              src={formatImageUrl(movie.posterUrl)}
-              alt={movie.title}
-              className="w-24 h-36 md:w-32 md:h-48 object-cover shadow-lg shadow-black/50"
-            />
-          ) : (
-            <div className="w-24 h-36 md:w-32 md:h-48 bg-muted flex items-center justify-center">
-              No Poster
-            </div>
-          )}
+      {isLoadingShowTime ? (
+        <MovieInfoSkeleton />
+      ) : (
+        movie &&
+        theater &&
+        showTime && (
+          <div className="mb-10 flex flex-col md:flex-row gap-6 items-start md:items-center bg-card/50 p-6 border border-border rounded-xl backdrop-blur-sm">
+            {movie.posterUrl ? (
+              <img
+                src={formatImageUrl(movie.posterUrl)}
+                alt={movie.title}
+                className="w-24 h-36 md:w-32 md:h-48 object-cover rounded-lg shadow-lg shadow-black/50 shrink-0"
+              />
+            ) : (
+              <div className="w-24 h-36 md:w-32 md:h-48 bg-muted rounded-lg flex items-center justify-center text-xs text-muted-foreground shrink-0">
+                No Poster
+              </div>
+            )}
 
-          <div className="flex-1 space-y-4">
-            <div>
-              <h1 className="text-2xl md:text-4xl font-bold text-foreground tracking-tight">
-                {movie.title}
-              </h1>
-              <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-primary" />
-                  <span className="font-medium text-foreground">
-                    {theater.name}
+            <div className="flex-1 space-y-4">
+              <div>
+                <h1 className="text-2xl md:text-4xl font-bold text-foreground tracking-tight leading-tight">
+                  {movie.title}
+                </h1>
+                <div className="flex flex-wrap items-center gap-3 mt-3">
+                  <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                    <MapPin className="w-3.5 h-3.5 text-primary" />
+                    <span className="font-medium text-foreground">
+                      {theater.name}
+                    </span>
                   </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-primary" />
-                  <span>
+                  <span className="text-border">·</span>
+                  <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                    <Calendar className="w-3.5 h-3.5 text-primary" />
                     {format(
                       new Date(showTime.movieSchedule.date),
                       "MMMM d, yyyy",
                     )}
                   </span>
-                </div>
-                <div className="flex items-center gap-1.5 bg-primary/10 text-primary px-2.5 py-1 rounded-md font-medium border border-primary/20">
-                  <Clock className="w-4 h-4" />
-                  <span>
-                    {format(new Date(showTime.startTime), "h:mm a")} -{" "}
+                  <span className="flex items-center gap-1.5 text-sm bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-md font-medium">
+                    <Clock className="w-3.5 h-3.5" />
+                    {format(new Date(showTime.startTime), "h:mm a")} –{" "}
                     {format(new Date(showTime.endTime), "h:mm a")}
                   </span>
                 </div>
               </div>
-            </div>
 
-            <p className="text-muted-foreground text-sm max-w-2xl line-clamp-2">
-              Select your preferred seats below. Premium viewing experience
-              guaranteed.
-            </p>
+              {movie.synopsis && (
+                <p className="text-muted-foreground text-sm max-w-2xl line-clamp-2 leading-relaxed">
+                  {movie.synopsis}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
+        )
       )}
 
       {activePayment && (
@@ -315,20 +336,24 @@ export default function SeatSelectionRoute() {
         />
       )}
 
-      <div className="bg-card/30 p-8 border border-border/50 overflow-x-auto shadow-inner relative">
-        <div className="absolute inset-0 bg-linear-to-b from-primary/5 to-transparent pointer-events-none rounded-t-2xl" />
-        <div className="relative z-10 min-w-[600px]">
-          <SeatGrid
-            layout={layout}
-            seats={seats}
-            selectedSeats={selectedSeats}
-            onSeatToggle={handleSeatToggle}
-          />
-          <div className="mt-12">
-            <SeatLegend />
+      {isLoadingSeats ? (
+        <SeatGridSkeleton />
+      ) : (
+        <div className="bg-card/30 border border-border/50 overflow-x-auto shadow-inner relative rounded-xl">
+          <div className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-primary/5 to-transparent pointer-events-none rounded-t-xl" />
+          <div className="relative z-10 p-8 min-w-[600px]">
+            <SeatGrid
+              layout={layout}
+              seats={seats}
+              selectedSeats={selectedSeats}
+              onSeatToggle={handleSeatToggle}
+            />
+            <div className="mt-10 pt-6 border-t border-border/30">
+              <SeatLegend />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <BookingSummary
         price={price}
