@@ -286,10 +286,20 @@ const getReservation = async (reservationId: string, userId: string) => {
   return reservation;
 };
 
+const getActiveReservations = async (userId: string) => {
+  return reservationRepository.getReservationsByUserId(userId, false);
+};
+
+const getTransactionHistory = async (userId: string) => {
+  return reservationRepository.getReservationsByUserId(userId, true);
+};
+
 export default {
   createReservationHold,
   createPaymentToken,
   getActiveReservationPayment,
+  getActiveReservations,
+  getTransactionHistory,
   cancelReservation,
   getReservation,
 };

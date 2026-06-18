@@ -53,6 +53,34 @@ const getActiveReservationPayment = asyncHandler<ProtectedRequest>(
   }
 );
 
+const getActiveReservations = asyncHandler<ProtectedRequest>(
+  async (req, res) => {
+    const userId = req.user.id;
+
+    const activeReservations = await reservationService.getActiveReservations(
+      userId
+    );
+
+    new SuccessResponse("Get active reservations successful", {
+      activeReservations,
+    }).send(res);
+  }
+);
+
+const getTransactionHistory = asyncHandler<ProtectedRequest>(
+  async (req, res) => {
+    const userId = req.user.id;
+
+    const transactionHistory = await reservationService.getTransactionHistory(
+      userId
+    );
+
+    new SuccessResponse("Get transaction history successful", {
+      transactionHistory,
+    }).send(res);
+  }
+);
+
 const cancelReservation = asyncHandler<ProtectedRequest>(async (req, res) => {
   const validatedData = cancelReservationSchema.parse(req.body);
   const { reservationId } = validatedData;
@@ -86,6 +114,8 @@ export default {
   createReservationHold,
   createReservationPayment,
   getActiveReservationPayment,
+  getActiveReservations,
+  getTransactionHistory,
   cancelReservation,
   getReservation,
 };

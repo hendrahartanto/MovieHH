@@ -120,12 +120,43 @@ const updatePaymentStatusByReservationId = async (
   });
 };
 
+const getReservationsByUserId = async (
+  userId: string,
+  isPast: boolean,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.reservation.findMany({
+    where: {
+      userId,
+      showTime: {
+        startTime: isPast ? { lt: new Date() } : { gte: new Date() },
+      },
+    },
+    include: {
+      payment: true,
+      reservationDetails: { include: { seat: true } },
+      showTime: {
+        include: {
+          movieSchedule: {
+            include: {
+              movie: true,
+              theater: { include: { location: true } },
+            },
+          },
+        },
+      },
+    },
+    orderBy: { createAt: "desc" },
+  });
+};
+
 export default {
   createReservation,
   updateReservationStatus,
   expirePendingReservation,
   getReservationById,
   getActivePendingReservationByUserId,
+  getReservationsByUserId,
   getPaymentByReservationId,
   createPayment,
   updatePaymentStatusByReservationId,
