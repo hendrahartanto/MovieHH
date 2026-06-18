@@ -3,9 +3,9 @@ import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { AppRoot } from "./pages/root";
+import AppRoot from "./pages/root";
 import { ProtectedRoute } from "@/lib/auth";
-import { AdminRoot } from "./pages/admin/root";
+import AdminRoot from "./pages/admin/root";
 
 //TODO:
 //error boundary per route

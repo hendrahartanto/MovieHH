@@ -16,7 +16,7 @@ import { formatImageUrl } from "@/helper/image-helper";
 import { paths } from "@/config/paths";
 import { cn } from "@/lib/utils";
 
-export default function PaymentResultRoute() {
+const PaymentResultRoute = () => {
   const { reservationId } = useParams();
   const navigate = useNavigate();
 
@@ -250,4 +250,6 @@ export default function PaymentResultRoute() {
       </div>
     </div>
   );
-}
+};
+
+export default PaymentResultRoute;

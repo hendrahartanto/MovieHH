@@ -1,7 +1,7 @@
 import { NavbarLayout } from "@/components/layouts/navbar-layout";
 import { Outlet, ScrollRestoration } from "react-router";
 
-export const AppRoot = () => {
+const AppRoot = () => {
   return (
     <NavbarLayout>
       <Outlet />
@@ -9,3 +9,5 @@ export const AppRoot = () => {
     </NavbarLayout>
   );
 };
+
+export default AppRoot;

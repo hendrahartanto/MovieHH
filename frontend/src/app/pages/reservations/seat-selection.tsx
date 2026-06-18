@@ -56,7 +56,7 @@ const SeatGridSkeleton = () => (
   </div>
 );
 
-export default function SeatSelectionRoute() {
+const SeatSelectionRoute = () => {
   const { showtimeId } = useParams();
   const navigate = useNavigate();
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
@@ -421,4 +421,6 @@ export default function SeatSelectionRoute() {
       </div>
     </>
   );
-}
+};
+
+export default SeatSelectionRoute;

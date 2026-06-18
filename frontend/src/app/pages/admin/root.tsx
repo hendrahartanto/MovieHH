@@ -5,10 +5,12 @@ export const ErrorBoundary = () => {
   return <div>Something went wront!</div>;
 };
 
-export const AdminRoot = () => {
+const AdminRoot = () => {
   return (
     <SidebarLayout>
       <Outlet />
     </SidebarLayout>
   );
 };
+
+export default AdminRoot;

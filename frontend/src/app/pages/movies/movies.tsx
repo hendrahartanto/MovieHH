@@ -10,7 +10,7 @@ import { UserSearchBox } from "@/components/ui/user-search-box";
 
 type TabValue = "now-showing" | "upcoming";
 
-export default function MoviesPage() {
+const MoviesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentTab = (searchParams.get("tab") as TabValue) || "now-showing";
 
@@ -209,4 +209,6 @@ export default function MoviesPage() {
       )}
     </div>
   );
-}
+};
+
+export default MoviesPage;
