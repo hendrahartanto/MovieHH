@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ui/confirmation-modal";
 import { formatPrice } from "@/helper/format-helper";
-import { ActiveReservationPayment } from "../types";
+import { ActiveReservationPayment } from "@/features/reservations/types";
 import { format, differenceInSeconds } from "date-fns";
 import { Loader2, RotateCcw, Timer, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";

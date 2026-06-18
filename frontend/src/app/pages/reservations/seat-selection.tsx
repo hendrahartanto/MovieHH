@@ -1,8 +1,12 @@
 import { useParams, useNavigate } from "react-router";
-import { SeatGrid } from "@/features/reservations/components/seat-grid";
-import { SeatLegend } from "@/features/reservations/components/seat-legend";
-import { BookingSummary } from "@/features/reservations/components/booking-summary";
-import { ActivePaymentCard } from "@/features/reservations/components/active-payment-card";
+import {
+  ActivePaymentCard,
+  BookingSummary,
+  MovieInfoSkeleton,
+  SeatGrid,
+  SeatGridSkeleton,
+  SeatLegend,
+} from "@/features/reservations/components/seat-selection";
 import {
   getShowTimeQueryOptions,
   getShowTimeSeatsQueryOptions,
@@ -20,41 +24,10 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Calendar, Clock, MapPin, Loader2 } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { formatImageUrl } from "@/helper/image-helper";
 import { loadMidtransSnap } from "@/lib/midtrans-snap";
 import { useNotifications } from "@/components/ui/notification/notification-store";
 import { useReservation } from "@/features/reservations/api/get-reservation";
-
-const MovieInfoSkeleton = () => (
-  <div className="mb-10 flex flex-col md:flex-row gap-6 items-start p-6 bg-card/50 border border-border rounded-xl">
-    <Skeleton className="w-24 h-36 md:w-32 md:h-48 rounded-lg shrink-0" />
-    <div className="flex-1 space-y-4 pt-1">
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-3/4" />
-        <Skeleton className="h-4 w-1/2" />
-      </div>
-      <div className="flex gap-3">
-        <Skeleton className="h-7 w-28" />
-        <Skeleton className="h-7 w-36" />
-        <Skeleton className="h-7 w-32" />
-      </div>
-    </div>
-  </div>
-);
-
-const SeatGridSkeleton = () => (
-  <div className="bg-card/30 p-8 border border-border/50 flex flex-col items-center gap-3 min-h-80 justify-center">
-    <Skeleton className="h-4 w-48 mb-4" />
-    {Array.from({ length: 6 }).map((_, i) => (
-      <div key={i} className="flex gap-2">
-        {Array.from({ length: 10 }).map((__, j) => (
-          <Skeleton key={j} className="w-8 h-8 rounded-t-lg rounded-b-sm" />
-        ))}
-      </div>
-    ))}
-  </div>
-);
 
 const SeatSelectionRoute = () => {
   const { showtimeId } = useParams();
@@ -220,8 +193,7 @@ const SeatSelectionRoute = () => {
       if (!reservationId || paymentCreated) return;
       try {
         await cancelReservation.mutateAsync({ reservationId });
-      } catch {
-      }
+      } catch {}
     };
 
     try {
@@ -296,8 +268,7 @@ const SeatSelectionRoute = () => {
         message:
           "The Midtrans payment was cancelled and your seats were released.",
       });
-    } catch {
-    }
+    } catch {}
   };
 
   return (
