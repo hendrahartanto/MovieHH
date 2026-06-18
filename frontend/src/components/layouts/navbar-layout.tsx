@@ -27,6 +27,7 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
   const navItems = [
     { name: "Movies", to: paths.movies.getHref() },
     { name: "Cinemas", to: paths.cinemas.getHref() },
+    ...(user.data ? [{ name: "My Tickets", to: paths.myTickets.getHref() }] : []),
   ] as NavbarItem[];
 
   return (

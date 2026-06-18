@@ -72,6 +72,11 @@ const createAppRouter = (queryClient: QueryClient) =>
               convert(queryClient),
             ),
         },
+        {
+          path: paths.myTickets.path,
+          lazy: () =>
+            import("./pages/reservations/my-tickets").then(convert(queryClient)),
+        },
       ],
     },
     {

@@ -90,4 +90,9 @@ export const paths = {
     path: "/reservations/:reservationId/result",
     getHref: (id: string) => `/reservations/${id}/result`,
   },
+
+  myTickets: {
+    path: "/my-tickets",
+    getHref: () => "/my-tickets",
+  },
 } as const;
