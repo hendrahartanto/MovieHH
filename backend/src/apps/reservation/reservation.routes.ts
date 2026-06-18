@@ -12,5 +12,6 @@ router.get("/active-payment", reservationController.getActiveReservationPayment)
 router.post("/hold", reservationController.createReservationHold);
 router.post("/payment", reservationController.createReservationPayment);
 router.post("/cancel", reservationController.cancelReservation);
+router.get("/:id", reservationController.getReservation);
 
 export default router;

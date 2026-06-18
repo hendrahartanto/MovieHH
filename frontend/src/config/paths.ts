@@ -85,4 +85,9 @@ export const paths = {
     path: "/showtimes/:showtimeId/seats",
     getHref: (id: string) => `/showtimes/${id}/seats`,
   },
+
+  paymentResult: {
+    path: "/reservations/:reservationId/result",
+    getHref: (id: string) => `/reservations/${id}/result`,
+  },
 } as const;

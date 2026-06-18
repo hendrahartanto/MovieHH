@@ -42,7 +42,16 @@ const getReservationById = async (
   return tx.reservation.findUnique({
     where: { id: reservationId },
     include: {
-      showTime: { include: { movieSchedule: true } },
+      showTime: {
+        include: {
+          movieSchedule: {
+            include: {
+              movie: true,
+              theater: { include: { location: true } },
+            },
+          },
+        },
+      },
       user: true,
       payment: true,
       reservationDetails: { include: { seat: true } },

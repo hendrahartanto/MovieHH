@@ -65,6 +65,13 @@ const createAppRouter = (queryClient: QueryClient) =>
               convert(queryClient),
             ),
         },
+        {
+          path: paths.paymentResult.path,
+          lazy: () =>
+            import("./pages/reservations/payment-result/payment-result").then(
+              convert(queryClient),
+            ),
+        },
       ],
     },
     {

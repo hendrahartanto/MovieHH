@@ -271,9 +271,25 @@ const cancelReservation = async (reservationId: string, userId: string) => {
   });
 };
 
+const getReservation = async (reservationId: string, userId: string) => {
+  const reservation =
+    await reservationRepository.getReservationById(reservationId);
+
+  if (!reservation) {
+    throw new NoDataError("Reservation not found");
+  }
+
+  if (reservation.userId !== userId) {
+    throw new BadRequestError("Unauthorized access to reservation");
+  }
+
+  return reservation;
+};
+
 export default {
   createReservationHold,
   createPaymentToken,
   getActiveReservationPayment,
   cancelReservation,
+  getReservation,
 };
