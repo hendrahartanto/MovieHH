@@ -99,16 +99,17 @@ export const ScheduleAccordionForMovie = ({
               const availableSeats = getAvailableSeatCount(showtime);
               const totalSeats = showtime.seats.length;
               const isFull = availableSeats === 0 && totalSeats > 0;
+              const isDisabled = isFull || showtime.isPassed;
 
               return (
                 <button
                   key={showtime.id}
-                  disabled={isFull}
+                  disabled={isDisabled}
                   onClick={() =>
                     setSelectedShowtimeId(isSelected ? null : showtime.id)
                   }
                   className={`flex flex-col items-center px-5 py-3 rounded-lg border text-sm transition-all duration-200 min-w-[90px] ${
-                    isFull
+                    isDisabled
                       ? "opacity-40 cursor-not-allowed border-border bg-muted"
                       : isSelected
                         ? "cinema-gradient border-transparent text-white shadow-lg scale-105"
@@ -124,16 +125,22 @@ export const ScheduleAccordionForMovie = ({
                   {totalSeats > 0 && (
                     <span
                       className={`text-xs mt-1.5 font-medium ${
-                        isFull
-                          ? "text-destructive"
-                          : availableSeats <= 10
-                            ? "text-amber-400"
-                            : isSelected
-                              ? "text-white/80"
-                              : "text-green-400"
+                        showtime.isPassed
+                          ? "text-muted-foreground"
+                          : isFull
+                            ? "text-destructive"
+                            : availableSeats <= 10
+                              ? "text-amber-400"
+                              : isSelected
+                                ? "text-white/80"
+                                : "text-green-400"
                       }`}
                     >
-                      {isFull ? "Full" : `${availableSeats}/${totalSeats}`}
+                      {showtime.isPassed
+                        ? "Passed"
+                        : isFull
+                          ? "Full"
+                          : `${availableSeats}/${totalSeats}`}
                     </span>
                   )}
                 </button>

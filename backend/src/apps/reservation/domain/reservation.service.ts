@@ -42,6 +42,12 @@ const createReservationHold = async (
     const showTime = await showTimeRepository.getShowTimeById(showTimeId);
     if (!showTime) throw new NoDataError("Showtime not found");
 
+    if (new Date(showTime.startTime) < new Date()) {
+      throw new BadRequestError(
+        "Cannot reserve seats for a showtime that has already started or passed",
+      );
+    }
+
     const seats = await Promise.all(
       seatIds.map((seatId) =>
         showTimeRepository.getShowTimeSeat(showTimeId, seatId),

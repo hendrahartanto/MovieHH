@@ -7,6 +7,17 @@ import { getShowTimesByDateRangeSchema } from "../dto/get-show-times-by-date-ran
 import { updateMovieScheduleSchema } from "../dto/update-movie-schedule.dto";
 import showTimeService from "../domain/show-time.service";
 
+const mapMovieSchedules = (movieSchedules: any[]) => {
+  const now = new Date();
+  return movieSchedules.map((schedule) => ({
+    ...schedule,
+    showTimes: schedule.showTimes?.map((st: any) => ({
+      ...st,
+      isPassed: new Date(st.startTime) < now,
+    })),
+  }));
+};
+
 const createMovieSchedule = asyncHandler(async (req, res) => {
   const validatedData = createMovieScheduleSchema.parse(req.body);
   const newMovieSchedule =
@@ -25,8 +36,10 @@ const getMovieSchedules = asyncHandler(async (req, res) => {
   const { movieSchedules, total } =
     await showTimeService.getMovieSchedulesPaginated(page, limit, search);
 
+  const mappedSchedules = mapMovieSchedules(movieSchedules);
+
   new SuccessResponse("Get movie schedules successful", {
-    movieSchedules,
+    movieSchedules: mappedSchedules,
     pagination: {
       page,
       limit,
@@ -41,8 +54,10 @@ const getMovieScheduleByDateRange = asyncHandler(async (req, res) => {
   const movieSchedules =
     await showTimeService.getMovieScheduleByDateRange(validatedData);
 
+  const mappedSchedules = mapMovieSchedules(movieSchedules);
+
   new SuccessResponse("Get movie schedules successful", {
-    movieSchedules,
+    movieSchedules: mappedSchedules,
   }).send(res);
 });
 
@@ -57,8 +72,10 @@ const getMovieScheduleByMovieIdAndDateRange = asyncHandler(async (req, res) => {
       validatedData,
     );
 
+  const mappedSchedules = mapMovieSchedules(movieSchedules);
+
   new SuccessResponse("Get movie schedules successful", {
-    movieSchedules,
+    movieSchedules: mappedSchedules,
   }).send(res);
 });
 
@@ -74,8 +91,10 @@ const getMovieScheduleByTheaterIdAndDateRange = asyncHandler(
         validatedData,
       );
 
+    const mappedSchedules = mapMovieSchedules(movieSchedules);
+
     new SuccessResponse("Get movie schedules successful", {
-      movieSchedules,
+      movieSchedules: mappedSchedules,
     }).send(res);
   },
 );

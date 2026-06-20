@@ -9,6 +9,7 @@ export type Showtime = {
   startTime: Date;
   endTime: Date;
   seats: Seat[];
+  isPassed?: boolean;
   createdAt: Date;
   updatedAt: Date;
 };
