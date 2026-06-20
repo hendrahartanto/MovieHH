@@ -9,7 +9,7 @@ import {
   ChevronRight,
   Armchair,
 } from "lucide-react";
-import { SeatDots } from "./SeatDots";
+import { SeatDots } from "./seat-dots";
 import { formatBookingId } from "@/lib/utils";
 
 const formatDate = (iso: string) => {
