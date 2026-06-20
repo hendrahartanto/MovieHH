@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatImageUrl } from "@/helper/image-helper";
 import { paths } from "@/config/paths";
-import { cn } from "@/lib/utils";
+import { cn, formatBookingId } from "@/lib/utils";
 
 type PaymentState = "success" | "pending" | "failed";
 
@@ -234,7 +234,7 @@ const BookingMeta = ({ reservation, seatLabels, state }: BookingMetaProps) => (
           Booking ID
         </p>
         <p className="font-mono text-foreground font-semibold tracking-wide">
-          {reservation.id.split("-")[0].toUpperCase()}
+          {formatBookingId(reservation.id)}
         </p>
       </div>
 
@@ -400,7 +400,7 @@ export const PaymentResultRoute = () => {
         <p className="text-center text-xs text-muted-foreground mt-4">
           Booking reference:{" "}
           <span className="font-mono">
-            {reservation.id.split("-")[0].toUpperCase()}
+            {formatBookingId(reservation.id)}
           </span>
         </p>
       </div>

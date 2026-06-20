@@ -10,6 +10,7 @@ import {
   Armchair,
 } from "lucide-react";
 import { SeatDots } from "./SeatDots";
+import { formatBookingId } from "@/lib/utils";
 
 const formatDate = (iso: string) => {
   const d = new Date(iso);
@@ -113,7 +114,7 @@ export const ReservationCard = ({
             <Ticket className="h-6 w-6 text-primary mx-auto mb-1 opacity-80" />
             <p className="text-xs text-muted-foreground font-medium">Booking</p>
             <p className="text-xs font-mono text-foreground/70 truncate max-w-24">
-              #{reservation.id.slice(-6).toUpperCase()}
+              #{formatBookingId(reservation.id)}
             </p>
           </div>
           <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-200" />
