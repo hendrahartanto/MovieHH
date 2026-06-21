@@ -77,7 +77,8 @@ export const BookingSummary = ({
 
         <Button
           size="lg"
-          className="w-full cinema-gradient cinema-glow text-white font-semibold gap-2 transition-all duration-200 disabled:opacity-50 disabled:cinema-glow-none disabled:cursor-not-allowed"
+          variant="glow"
+          className="w-full hover:scale-101"
           disabled={!hasSelection || isCheckoutPending || isCheckoutDisabled}
           onClick={onCheckout}
         >

@@ -29,6 +29,10 @@ export const CinemaBookingSection = ({
     hasSchedule,
   } = useCinemaBooking(theaterId);
 
+  const validSchedules = schedules.filter(
+    (schedule) => schedule.showTimes && schedule.showTimes.length > 0
+  );
+
   return (
     <section>
       <div className="flex items-center gap-4 mb-8">
@@ -54,11 +58,11 @@ export const CinemaBookingSection = ({
 
       {isSchedulesLoading ? (
         <ScheduleSkeleton />
-      ) : schedules.length === 0 ? (
+      ) : validSchedules.length === 0 ? (
         <EmptyScheduleState date={selectedDate} />
       ) : (
         <div className="space-y-3">
-          {schedules.map((schedule) => (
+          {validSchedules.map((schedule) => (
             <ScheduleAccordionForCinema
               key={schedule.id}
               schedule={schedule}
