@@ -152,7 +152,6 @@ const SeatSelectionRoute = () => {
       onPending: () => {
         setSelectedSeats([]);
         refreshReservationState();
-        setPollingReservationId(currentReservationId);
       },
       onError: () => {
         refreshReservationState();
