@@ -56,13 +56,23 @@ const getActiveReservationPayment = asyncHandler<ProtectedRequest>(
 const getActiveReservations = asyncHandler<ProtectedRequest>(
   async (req, res) => {
     const userId = req.user.id;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
 
-    const activeReservations = await reservationService.getActiveReservations(
-      userId
+    const { reservations, total } = await reservationService.getActiveReservations(
+      userId,
+      page,
+      limit
     );
 
     new SuccessResponse("Get active reservations successful", {
-      activeReservations,
+      activeReservations: reservations,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     }).send(res);
   }
 );
@@ -70,13 +80,23 @@ const getActiveReservations = asyncHandler<ProtectedRequest>(
 const getTransactionHistory = asyncHandler<ProtectedRequest>(
   async (req, res) => {
     const userId = req.user.id;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
 
-    const transactionHistory = await reservationService.getTransactionHistory(
-      userId
+    const { reservations, total } = await reservationService.getTransactionHistory(
+      userId,
+      page,
+      limit
     );
 
     new SuccessResponse("Get transaction history successful", {
-      transactionHistory,
+      transactionHistory: reservations,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     }).send(res);
   }
 );

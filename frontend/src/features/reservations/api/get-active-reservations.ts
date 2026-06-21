@@ -4,28 +4,54 @@ import { QueryConfig } from "@/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { ActiveReservation } from "../types";
 
-export const getActiveReservations = (): Promise<
-  ApiResponse<{ activeReservations: ActiveReservation[] }>
-> => {
-  return api.get("/reservations/active");
+export type PaginatedActiveReservations = {
+  activeReservations: ActiveReservation[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 };
 
-export const getActiveReservationsQueryOptions = () => {
+export const getActiveReservations = ({
+  page = 1,
+  limit = 10,
+}: {
+  page?: number;
+  limit?: number;
+} = {}): Promise<ApiResponse<PaginatedActiveReservations>> => {
+  return api.get("/reservations/active", {
+    params: { page, limit },
+  });
+};
+
+export const getActiveReservationsQueryOptions = ({
+  page = 1,
+  limit = 10,
+}: {
+  page?: number;
+  limit?: number;
+} = {}) => {
   return queryOptions({
-    queryKey: ["reservations", "active"],
-    queryFn: getActiveReservations,
+    queryKey: ["reservations", "active", { page, limit }],
+    queryFn: () => getActiveReservations({ page, limit }),
   });
 };
 
 type UseActiveReservationsOptions = {
+  page?: number;
+  limit?: number;
   queryConfig?: QueryConfig<typeof getActiveReservationsQueryOptions>;
 };
 
 export const useActiveReservations = ({
+  page,
+  limit,
   queryConfig,
 }: UseActiveReservationsOptions = {}) => {
   return useQuery({
-    ...getActiveReservationsQueryOptions(),
+    ...getActiveReservationsQueryOptions({ page, limit }),
     ...queryConfig,
   });
 };

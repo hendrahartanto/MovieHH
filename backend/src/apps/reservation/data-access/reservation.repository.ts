@@ -122,32 +122,60 @@ const updatePaymentStatusByReservationId = async (
 
 const getReservationsByUserId = async (
   userId: string,
-  isPast: boolean,
+  type: "active" | "history",
+  page: number = 1,
+  limit: number = 10,
   tx: PrismaClient | Prisma.TransactionClient = prisma
 ) => {
-  return tx.reservation.findMany({
-    where: {
-      userId,
-      showTime: {
-        startTime: isPast ? { lt: new Date() } : { gte: new Date() },
-      },
-    },
-    include: {
-      payment: true,
-      reservationDetails: { include: { seat: true } },
-      showTime: {
-        include: {
-          movieSchedule: {
-            include: {
-              movie: true,
-              theater: { include: { location: true } },
+  const now = new Date();
+  const whereClause: Prisma.ReservationWhereInput = {
+    userId,
+    ...(type === "active"
+      ? {
+          status: "CONFIRMED",
+          showTime: {
+            startTime: { gte: now },
+          },
+        }
+      : {
+          OR: [
+            {
+              showTime: {
+                startTime: { lt: now },
+              },
+            },
+            {
+              status: { not: "CONFIRMED" },
+            },
+          ],
+        }),
+  };
+
+  const [reservations, total] = await Promise.all([
+    tx.reservation.findMany({
+      where: whereClause,
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        payment: true,
+        reservationDetails: { include: { seat: true } },
+        showTime: {
+          include: {
+            movieSchedule: {
+              include: {
+                movie: true,
+                theater: { include: { location: true } },
+              },
             },
           },
         },
       },
-    },
-    orderBy: { createAt: "desc" },
-  });
+      orderBy: { createAt: "desc" },
+    }),
+    tx.reservation.count({ where: whereClause }),
+  ]);
+
+  return { reservations, total };
 };
 
 export default {

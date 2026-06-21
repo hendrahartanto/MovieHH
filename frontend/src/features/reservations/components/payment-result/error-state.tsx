@@ -19,7 +19,7 @@ export const ErrorState = ({ onNavigateHome }: ErrorStateProps) => (
           We couldn't find the reservation you are looking for.
         </p>
       </div>
-      <Button onClick={onNavigateHome} className="w-full cinema-glow">
+      <Button onClick={onNavigateHome} variant="glow" className="w-full">
         Back to Home
       </Button>
     </div>

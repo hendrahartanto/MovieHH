@@ -292,12 +292,12 @@ const getReservation = async (reservationId: string, userId: string) => {
   return reservation;
 };
 
-const getActiveReservations = async (userId: string) => {
-  return reservationRepository.getReservationsByUserId(userId, false);
+const getActiveReservations = async (userId: string, page: number = 1, limit: number = 10) => {
+  return reservationRepository.getReservationsByUserId(userId, "active", page, limit);
 };
 
-const getTransactionHistory = async (userId: string) => {
-  return reservationRepository.getReservationsByUserId(userId, true);
+const getTransactionHistory = async (userId: string, page: number = 1, limit: number = 10) => {
+  return reservationRepository.getReservationsByUserId(userId, "history", page, limit);
 };
 
 export default {

@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import {
   useActiveReservations,
   useTransactionHistory,
 } from "@/features/reservations/api";
-import { Ticket, Clock } from "lucide-react";
+import { Ticket, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   PageHeader,
   ReservationCard,
@@ -12,18 +14,112 @@ import {
   EmptyState,
 } from "@/features/reservations/components/my-tickets";
 
+interface PaginationControlsProps {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  itemName: string;
+}
+
+const PaginationControls = ({
+  page,
+  limit,
+  total,
+  totalPages,
+  onPageChange,
+  itemName,
+}: PaginationControlsProps) => {
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="flex items-center justify-between px-6 py-4 border border-border/50 bg-card/50 rounded-xl mt-6">
+      <div className="text-sm text-muted-foreground">
+        Showing {(page - 1) * limit + 1} to{" "}
+        {Math.min(page * limit, total)}{" "}
+        of {total} {itemName}
+      </div>
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page <= 1}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+
+        <div className="flex items-center gap-1">
+          {Array.from(
+            { length: Math.min(5, totalPages) },
+            (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (page <= 3) {
+                pageNum = i + 1;
+              } else if (page >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = page - 2 + i;
+              }
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={
+                    pageNum === page ? "default" : "outline"
+                  }
+                  size="sm"
+                  className="w-8 h-8 p-0"
+                  onClick={() => onPageChange(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            }
+          )}
+        </div>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onPageChange(page + 1)}
+          disabled={page >= totalPages}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 export const MyTicketsPage = () => {
-  const { data: activeData, isLoading: activeLoading } =
-    useActiveReservations();
-  const { data: historyData, isLoading: historyLoading } =
-    useTransactionHistory();
+  const [activePage, setActivePage] = useState(1);
+  const [historyPage, setHistoryPage] = useState(1);
+
+  const { data: activeData, isLoading: activeLoading } = useActiveReservations({
+    page: activePage,
+    limit: 10,
+  });
+  const { data: historyData, isLoading: historyLoading } = useTransactionHistory({
+    page: historyPage,
+    limit: 10,
+  });
 
   const activeReservations = activeData?.data.activeReservations ?? [];
   const historyReservations = historyData?.data.transactionHistory ?? [];
 
+  const activePagination = activeData?.data.pagination;
+  const historyPagination = historyData?.data.pagination;
+
+  const totalActive = activePagination?.total ?? 0;
+  const totalHistory = historyPagination?.total ?? 0;
+
   return (
     <div className="layout-middle py-24">
-      <PageHeader activeCount={activeReservations.length} />
+      <PageHeader activeCount={totalActive} />
 
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="inline-flex h-auto bg-muted/30 border border-border rounded-xl p-1 mb-8 gap-1">
@@ -33,9 +129,9 @@ export const MyTicketsPage = () => {
           >
             <Ticket className="h-4 w-4 mr-2 inline-block" />
             Active
-            {activeReservations.length > 0 && (
+            {totalActive > 0 && (
               <span className="ml-2 text-xs bg-white/20 rounded-full px-1.5 py-0.5">
-                {activeReservations.length}
+                {totalActive}
               </span>
             )}
           </TabsTrigger>
@@ -58,15 +154,28 @@ export const MyTicketsPage = () => {
           ) : activeReservations.length === 0 ? (
             <EmptyState label="No active tickets" />
           ) : (
-            <div className="grid gap-3">
-              {activeReservations.map((reservation) => (
-                <ReservationCard
-                  key={reservation.id}
-                  reservation={reservation}
-                  variant="active"
+            <>
+              <div className="grid gap-3">
+                {activeReservations.map((reservation) => (
+                  <ReservationCard
+                    key={reservation.id}
+                    reservation={reservation}
+                    variant="active"
+                  />
+                ))}
+              </div>
+
+              {activePagination && (
+                <PaginationControls
+                  page={activePage}
+                  limit={10}
+                  total={totalActive}
+                  totalPages={activePagination.totalPages}
+                  onPageChange={setActivePage}
+                  itemName={totalActive === 1 ? "ticket" : "tickets"}
                 />
-              ))}
-            </div>
+              )}
+            </>
           )}
         </TabsContent>
 
@@ -84,8 +193,7 @@ export const MyTicketsPage = () => {
               <div className="flex items-center gap-3 mb-5">
                 <Separator className="flex-1 bg-border/50" />
                 <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                  {historyReservations.length}{" "}
-                  {historyReservations.length === 1 ? "booking" : "bookings"}
+                  {totalHistory} {totalHistory === 1 ? "booking" : "bookings"}
                 </span>
                 <Separator className="flex-1 bg-border/50" />
               </div>
@@ -98,6 +206,17 @@ export const MyTicketsPage = () => {
                   />
                 ))}
               </div>
+
+              {historyPagination && (
+                <PaginationControls
+                  page={historyPage}
+                  limit={10}
+                  total={totalHistory}
+                  totalPages={historyPagination.totalPages}
+                  onPageChange={setHistoryPage}
+                  itemName={totalHistory === 1 ? "booking" : "bookings"}
+                />
+              )}
             </>
           )}
         </TabsContent>

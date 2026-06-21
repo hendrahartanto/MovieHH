@@ -23,13 +23,13 @@ export const ActionButtons = ({ state, showTimeId }: ActionButtonsProps) => (
     </Button>
 
     {(state === "failed" || state === "pending") && (
-      <Button className="flex-1 h-11 cinema-glow font-semibold" asChild>
+      <Button variant="glow" className="flex-1 h-11" asChild>
         <Link to={paths.seatSelection.getHref(showTimeId)}>Try Again</Link>
       </Button>
     )}
 
     {state === "success" && (
-      <Button className="flex-1 h-11 cinema-glow font-semibold" asChild>
+      <Button variant="glow" className="flex-1 h-11" asChild>
         <Link to={paths.home.getHref()}>Browse More Films</Link>
       </Button>
     )}
