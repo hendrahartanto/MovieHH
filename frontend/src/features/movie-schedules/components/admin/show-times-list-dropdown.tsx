@@ -3,15 +3,16 @@ import { CreateShowTime } from "./create-show-time";
 import { Clock, CalendarX } from "lucide-react";
 import { DeleteShowTime } from "./delete-show-time";
 
-
 interface ShowTimesListDropdownProps {
   showTimes: Showtime[];
   movieScheduleId: string;
+  movieDuration: number;
 }
 
 export const ShowTimesListDropdown = ({
   showTimes,
   movieScheduleId,
+  movieDuration,
 }: ShowTimesListDropdownProps) => {
   const hasShowTimes = showTimes && showTimes.length > 0;
 
@@ -21,7 +22,10 @@ export const ShowTimesListDropdown = ({
         <Clock className="w-4 h-4 text-muted-foreground" />
         <div className="flex gap-5 items-center">
           <h4 className="font-semibold text-sm">Showtime Details</h4>
-          <CreateShowTime movieScheduleId={movieScheduleId} />
+          <CreateShowTime
+            movieScheduleId={movieScheduleId}
+            movieDuration={movieDuration}
+          />
         </div>
       </div>
 

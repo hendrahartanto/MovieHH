@@ -203,6 +203,7 @@ export const MovieSchedulesList = () => {
                         <ShowTimesListDropdown
                           movieScheduleId={schedule.id}
                           showTimes={schedule.showTimes}
+                          movieDuration={schedule.movie.duration}
                         />
                       </TableCell>
                     </TableRow>

@@ -23,9 +23,10 @@ import { useEffect, useState } from "react";
 
 interface CreateShowTimeProps {
   movieScheduleId: string;
+  movieDuration: number;
 }
 
-export const CreateShowTime = ({ movieScheduleId }: CreateShowTimeProps) => {
+export const CreateShowTime = ({ movieScheduleId, movieDuration }: CreateShowTimeProps) => {
   const [isClose, setIsClose] = useState(false);
 
   const createShowTime = useCreateShowTime({
@@ -59,6 +60,25 @@ export const CreateShowTime = ({ movieScheduleId }: CreateShowTimeProps) => {
       endTime: "",
     },
   });
+
+  const startTime = form.watch("startTime");
+
+  useEffect(() => {
+    if (startTime) {
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+      date.setMinutes(date.getMinutes() + movieDuration);
+
+      const endHours = String(date.getHours()).padStart(2, "0");
+      const endMinutes = String(date.getMinutes()).padStart(2, "0");
+      form.setValue("endTime", `${endHours}:${endMinutes}`, {
+        shouldValidate: true,
+      });
+    } else {
+      form.setValue("endTime", "");
+    }
+  }, [startTime, movieDuration, form]);
 
   const onSubmit = (data: CreateShowTimeInput) => {
     createShowTime.mutate({ data });
@@ -110,10 +130,17 @@ export const CreateShowTime = ({ movieScheduleId }: CreateShowTimeProps) => {
               <FormItem>
                 <FormLabel>End Time</FormLabel>
                 <FormControl>
-                  <Input type="time" step="60" {...field} placeholder="HH:mm" />
+                  <Input
+                    type="time"
+                    step="60"
+                    {...field}
+                    placeholder="HH:mm"
+                    readOnly
+                    className="bg-muted cursor-not-allowed"
+                  />
                 </FormControl>
                 <FormDescription>
-                  Enter the end time for the show.
+                  The end time is automatically calculated based on the movie's duration ({movieDuration} min).
                 </FormDescription>
                 <FormMessage />
               </FormItem>
