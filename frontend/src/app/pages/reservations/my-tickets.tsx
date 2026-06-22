@@ -12,7 +12,9 @@ import {
   ReservationCard,
   ReservationSkeleton,
   EmptyState,
+  TicketModal,
 } from "@/features/reservations/components/my-tickets";
+import { ActiveReservation } from "@/features/reservations/types";
 
 interface PaginationControlsProps {
   page: number;
@@ -98,6 +100,7 @@ const PaginationControls = ({
 export const MyTicketsPage = () => {
   const [activePage, setActivePage] = useState(1);
   const [historyPage, setHistoryPage] = useState(1);
+  const [selectedReservation, setSelectedReservation] = useState<ActiveReservation | null>(null);
 
   const { data: activeData, isLoading: activeLoading } = useActiveReservations({
     page: activePage,
@@ -120,6 +123,11 @@ export const MyTicketsPage = () => {
   return (
     <div className="layout-middle py-24">
       <PageHeader activeCount={totalActive} />
+
+      <TicketModal
+        reservation={selectedReservation}
+        onClose={() => setSelectedReservation(null)}
+      />
 
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="inline-flex h-auto bg-muted/30 border border-border rounded-xl p-1 mb-8 gap-1">
@@ -157,12 +165,13 @@ export const MyTicketsPage = () => {
             <>
               <div className="grid gap-3">
                 {activeReservations.map((reservation) => (
-                  <ReservationCard
-                    key={reservation.id}
-                    reservation={reservation}
-                    variant="active"
-                  />
-                ))}
+                <ReservationCard
+                  key={reservation.id}
+                  reservation={reservation}
+                  variant="active"
+                  onClick={() => setSelectedReservation(reservation)}
+                />
+              ))}
               </div>
 
               {activePagination && (
@@ -199,12 +208,13 @@ export const MyTicketsPage = () => {
               </div>
               <div className="grid gap-3">
                 {historyReservations.map((reservation) => (
-                  <ReservationCard
-                    key={reservation.id}
-                    reservation={reservation}
-                    variant="history"
-                  />
-                ))}
+                <ReservationCard
+                  key={reservation.id}
+                  reservation={reservation}
+                  variant="history"
+                  onClick={() => setSelectedReservation(reservation)}
+                />
+              ))}
               </div>
 
               {historyPagination && (

@@ -35,11 +35,13 @@ const STATUS_STYLES: Record<string, string> = {
 interface ReservationCardProps {
   reservation: ActiveReservation;
   variant?: "active" | "history";
+  onClick?: () => void;
 }
 
 export const ReservationCard = ({
   reservation,
   variant = "active",
+  onClick,
 }: ReservationCardProps) => {
   const movie = reservation.showTime.movieSchedule.movie;
   const theater = reservation.showTime.movieSchedule.theater;
@@ -49,7 +51,13 @@ export const ReservationCard = ({
     STATUS_STYLES[reservation.status] ?? STATUS_STYLES["PENDING"];
 
   return (
-    <article className="group relative flex rounded-xl overflow-hidden cinema-border bg-card transition-all duration-300 hover:cinema-glow hover:-translate-y-0.5">
+    <article
+      className={`group relative flex rounded-xl overflow-hidden cinema-border bg-card transition-all duration-300 hover:cinema-glow hover:-translate-y-0.5 ${onClick ? "cursor-pointer" : ""}`}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === "Enter" || e.key === " ") onClick(); } : undefined}
+    >
       <div
         className={`w-1 shrink-0 cinema-gradient ${variant === "history" ? "opacity-30" : "opacity-100"}`}
       />
