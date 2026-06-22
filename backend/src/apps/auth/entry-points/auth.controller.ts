@@ -6,10 +6,11 @@ import {
   SuccessResponse,
 } from "../../../lib/http/api-response";
 import { loginUserSchema } from "../dto/login-user.dto";
-import { BadTokenError, TokenExpireError } from "../../../lib/exceptions/api-error";
+import { BadTokenError, TokenExpireError, AuthFailureError } from "../../../lib/exceptions/api-error";
 import { ProtectedRequest } from "../../../types/app-requests";
 import { verifyAccessToken } from "../../../lib/utils/jwt.util";
 import userRepository from "../../user/data-access/user.repository";
+import { changePasswordSchema } from "../dto/change-password.dto";
 
 const register = asyncHandler(async (req, res) => {
   const validatedData = createUserSchema.parse(req.body);
@@ -94,10 +95,20 @@ const me = asyncHandler<ProtectedRequest>(async (req, res) => {
   }
 });
 
+const changePassword = asyncHandler<ProtectedRequest>(async (req, res) => {
+  if (!req.user) throw new AuthFailureError("User is not authenticated");
+
+  const validatedData = changePasswordSchema.parse(req.body);
+  await authService.changePassword(req.user.id, validatedData);
+
+  new SuccessMsgResponse("Password changed successfully").send(res);
+});
+
 export default {
   register,
   login,
   refreshAccessToken,
   logout,
   me,
+  changePassword,
 };

@@ -8,6 +8,7 @@ import userRepository from "../../user/data-access/user.repository";
 import { CreateUserDTO } from "../dto/create-user.dto";
 import bcrypt from "bcrypt";
 import { LoginUserDTO } from "../dto/login-user.dto";
+import { ChangePasswordDTO } from "../dto/change-password.dto";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -59,8 +60,22 @@ const refreshAccessToken = async (refreshToken: string) => {
   }
 };
 
+const changePassword = async (userId: string, data: ChangePasswordDTO) => {
+  const user = await userRepository.getUserById(userId);
+  if (!user) throw new BadRequestError("User not found");
+
+  const isPasswordValid = await bcrypt.compare(data.currentPassword, user.password);
+  if (!isPasswordValid) {
+    throw new AuthFailureError("Incorrect current password");
+  }
+
+  const passwordHash = await bcrypt.hash(data.newPassword, 10);
+  await userRepository.updateUserPassword(userId, passwordHash);
+};
+
 export default {
   register,
   login,
   refreshAccessToken,
+  changePassword,
 };
