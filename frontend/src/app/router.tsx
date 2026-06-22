@@ -77,6 +77,11 @@ const createAppRouter = (queryClient: QueryClient) =>
           lazy: () =>
             import("./pages/reservations/my-tickets").then(convert(queryClient)),
         },
+        {
+          path: paths.profile.path,
+          lazy: () =>
+            import("./pages/profile").then(convert(queryClient)),
+        },
       ],
     },
     {

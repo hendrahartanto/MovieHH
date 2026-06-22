@@ -9,6 +9,7 @@ import { CreateUserDTO } from "../dto/create-user.dto";
 import bcrypt from "bcrypt";
 import { LoginUserDTO } from "../dto/login-user.dto";
 import { ChangePasswordDTO } from "../dto/change-password.dto";
+import { UpdateProfileDTO } from "../dto/update-profile.dto";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -73,9 +74,22 @@ const changePassword = async (userId: string, data: ChangePasswordDTO) => {
   await userRepository.updateUserPassword(userId, passwordHash);
 };
 
+const updateProfile = async (userId: string, data: UpdateProfileDTO) => {
+  const user = await userRepository.getUserById(userId);
+  if (!user) throw new BadRequestError("User not found");
+
+  if (data.email !== user.email) {
+    const existingUser = await userRepository.getUserByEmail(data.email);
+    if (existingUser) throw new BadRequestError("Email is already taken");
+  }
+
+  return userRepository.updateUserProfile(userId, data);
+};
+
 export default {
   register,
   login,
   refreshAccessToken,
   changePassword,
+  updateProfile,
 };

@@ -20,9 +20,20 @@ const updateUserPassword = async (userId: string, passwordHash: string) => {
   });
 };
 
+const updateUserProfile = async (
+  userId: string,
+  data: { name: string; email: string; avatarUrl?: string }
+) => {
+  return prisma.user.update({
+    where: { id: userId },
+    data,
+  });
+};
+
 export default {
   createUser,
   getUserByEmail,
   getUserById,
   updateUserPassword,
+  updateUserProfile,
 };

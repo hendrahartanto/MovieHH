@@ -11,6 +11,7 @@ import { ProtectedRequest } from "../../../types/app-requests";
 import { verifyAccessToken } from "../../../lib/utils/jwt.util";
 import userRepository from "../../user/data-access/user.repository";
 import { changePasswordSchema } from "../dto/change-password.dto";
+import { updateProfileSchema } from "../dto/update-profile.dto";
 
 const register = asyncHandler(async (req, res) => {
   const validatedData = createUserSchema.parse(req.body);
@@ -104,6 +105,19 @@ const changePassword = asyncHandler<ProtectedRequest>(async (req, res) => {
   new SuccessMsgResponse("Password changed successfully").send(res);
 });
 
+const updateProfile = asyncHandler<ProtectedRequest>(async (req, res) => {
+  if (!req.user) throw new AuthFailureError("User is not authenticated");
+
+  const validatedData = updateProfileSchema.parse({
+    name: req.body.name,
+    email: req.body.email,
+  });
+
+  const updatedUser = await authService.updateProfile(req.user.id, validatedData);
+
+  new SuccessResponse("Profile updated successfully", updatedUser).send(res);
+});
+
 export default {
   register,
   login,
@@ -111,4 +125,5 @@ export default {
   logout,
   me,
   changePassword,
+  updateProfile,
 };

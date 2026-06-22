@@ -3,11 +3,22 @@ import { useUser } from "@/lib/auth";
 import { Link, useLocation } from "react-router";
 import { paths } from "@/config/paths";
 import { Button } from "../ui/button";
+import { Avatar } from "../ui/avatar";
 import { ConfirmLogout } from "@/features/auth/components/confirm-logout";
 import moviehhLogo from "@/assets/moviehh_logo.png";
 import { cn } from "@/lib/utils";
 import { Footer } from "../ui/footer";
 import { ShieldCheck } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { User as UserIcon, LogOut, Ticket } from "lucide-react";
 
 interface NavbarItem {
   name: string;
@@ -28,7 +39,9 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
   const navItems = [
     { name: "Movies", to: paths.movies.getHref() },
     { name: "Cinemas", to: paths.cinemas.getHref() },
-    ...(user.data ? [{ name: "My Tickets", to: paths.myTickets.getHref() }] : []),
+    ...(user.data
+      ? [{ name: "My Tickets", to: paths.myTickets.getHref() }]
+      : []),
   ] as NavbarItem[];
 
   return (
@@ -88,17 +101,64 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
                 </Link>
               )}
               {user.data ? (
-                <ConfirmLogout
-                  triggerButton={
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-border hover:border-primary hover:text-primary transition-colors"
-                    >
-                      Logout
-                    </Button>
-                  }
-                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 outline-hidden cursor-pointer group">
+                      <Avatar
+                        name={user.data.name}
+                        size="sm"
+                        className="group-hover:border-primary"
+                      />
+                      <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground hidden md:inline transition-colors">
+                        {user.data.name}
+                      </span>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-56 bg-background border border-border shadow-xl rounded-xl p-1.5"
+                  >
+                    <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      My Account
+                    </DropdownMenuLabel>
+                    <div className="px-2 py-2 flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold text-foreground truncate">
+                        {user.data.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {user.data.email}
+                      </p>
+                    </div>
+                    <DropdownMenuSeparator className="my-1 bg-border/50" />
+                    <DropdownMenuItem asChild className="rounded-lg">
+                      <Link
+                        to={paths.profile.getHref()}
+                        className="w-full flex items-center gap-2 cursor-pointer"
+                      >
+                        <UserIcon className="w-4 h-4 text-muted-foreground" />
+                        <span>Profile Settings</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="rounded-lg">
+                      <Link
+                        to={paths.myTickets.getHref()}
+                        className="w-full flex items-center gap-2 cursor-pointer"
+                      >
+                        <Ticket className="w-4 h-4 text-muted-foreground" />
+                        <span>My Tickets</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="my-1 bg-border/50" />
+                    <ConfirmLogout
+                      triggerButton={
+                        <button className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-500 hover:bg-red-500/10 rounded-lg cursor-pointer transition-colors text-left font-medium">
+                          <LogOut className="w-4 h-4" />
+                          <span>Logout</span>
+                        </button>
+                      }
+                    />
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <>
                   <Link to={paths.auth.login.getHref()}>
@@ -111,10 +171,7 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
                     </Button>
                   </Link>
                   <Link to={paths.auth.register.getHref()}>
-                    <Button
-                      variant="glow"
-                      size="sm"
-                    >
+                    <Button variant="glow" size="sm">
                       Sign Up
                     </Button>
                   </Link>

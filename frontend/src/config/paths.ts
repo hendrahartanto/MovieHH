@@ -95,4 +95,8 @@ export const paths = {
     path: "/my-tickets",
     getHref: () => "/my-tickets",
   },
+  profile: {
+    path: "/profile",
+    getHref: () => "/profile",
+  },
 } as const;

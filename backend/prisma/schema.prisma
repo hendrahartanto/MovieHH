@@ -19,6 +19,7 @@ model User {
   name         String
   role         Role          @default(USER)
   password     String
+  avatarUrl    String?
   reservations Reservation[]
 
   createdAt DateTime @default(now())
