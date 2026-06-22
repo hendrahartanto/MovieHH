@@ -19,8 +19,8 @@ Movie Management
 ==================
 - [DONE] Admins should be able to add, update, and delete movies.
 - [DONE] Each movie should have a title, description, and poster image.
-- Movies should be categorized by genre.
-- Movies should have showtimes.
+- [DONE] Movies should be categorized by genre.
+- [DONE] Movies should have showtimes.
 
 Reservation Management
 =======================

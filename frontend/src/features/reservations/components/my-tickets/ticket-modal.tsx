@@ -70,7 +70,6 @@ interface TicketModalProps {
 }
 
 export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
-  // Close on Escape key
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -79,7 +78,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // Lock body scroll while open
   useEffect(() => {
     if (reservation) {
       document.body.style.overflow = "hidden";
@@ -108,7 +106,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
     : formatPrice(price as number);
 
   return (
-    /* Backdrop */
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={onClose}
@@ -116,15 +113,12 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
       aria-modal="true"
       aria-label="Ticket details"
     >
-      {/* Dark blurred overlay */}
       <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
 
-      {/* Ticket card */}
       <div
         className="relative z-10 w-full max-w-md animate-in fade-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute -top-3 -right-3 z-20 w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150 shadow-lg"
@@ -133,14 +127,11 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
           <X className="h-4 w-4" />
         </button>
 
-        {/* ── Main ticket body ── */}
         <div
           className="rounded-2xl overflow-hidden shadow-2xl shadow-black/70 cinema-border"
           style={{ background: "hsl(0,0%,10%)" }}
         >
-          {/* ── Header: gradient with film-strip top ── */}
           <div className="relative cinema-gradient px-6 pt-6 pb-8 overflow-hidden">
-            {/* Film strip holes - top */}
             <div className="absolute top-0 left-0 right-0 flex justify-between px-2">
               {Array.from({ length: 16 }).map((_, i) => (
                 <div
@@ -163,7 +154,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
                 </h2>
               </div>
 
-              {/* Status pill */}
               <span
                 className={`shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 border ${statusCfg.bg} ${statusCfg.text} border-current/20`}
               >
@@ -175,17 +165,13 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
             </div>
           </div>
 
-          {/* ── Tear / perforation line ── */}
           <div className="relative flex items-center">
             <div className="w-5 h-10 rounded-r-full bg-background border-r border-t border-b border-border/50" />
             <div className="flex-1 border-t-2 border-dashed border-border/40 mx-1" />
             <div className="w-5 h-10 rounded-l-full bg-background border-l border-t border-b border-border/50" />
           </div>
 
-          {/* ── Details body ── */}
           <div className="px-6 pt-2 pb-5 space-y-5">
-
-            {/* Date & Showtime */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 font-medium">
@@ -217,7 +203,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
               </div>
             </div>
 
-            {/* Theater & Total */}
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 font-medium">
@@ -243,7 +228,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
               </div>
             </div>
 
-            {/* Seats */}
             <div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-2 font-medium">
                 Seats ({seats.length})
@@ -268,10 +252,8 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
               )}
             </div>
 
-            {/* Divider */}
             <div className="border-t border-border/30" />
 
-            {/* Booking ID + barcode visual */}
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5 font-medium">
@@ -285,7 +267,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
                 </div>
               </div>
 
-              {/* Decorative barcode */}
               <div className="flex items-end gap-px h-10 opacity-35 pr-1">
                 {BARCODE_HEIGHTS.map((h, i) => (
                   <div
@@ -298,7 +279,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
             </div>
           </div>
 
-          {/* ── Bottom film strip ── */}
           <div className="flex justify-between px-2 pb-1 opacity-50">
             {Array.from({ length: 16 }).map((_, i) => (
               <div key={i} className="w-3 h-2.5 rounded-t-sm bg-border/40" />
@@ -306,7 +286,6 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
           </div>
         </div>
 
-        {/* Hint below ticket */}
         <p className="text-center text-xs text-muted-foreground mt-3 flex items-center justify-center gap-1.5">
           <Ticket className="h-3 w-3" />
           Present this ticket at the entrance

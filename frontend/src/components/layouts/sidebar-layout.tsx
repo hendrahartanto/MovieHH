@@ -11,6 +11,7 @@ import {
   Tags,
   Map,
   Calendar,
+  Globe,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
@@ -56,6 +57,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Movie Schedules",
       to: paths.admin.movieSchedules.getHref(),
       icon: <Calendar className="w-5 h-5" />,
+    },
+    {
+      name: "User Portal",
+      to: paths.home.getHref(),
+      icon: <Globe className="w-5 h-5" />,
     },
   ];
 
@@ -124,13 +130,17 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                 <li key={index}>
                   <Link
                     to={item.to}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 group relative overflow-hidden"
+                    className={`flex items-center ${
+                      isCollapsed ? "justify-center px-0" : "gap-3 px-4"
+                    } py-3 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 group relative overflow-hidden`}
                   >
-                    <div className="relative z-10 flex items-center gap-3 w-full">
+                    <div className={`relative z-10 flex items-center ${
+                      isCollapsed ? "justify-center" : "gap-3 w-full"
+                    }`}>
                       <div className="transition-transform duration-200 group-hover:scale-110">
                         {item.icon}
                       </div>
-                      <span className="font-medium">{item.name}</span>
+                      {!isCollapsed && <span className="font-medium">{item.name}</span>}
                     </div>
                     <div className="absolute inset-0 bg-linear-to-r from-orange-500/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
                   </Link>

@@ -7,6 +7,7 @@ import { ConfirmLogout } from "@/features/auth/components/confirm-logout";
 import moviehhLogo from "@/assets/moviehh_logo.png";
 import { cn } from "@/lib/utils";
 import { Footer } from "../ui/footer";
+import { ShieldCheck } from "lucide-react";
 
 interface NavbarItem {
   name: string;
@@ -74,6 +75,18 @@ export const NavbarLayout = ({ children }: { children: React.ReactNode }) => {
             </nav>
 
             <div className="flex items-center gap-3">
+              {user.data?.role === "ADMIN" && (
+                <Link to={paths.admin.root.getHref()}>
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    className="flex items-center gap-1.5"
+                  >
+                    <ShieldCheck className="w-4 h-4" />
+                    Admin Panel
+                  </Button>
+                </Link>
+              )}
               {user.data ? (
                 <ConfirmLogout
                   triggerButton={
