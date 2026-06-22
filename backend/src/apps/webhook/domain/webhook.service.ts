@@ -8,6 +8,7 @@ import {
 import reservationRepository from "../../reservation/data-access/reservation.repository";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
+import { broadcastSeatStatus } from "../../../infrastructure/socket";
 
 type MidtransNotification = {
   order_id?: string;
@@ -65,6 +66,12 @@ const confirmReservationPayment = async (
       tx,
     );
   });
+
+  broadcastSeatStatus(
+    reservation.showTimeId,
+    reservation.reservationDetails.map((detail) => detail.seatId),
+    "RESERVED"
+  );
 };
 
 const releaseReservationPayment = async (
@@ -96,6 +103,12 @@ const releaseReservationPayment = async (
       tx,
     );
   });
+
+  broadcastSeatStatus(
+    reservation.showTimeId,
+    reservation.reservationDetails.map((detail) => detail.seatId),
+    "AVAILABLE"
+  );
 };
 
 const handleMidtransNotification = async (notification: MidtransNotification) => {

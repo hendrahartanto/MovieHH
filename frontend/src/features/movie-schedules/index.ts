@@ -11,3 +11,4 @@ export * from "./api/create-show-time";
 export * from "./api/update-movie-schedule";
 export * from "./api/delete-movie-schedule";
 export * from "./api/delete-show-time";
+export * from "./hooks/use-show-time-seats-socket";

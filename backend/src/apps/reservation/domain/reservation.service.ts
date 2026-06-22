@@ -11,6 +11,7 @@ import prisma from "../../../db";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
 import reservationRepository from "../data-access/reservation.repository";
+import { broadcastSeatStatus } from "../../../infrastructure/socket";
 import { CreateReservationHoldDTO } from "../dto/create-reservation-hold.dto";
 
 const createReservationHold = async (
@@ -25,7 +26,7 @@ const createReservationHold = async (
     throw new BadRequestError("Number of selected seats must match the count");
   }
 
-  return prisma.$transaction(async (tx) => {
+  const reservation = await prisma.$transaction(async (tx) => {
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${userId}))`;
 
     const activeReservation =
@@ -105,12 +106,16 @@ const createReservationHold = async (
 
     return reservation;
   });
+
+  broadcastSeatStatus(showTimeId, seatIds, "HOLD");
+
+  return reservation;
 };
 
 const createPaymentToken = async (
   reservationId: string,
   userId: string,
-  returnUrl?: string
+  returnUrl?: string,
 ) => {
   return prisma.$transaction(
     async (tx) => {
@@ -233,17 +238,19 @@ const cancelReservation = async (reservationId: string, userId: string) => {
         statusCode !== "412"
       ) {
         throw new BadRequestError(
-          `Failed to cancel payment at Midtrans: ${error.message}`
+          `Failed to cancel payment at Midtrans: ${error.message}`,
         );
       }
     }
   }
 
-  return prisma.$transaction(async (tx) => {
+  const cancelledReservation = await prisma.$transaction(async (tx) => {
     await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${reservationId}))`;
 
-    const currentReservation =
-      await reservationRepository.getReservationById(reservationId, tx);
+    const currentReservation = await reservationRepository.getReservationById(
+      reservationId,
+      tx,
+    );
     if (!currentReservation) throw new NoDataError("Reservation not found");
     if (currentReservation.status !== "PENDING")
       throw new BadRequestError("Reservation status is not valid");
@@ -275,6 +282,14 @@ const cancelReservation = async (reservationId: string, userId: string) => {
 
     return cancelledReservation;
   });
+
+  broadcastSeatStatus(
+    reservation.showTimeId,
+    reservation.reservationDetails.map((detail) => detail.seatId),
+    "AVAILABLE",
+  );
+
+  return cancelledReservation;
 };
 
 const getReservation = async (reservationId: string, userId: string) => {
@@ -292,12 +307,30 @@ const getReservation = async (reservationId: string, userId: string) => {
   return reservation;
 };
 
-const getActiveReservations = async (userId: string, page: number = 1, limit: number = 10) => {
-  return reservationRepository.getReservationsByUserId(userId, "active", page, limit);
+const getActiveReservations = async (
+  userId: string,
+  page: number = 1,
+  limit: number = 10,
+) => {
+  return reservationRepository.getReservationsByUserId(
+    userId,
+    "active",
+    page,
+    limit,
+  );
 };
 
-const getTransactionHistory = async (userId: string, page: number = 1, limit: number = 10) => {
-  return reservationRepository.getReservationsByUserId(userId, "history", page, limit);
+const getTransactionHistory = async (
+  userId: string,
+  page: number = 1,
+  limit: number = 10,
+) => {
+  return reservationRepository.getReservationsByUserId(
+    userId,
+    "history",
+    page,
+    limit,
+  );
 };
 
 export default {

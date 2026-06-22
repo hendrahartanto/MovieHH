@@ -12,6 +12,7 @@ import {
   getShowTimeSeatsQueryOptions,
   useShowTime,
   useShowTimeSeats,
+  useShowTimeSeatsSocket,
 } from "@/features/movie-schedules";
 import {
   getActiveReservationPaymentQueryOptions,
@@ -53,6 +54,8 @@ const SeatSelectionRoute = () => {
   const { data: seatsData, isLoading: isLoadingSeats } = useShowTimeSeats({
     showTimeId: showtimeId as string,
   });
+
+  useShowTimeSeatsSocket(showtimeId);
 
   const { data: activePaymentData } = useActiveReservationPayment();
 
