@@ -1,4 +1,5 @@
 import express from "express";
+import helmet from "helmet";
 import loggerMiddleware from "./middlewares/logger.middleware";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import routes from "./routes/index";
@@ -8,6 +9,10 @@ import path from "path";
 import { corsOrigin } from "./config";
 
 const app = express();
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 
 // Enable CORS
 app.use(
