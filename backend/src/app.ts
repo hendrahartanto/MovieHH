@@ -2,6 +2,7 @@ import express from "express";
 import helmet from "helmet";
 import loggerMiddleware from "./middlewares/logger.middleware";
 import { errorMiddleware } from "./middlewares/error.middleware";
+import { globalLimiter } from "./middlewares/rate-limiter.middleware";
 import routes from "./routes/index";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -31,6 +32,9 @@ app.use(express.urlencoded({ extended: true }));
 
 //logger middleware
 app.use(loggerMiddleware);
+
+//global rate limiter
+app.use(globalLimiter);
 
 //expose folder uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
