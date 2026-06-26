@@ -21,7 +21,7 @@ const register = asyncHandler(async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/auth",
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -40,7 +40,7 @@ const login = asyncHandler(async (req, res) => {
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/auth",
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
@@ -71,6 +71,7 @@ const logout = asyncHandler(async (req, res) => {
   res.clearCookie("refreshToken", {
     sameSite: "strict",
     path: "/auth",
+    secure: process.env.NODE_ENV === "production",
   });
 
   new SuccessMsgResponse("Logout successful").send(res);
