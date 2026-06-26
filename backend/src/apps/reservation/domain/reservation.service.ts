@@ -117,84 +117,83 @@ const createPaymentToken = async (
   userId: string,
   returnUrl?: string,
 ) => {
-  return prisma.$transaction(
-    async (tx) => {
-      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${reservationId}))`;
-
-      const reservation = await reservationRepository.getReservationById(
-        reservationId,
-        tx,
-      );
-      if (!reservation) throw new NoDataError("Reservation not found");
-      if (reservation.userId !== userId)
-        throw new BadRequestError("Unauthorized access to reservation");
-
-      if (reservation.status !== "PENDING")
-        throw new BadRequestError("Reservation is not payable");
-
-      const now = new Date();
-      if (reservation.expiresAt <= now)
-        throw new BadRequestError("Reservation has expired");
-
-      const existingPayment =
-        await reservationRepository.getPaymentByReservationId(
-          reservationId,
-          tx,
-        );
-      if (existingPayment) {
-        return existingPayment;
-      }
-
-      const remainingHoldMinutes = Math.ceil(
-        (reservation.expiresAt.getTime() - now.getTime()) / (60 * 1000),
-      );
-
-      const parameter: any = {
-        transaction_details: {
-          order_id: reservationId,
-          gross_amount: Number(reservation.totalPrice),
-        },
-        customer_details: {
-          first_name: reservation.user.name,
-          email: reservation.user.email,
-        },
-        item_details: reservation.reservationDetails.map((detail) => ({
-          id: detail.seatId,
-          price: Number(reservation.showTime.movieSchedule.price),
-          quantity: 1,
-          name: `Seat ${detail.seat.seatRow}${detail.seat.seatNumber}`,
-        })),
-        credit_card: {
-          secure: true,
-        },
-        expiry: {
-          start_time: dayjs(now).format("YYYY-MM-DD HH:mm:ss Z"),
-          unit: "minute",
-          duration: remainingHoldMinutes,
-        },
-      };
-
-      if (returnUrl) {
-        parameter.callbacks = {
-          finish: returnUrl,
-          unfinish: returnUrl,
-          error: returnUrl,
-        };
-      }
-
-      const transaction = await midtransSnap.createTransaction(parameter);
-
-      return reservationRepository.createPayment(
-        {
-          reservation: { connect: { id: reservationId } },
-          token: transaction.token,
-          redirectUrl: transaction.redirect_url,
-        },
-        tx,
-      );
-    },
-    { timeout: 15000 },
+  const reservation = await reservationRepository.getReservationById(
+    reservationId,
   );
+  if (!reservation) throw new NoDataError("Reservation not found");
+  if (reservation.userId !== userId)
+    throw new BadRequestError("Unauthorized access to reservation");
+
+  if (reservation.status !== "PENDING")
+    throw new BadRequestError("Reservation is not payable");
+
+  const now = new Date();
+  if (reservation.expiresAt <= now)
+    throw new BadRequestError("Reservation has expired");
+
+  const existingPayment = await reservationRepository.getPaymentByReservationId(
+    reservationId,
+  );
+  if (existingPayment) {
+    return existingPayment;
+  }
+
+  const remainingHoldMinutes = Math.ceil(
+    (reservation.expiresAt.getTime() - now.getTime()) / (60 * 1000),
+  );
+
+  const parameter: any = {
+    transaction_details: {
+      order_id: reservationId,
+      gross_amount: Number(reservation.totalPrice),
+    },
+    customer_details: {
+      first_name: reservation.user.name,
+      email: reservation.user.email,
+    },
+    item_details: reservation.reservationDetails.map((detail) => ({
+      id: detail.seatId,
+      price: Number(reservation.showTime.movieSchedule.price),
+      quantity: 1,
+      name: `Seat ${detail.seat.seatRow}${detail.seat.seatNumber}`,
+    })),
+    credit_card: {
+      secure: true,
+    },
+    expiry: {
+      start_time: dayjs(now).format("YYYY-MM-DD HH:mm:ss Z"),
+      unit: "minute",
+      duration: remainingHoldMinutes,
+    },
+  };
+
+  if (returnUrl) {
+    parameter.callbacks = {
+      finish: returnUrl,
+      unfinish: returnUrl,
+      error: returnUrl,
+    };
+  }
+
+  const transaction = await midtransSnap.createTransaction(parameter);
+
+  try {
+    return await reservationRepository.createPayment({
+      reservation: { connect: { id: reservationId } },
+      token: transaction.token,
+      redirectUrl: transaction.redirect_url,
+    });
+  } catch (error: any) {
+    // P2002 is Prisma's error code for "Unique constraint failed"
+    // This safely handles the race condition where a user double-clicks "Pay".
+    if (error.code === "P2002") {
+      const payment = await reservationRepository.getPaymentByReservationId(
+        reservationId,
+      );
+      if (payment) return payment;
+    }
+    throw error;
+  }
 };
 
 const getActiveReservationPayment = async (userId: string) => {
