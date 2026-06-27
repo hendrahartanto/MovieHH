@@ -69,6 +69,7 @@ model GenresOnMovies {
   updatedAt DateTime @updatedAt
 
   @@id([movieId, genreId])
+  @@index([genreId])
 }
 
 model Location {
@@ -93,6 +94,8 @@ model Theater {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([locationId])
 }
 
 model Seat {
@@ -103,6 +106,8 @@ model Seat {
   theaterId          String              @db.Uuid
   showTimes          SeatsOnShowTimes[]
   reservationDetails ReservationDetail[]
+
+  @@index([theaterId])
 }
 
 model MovieSchedule {
@@ -117,6 +122,9 @@ model MovieSchedule {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([movieId])
+  @@index([theaterId])
 }
 
 model ShowTime {
@@ -129,6 +137,9 @@ model ShowTime {
   seats           SeatsOnShowTimes[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
+
+  @@index([movieScheduleId])
+  @@index([startTime])
 }
 
 model SeatsOnShowTimes {
@@ -139,6 +150,7 @@ model SeatsOnShowTimes {
   status     SeatStatus @default(AVAILABLE)
 
   @@id([seatId, showTimeId])
+  @@index([showTimeId])
 }
 
 model Reservation {
@@ -153,6 +165,9 @@ model Reservation {
   createAt           DateTime            @default(now())
   reservationDetails ReservationDetail[]
   payment            Payment?
+
+  @@index([userId])
+  @@index([showTimeId])
 }
 
 model ReservationDetail {
@@ -161,6 +176,9 @@ model ReservationDetail {
   reservationId String      @db.Uuid
   seat          Seat        @relation(fields: [seatId], references: [id], onDelete: Cascade)
   seatId        String      @db.Uuid
+
+  @@index([reservationId])
+  @@index([seatId])
 }
 
 model Payment {
