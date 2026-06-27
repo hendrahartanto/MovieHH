@@ -1,10 +1,11 @@
 import { paths } from "@/config/paths";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import AppRoot from "./pages/root";
 import { ProtectedRoute } from "@/lib/auth";
+import { Authorization } from "@/lib/authorization";
 import AdminRoot from "./pages/admin/root";
 
 //TODO:
@@ -88,7 +89,9 @@ const createAppRouter = (queryClient: QueryClient) =>
       path: paths.admin.root.path,
       element: (
         <ProtectedRoute>
-          <AdminRoot />
+          <Authorization allowedRoles={["ADMIN"]} forbiddenFallback={<Navigate to="/" replace />}>
+            <AdminRoot />
+          </Authorization>
         </ProtectedRoute>
       ),
       children: [

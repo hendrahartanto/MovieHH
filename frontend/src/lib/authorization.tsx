@@ -6,7 +6,7 @@ export enum ROLES {
   USER = "USER",
 }
 
-type RoleTypes = keyof typeof ROLES;
+export type RoleTypes = keyof typeof ROLES;
 
 export const useAuthorization = () => {
   const user = useUser();
