@@ -7,7 +7,7 @@ import prisma from "../../../db";
 
 const createTheater = async (newTheaterData: CreateTheaterDTO) => {
   return prisma.$transaction(async (tx) => {
-    const theater = await theaterRepository.createTheater(newTheaterData);
+    const theater = await theaterRepository.createTheater(newTheaterData, tx);
     const layout = newTheaterData.layout as number[][];
 
     const seats = [];

@@ -168,23 +168,30 @@ const createShowTime = async (newShowTimeData: CreateShowTimeDTO) => {
       "Showtime overlap with existing schedule in given theater",
     );
 
-  const newShowTime = await showTimeRepository.createShowTime({
-    ...newShowTimeData,
-    startTime,
-    endTime,
-  });
+  return prisma.$transaction(async (tx) => {
+    const newShowTime = await showTimeRepository.createShowTime(
+      {
+        ...newShowTimeData,
+        startTime,
+        endTime,
+      },
+      tx,
+    );
 
-  const seatsMapping: CreateShowTimeSeatsDTO[] = [];
-  existingMovieSchedule.theater.seats.forEach((seat) => {
-    seatsMapping.push({
-      showTimeId: newShowTime.id,
-      seatId: seat.id,
+    const seatsMapping: CreateShowTimeSeatsDTO[] = [];
+    existingMovieSchedule.theater.seats.forEach((seat) => {
+      seatsMapping.push({
+        showTimeId: newShowTime.id,
+        seatId: seat.id,
+      });
     });
+
+    if (seatsMapping.length > 0) {
+      await showTimeRepository.createShowTimeSeats(seatsMapping, tx);
+    }
+
+    return newShowTime;
   });
-
-  await showTimeRepository.createShowTimeSeats(seatsMapping);
-
-  return newShowTime;
 };
 
 const getShowTimeByDateRange = async (query: GetShowTimesByDateRangeDTO) => {

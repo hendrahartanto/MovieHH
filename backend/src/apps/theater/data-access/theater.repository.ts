@@ -2,8 +2,8 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateTheaterDTO } from "../dto/create-theater.dto";
 
-const createTheater = async (newTheaterData: CreateTheaterDTO) => {
-  return prisma.theater.create({ data: newTheaterData });
+const createTheater = async (newTheaterData: CreateTheaterDTO, tx: any = prisma) => {
+  return tx.theater.create({ data: newTheaterData });
 };
 
 const getTheaterById = async (theaterId: string) => {
