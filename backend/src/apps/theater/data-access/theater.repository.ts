@@ -7,9 +7,12 @@ const createTheater = async (newTheaterData: CreateTheaterDTO) => {
 };
 
 const getTheaterById = async (theaterId: string) => {
-  return prisma.theater.findUnique({
-    where: { id: theaterId },
-    include: { seats: true, location: true },
+  return prisma.theater.findFirst({
+    where: { id: theaterId, deletedAt: null },
+    include: {
+      seats: { where: { deletedAt: null } },
+      location: true,
+    },
   });
 };
 
@@ -23,6 +26,7 @@ const getTheatersPaginated = async (
       contains: search,
       mode: "insensitive",
     },
+    deletedAt: null,
   };
 
   const [theaters, total] = await Promise.all([
@@ -31,8 +35,11 @@ const getTheatersPaginated = async (
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        seats: true,
-        movieSchedules: { include: { showTimes: true } },
+        seats: { where: { deletedAt: null } },
+        movieSchedules: {
+          where: { deletedAt: null },
+          include: { showTimes: { where: { deletedAt: null } } },
+        },
         location: true,
       },
     }),
@@ -44,23 +51,31 @@ const getTheatersPaginated = async (
 
 const getTheaters = async () => {
   return prisma.theater.findMany({
+    where: { deletedAt: null },
     include: {
-      seats: true,
-      movieSchedules: true,
+      seats: { where: { deletedAt: null } },
+      movieSchedules: { where: { deletedAt: null } },
       location: true,
     },
   });
 };
 
-const updateTheater = async (theaterId: string, data: { name?: string, layout?: any }) => {
-  return prisma.theater.update({
+const updateTheater = async (
+  theaterId: string,
+  data: { name?: string; layout?: any },
+  tx: any = prisma,
+) => {
+  return tx.theater.update({
     where: { id: theaterId },
     data,
   });
 };
 
-const deleteTheater = async (theaterId: string) => {
-  return prisma.theater.delete({ where: { id: theaterId } });
+const deleteTheater = async (theaterId: string, tx: any = prisma) => {
+  return tx.theater.update({
+    where: { id: theaterId },
+    data: { deletedAt: new Date() },
+  });
 };
 
 export default {

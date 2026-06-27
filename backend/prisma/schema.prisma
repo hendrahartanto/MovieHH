@@ -48,6 +48,9 @@ model Movie {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@index([deletedAt])
 }
 
 model Genre {
@@ -94,8 +97,10 @@ model Theater {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@index([locationId])
+  @@index([deletedAt])
 }
 
 model Seat {
@@ -106,8 +111,10 @@ model Seat {
   theaterId          String              @db.Uuid
   showTimes          SeatsOnShowTimes[]
   reservationDetails ReservationDetail[]
+  deletedAt          DateTime?
 
   @@index([theaterId])
+  @@index([deletedAt])
 }
 
 model MovieSchedule {
@@ -122,9 +129,11 @@ model MovieSchedule {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@index([movieId])
   @@index([theaterId])
+  @@index([deletedAt])
 }
 
 model ShowTime {
@@ -137,9 +146,11 @@ model ShowTime {
   seats           SeatsOnShowTimes[]
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?
 
   @@index([movieScheduleId])
   @@index([startTime])
+  @@index([deletedAt])
 }
 
 model SeatsOnShowTimes {

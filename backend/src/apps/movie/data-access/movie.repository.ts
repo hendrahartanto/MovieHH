@@ -31,6 +31,7 @@ const getMovies = async (page: number, limit: number, search: string) => {
       contains: search,
       mode: "insensitive",
     },
+    deletedAt: null,
   };
 
   const [moviesRaw, total] = await Promise.all([
@@ -44,7 +45,10 @@ const getMovies = async (page: number, limit: number, search: string) => {
             genre: true,
           },
         },
-        movieSchedules: { include: { showTimes: true } },
+        movieSchedules: {
+          where: { deletedAt: null },
+          include: { showTimes: { where: { deletedAt: null } } },
+        },
       },
     }),
     prisma.movie.count({
@@ -61,8 +65,8 @@ const getMovies = async (page: number, limit: number, search: string) => {
 };
 
 const getMovieById = async (movieId: string) => {
-  const movieRaw = await prisma.movie.findUnique({
-    where: { id: movieId },
+  const movieRaw = await prisma.movie.findFirst({
+    where: { id: movieId, deletedAt: null },
     include: {
       genres: {
         include: {
@@ -86,21 +90,21 @@ const getMovieById = async (movieId: string) => {
 
 const getFeaturedMovies = async () => {
   return prisma.movie.findMany({
-    where: { isFeatured: true },
+    where: { isFeatured: true, deletedAt: null },
   });
 };
 
 const getActiveMovies = async () => {
   return prisma.movie.findMany({
-    where: { status: "ACTIVE" },
-    include: { movieSchedules: true }
+    where: { status: "ACTIVE", deletedAt: null },
+    include: { movieSchedules: { where: { deletedAt: null } } }
   })
 }
 
 const getUpcomingMovies = async () => {
   return prisma.movie.findMany({
-    where: { status: "COMING_SOON" },
-    include: { movieSchedules: true }
+    where: { status: "COMING_SOON", deletedAt: null },
+    include: { movieSchedules: { where: { deletedAt: null } } }
   })
 }
 
@@ -133,8 +137,11 @@ const updateGenres = async (movieId: string, genreIds: string[]) => {
     );
 };
 
-const deleteMovie = async (movieId: string) => {
-  return prisma.movie.delete({ where: { id: movieId } });
+const deleteMovie = async (movieId: string, tx: any = prisma) => {
+  return tx.movie.update({
+    where: { id: movieId },
+    data: { deletedAt: new Date() },
+  });
 };
 
 export default {

@@ -5,10 +5,10 @@ import { CreateShowTimeDTO } from "../dto/create-show-time.dto";
 import { CreateMovieScheduleDTO } from "../dto/create-movie-schedule.dto";
 import { endOfDay, startOfDay } from "date-fns";
 
-type PrismaClientOrTransaction = PrismaClient | Prisma.TransactionClient;
+type PrismaClientOrTransaction = PrismaClient | Prisma.TransactionClient | any;
 
-const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO) => {
-  return prisma.movieSchedule.create({ data: newMovieScheduleData });
+const createMovieSchedule = (newMovieScheduleData: CreateMovieScheduleDTO, tx: any = prisma) => {
+  return tx.movieSchedule.create({ data: newMovieScheduleData });
 };
 
 const getMovieSchedulesPaginated = async (
@@ -23,6 +23,7 @@ const getMovieSchedulesPaginated = async (
         mode: "insensitive",
       },
     },
+    deletedAt: null,
   };
 
   const [movieSchedules, total] = await Promise.all([
@@ -30,7 +31,11 @@ const getMovieSchedulesPaginated = async (
       where: whereClause,
       skip: (page - 1) * limit,
       take: limit,
-      include: { movie: true, theater: true, showTimes: true },
+      include: {
+        movie: true,
+        theater: true,
+        showTimes: { where: { deletedAt: null } },
+      },
     }),
     prisma.movieSchedule.count({ where: whereClause }),
   ]);
@@ -39,12 +44,12 @@ const getMovieSchedulesPaginated = async (
 };
 
 const getMovieScheduleById = (movieScheduleId: string) => {
-  return prisma.movieSchedule.findUnique({
-    where: { id: movieScheduleId },
+  return prisma.movieSchedule.findFirst({
+    where: { id: movieScheduleId, deletedAt: null },
     include: {
       movie: true,
-      showTimes: true,
-      theater: { include: { seats: true } },
+      showTimes: { where: { deletedAt: null } },
+      theater: { include: { seats: { where: { deletedAt: null } } } },
     },
   });
 };
@@ -53,16 +58,17 @@ const getMovieScheduleByDateRange = async (
   startDate: string,
   endDate: string,
 ) => {
-  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
-  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
+  const startOfDayVal = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDayVal = new Date(`${endDate}T23:59:59.999Z`);
 
   return prisma.movieSchedule.findMany({
     where: {
-      date: { gte: startOfDay, lte: endOfDay },
+      date: { gte: startOfDayVal, lte: endOfDayVal },
+      deletedAt: null,
     },
     include: {
       movie: true,
-      showTimes: true,
+      showTimes: { where: { deletedAt: null } },
       theater: true,
     },
   });
@@ -73,19 +79,21 @@ const getMovieScheduleByMovieIdAndDateRange = async (
   startDate: string,
   endDate: string,
 ) => {
-  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
-  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
+  const startOfDayVal = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDayVal = new Date(`${endDate}T23:59:59.999Z`);
 
   return prisma.movieSchedule.findMany({
     where: {
       movieId: movieId,
-      date: { gte: startOfDay, lte: endOfDay },
+      date: { gte: startOfDayVal, lte: endOfDayVal },
+      deletedAt: null,
     },
     include: {
       movie: true,
       showTimes: {
+        where: { deletedAt: null },
         include: {
-          seats: true,
+          seats: { where: { seat: { deletedAt: null } } },
         },
       },
       theater: {
@@ -110,12 +118,14 @@ const getMovieScheduleByMovieIdAndDateAndTheaterId = (
       date: { gte: start, lte: end },
       movieId,
       theaterId,
+      deletedAt: null,
     },
     include: {
       movie: true,
       showTimes: {
+        where: { deletedAt: null },
         include: {
-          seats: true,
+          seats: { where: { seat: { deletedAt: null } } },
         },
       },
       theater: {
@@ -128,7 +138,7 @@ const getMovieScheduleByMovieIdAndDateAndTheaterId = (
 };
 
 const updateMovieSchedule = async (
-  tx: PrismaClient | Prisma.TransactionClient = prisma,
+  tx: PrismaClientOrTransaction = prisma,
   movieScheduleId: string,
   data: {
     movieId: string;
@@ -145,7 +155,7 @@ const updateMovieSchedule = async (
 };
 
 const updateShowTime = async (
-  tx: PrismaClient | Prisma.TransactionClient = prisma,
+  tx: PrismaClientOrTransaction = prisma,
   showTimeId: string,
   data: { startTime: Date; endTime: Date },
 ) => {
@@ -155,25 +165,38 @@ const updateShowTime = async (
   });
 };
 
-const deleteMovieSchedule = async (movieScheduleId: string) => {
-  return prisma.movieSchedule.delete({ where: { id: movieScheduleId } });
+const deleteMovieSchedule = async (movieScheduleId: string, tx: any = prisma) => {
+  return tx.$transaction(async (t: any) => {
+    await t.showTime.updateMany({
+      where: { movieScheduleId },
+      data: { deletedAt: new Date() },
+    });
+    return t.movieSchedule.update({
+      where: { id: movieScheduleId },
+      data: { deletedAt: new Date() },
+    });
+  });
 };
 
-const createShowTime = async (newShowTimeData: {
-  movieScheduleId: string;
-  startTime: Date;
-  endTime: Date;
-}) => {
-  return prisma.showTime.create({ data: newShowTimeData });
+const createShowTime = async (
+  newShowTimeData: {
+    movieScheduleId: string;
+    startTime: Date;
+    endTime: Date;
+  },
+  tx: any = prisma,
+) => {
+  return tx.showTime.create({ data: newShowTimeData });
 };
 
 const getShowTimeByDateRange = async (startDate: string, endDate: string) => {
-  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
-  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
+  const startOfDayVal = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDayVal = new Date(`${endDate}T23:59:59.999Z`);
 
   return prisma.showTime.findMany({
     where: {
-      startTime: { gte: startOfDay, lte: endOfDay },
+      startTime: { gte: startOfDayVal, lte: endOfDayVal },
+      deletedAt: null,
     },
     include: {
       movieSchedule: { include: { movie: true, theater: true } },
@@ -191,13 +214,14 @@ const getOverlappingShowTime = async (
       movieSchedule: { theaterId },
       startTime: { lte: endTime },
       endTime: { gte: startTime },
+      deletedAt: null,
     },
   });
 };
 
 const getShowTimeById = async (showTimeId: string) => {
-  return prisma.showTime.findUnique({
-    where: { id: showTimeId },
+  return prisma.showTime.findFirst({
+    where: { id: showTimeId, deletedAt: null },
     include: {
       movieSchedule: {
         include: {
@@ -211,28 +235,27 @@ const getShowTimeById = async (showTimeId: string) => {
 
 const getShowTimeByMovieScheduleId = async (movieScheduleId: string) => {
   return prisma.showTime.findMany({
-    where: { movieScheduleId },
+    where: { movieScheduleId, deletedAt: null },
   });
 };
 
-const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[]) => {
-  return prisma.seatsOnShowTimes.createMany({ data: mappingDatas });
+const createShowTimeSeats = async (mappingDatas: CreateShowTimeSeatsDTO[], tx: any = prisma) => {
+  return tx.seatsOnShowTimes.createMany({ data: mappingDatas });
 };
 
 const getShowTimeSeats = async (showTimeId: string) => {
   return prisma.seatsOnShowTimes.findMany({
-    where: { showTimeId },
+    where: { showTimeId, seat: { deletedAt: null } },
     include: { seat: true },
   });
 };
 
 const getShowTimeSeat = async (showTimeId: string, seatId: string) => {
-  return prisma.seatsOnShowTimes.findUnique({
+  return prisma.seatsOnShowTimes.findFirst({
     where: {
-      seatId_showTimeId: {
-        seatId,
-        showTimeId,
-      },
+      seatId,
+      showTimeId,
+      seat: { deletedAt: null },
     },
     include: {
       seat: true,
@@ -240,8 +263,11 @@ const getShowTimeSeat = async (showTimeId: string, seatId: string) => {
   });
 };
 
-const deleteShowTime = async (showTimeId: string) => {
-  return prisma.showTime.delete({ where: { id: showTimeId } });
+const deleteShowTime = async (showTimeId: string, tx: any = prisma) => {
+  return tx.showTime.update({
+    where: { id: showTimeId },
+    data: { deletedAt: new Date() },
+  });
 };
 
 const updateSeatStatus = (
@@ -302,19 +328,21 @@ const getMovieScheduleByTheaterIdAndDateRange = async (
   startDate: string,
   endDate: string,
 ) => {
-  const startOfDay = new Date(`${startDate}T00:00:00.000Z`);
-  const endOfDay = new Date(`${endDate}T23:59:59.999Z`);
+  const startOfDayVal = new Date(`${startDate}T00:00:00.000Z`);
+  const endOfDayVal = new Date(`${endDate}T23:59:59.999Z`);
 
   return prisma.movieSchedule.findMany({
     where: {
       theaterId: theaterId,
-      date: { gte: startOfDay, lte: endOfDay },
+      date: { gte: startOfDayVal, lte: endOfDayVal },
+      deletedAt: null,
     },
     include: {
       movie: true,
       showTimes: {
+        where: { deletedAt: null },
         include: {
-          seats: true,
+          seats: { where: { seat: { deletedAt: null } } },
         },
       },
       theater: {
