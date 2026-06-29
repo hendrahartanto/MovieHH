@@ -211,7 +211,7 @@ async function seedShowtimes(movies: any[], theaters: any[]) {
 async function main() {
   console.log("🚀 Starting seeding...");
 
-  const users = seedUsers();
+  const users = await seedUsers();
 
   // 1. Genres
   const genres = await seedGenres();
