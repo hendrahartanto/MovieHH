@@ -1,14 +1,14 @@
 import multer from "multer";
 import path from "path";
-import fs from "fs"; // 1. Import module fs bawaan Node.js
+import fs from "fs";
 
-const uploadDir = "uploads/"; // Definisikan path folder tujuan
+import { BadRequestError } from "../lib/exceptions/api-error";
+
+const uploadDir = "uploads/";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // 2. Cek apakah folder uploads/ sudah ada
     if (!fs.existsSync(uploadDir)) {
-      // 3. Jika belum ada, buat foldernya
       fs.mkdirSync(uploadDir, { recursive: true });
     }
 
@@ -20,4 +20,28 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({ storage });
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_IMAGE_TYPES = /jpeg|jpg|png|webp/;
+
+export const upload = multer({
+  storage,
+  limits: {
+    fileSize: MAX_FILE_SIZE,
+  },
+  fileFilter: (req, file, cb) => {
+    const isMimetypeValid = ALLOWED_IMAGE_TYPES.test(file.mimetype);
+    const isExtnameValid = ALLOWED_IMAGE_TYPES.test(
+      path.extname(file.originalname).toLowerCase(),
+    );
+
+    if (isMimetypeValid && isExtnameValid) {
+      return cb(null, true);
+    }
+
+    cb(
+      new BadRequestError(
+        "Only JPEG, JPG, PNG, and WEBP image files are allowed.",
+      ),
+    );
+  },
+});
