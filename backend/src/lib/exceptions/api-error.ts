@@ -25,6 +25,26 @@ export abstract class ApiError extends Error {
     super(type);
   }
 
+  public get status(): number {
+    switch (this.type) {
+      case ErrorType.BAD_TOKEN:
+      case ErrorType.TOKEN_EXPIRED:
+      case ErrorType.UNAUTHORIZED:
+      case ErrorType.ACCESS_TOKEN:
+        return 401;
+      case ErrorType.NO_DATA:
+      case ErrorType.NOT_FOUND:
+        return 404;
+      case ErrorType.BAD_REQUEST:
+        return 400;
+      case ErrorType.FORBIDDEN:
+        return 403;
+      case ErrorType.INTERNAL:
+      default:
+        return 500;
+    }
+  }
+
   public static handle(err: ApiError, res: Response): Response {
     switch (err.type) {
       case ErrorType.BAD_TOKEN:

@@ -51,7 +51,7 @@ export const errorMiddleware = (
     // handle error agar bisa kirim response balik ke frontend
     ApiError.handle(err, res);
     logger.error(
-      `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
+      `${err.status} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
     );
   } else {
     logger.error(
