@@ -1,11 +1,10 @@
 import { paths } from "@/config/paths";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import AppRoot from "./pages/root";
 import { ProtectedRoute } from "@/lib/auth";
-import { Authorization } from "@/lib/authorization";
 import AdminRoot from "./pages/admin/root";
 
 //TODO:
@@ -88,10 +87,8 @@ const createAppRouter = (queryClient: QueryClient) =>
     {
       path: paths.admin.root.path,
       element: (
-        <ProtectedRoute>
-          <Authorization allowedRoles={["ADMIN"]} forbiddenFallback={<Navigate to="/" replace />}>
-            <AdminRoot />
-          </Authorization>
+        <ProtectedRoute allowedRoles={["ADMIN"]}>
+          <AdminRoot />
         </ProtectedRoute>
       ),
       children: [
@@ -130,6 +127,16 @@ const createAppRouter = (queryClient: QueryClient) =>
             import("./pages/admin/movie-schedules/movie-schedules").then(
               convert(queryClient),
             ),
+        },
+        {
+          path: paths.admin.checkIn.path,
+          lazy: () =>
+            import("./pages/admin/check-in/scanner").then(convert(queryClient)),
+        },
+        {
+          path: paths.admin.verifyCheckIn.path,
+          lazy: () =>
+            import("./pages/admin/check-in/verify").then(convert(queryClient)),
         },
       ],
     },

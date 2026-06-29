@@ -12,6 +12,7 @@ import {
   Map,
   Calendar,
   Globe,
+  QrCode,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
@@ -57,6 +58,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Movie Schedules",
       to: paths.admin.movieSchedules.getHref(),
       icon: <Calendar className="w-5 h-5" />,
+    },
+    {
+      name: "Check-in Scanner",
+      to: paths.admin.checkIn.getHref(),
+      icon: <QrCode className="w-5 h-5" />,
     },
     {
       name: "User Portal",

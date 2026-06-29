@@ -30,7 +30,13 @@ const authConfig = {
 export const { useUser, useLogin, useLogout, useRegister, AuthLoader } =
   configureAuth(authConfig);
 
-export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+export const ProtectedRoute = ({
+  children,
+  allowedRoles,
+}: {
+  children: React.ReactNode;
+  allowedRoles?: string[];
+}) => {
   const user = useUser();
   const location = useLocation();
 
@@ -38,6 +44,10 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return (
       <Navigate to={paths.auth.login.getHref(location.pathname)} replace />
     );
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.data.role)) {
+    return <Navigate to={paths.home.getHref()} replace />;
   }
 
   return children;

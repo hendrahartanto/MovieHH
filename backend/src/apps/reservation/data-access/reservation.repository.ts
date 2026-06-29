@@ -176,6 +176,28 @@ const getReservationsByUserId = async (
   ]);
 
   return { reservations, total };
+};const checkInReservation = async (
+  reservationId: string,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  return tx.reservation.update({
+    where: { id: reservationId },
+    data: { checkedInAt: new Date() },
+    include: {
+      showTime: {
+        include: {
+          movieSchedule: {
+            include: {
+              movie: true,
+              theater: { include: { location: true } },
+            },
+          },
+        },
+      },
+      user: true,
+      reservationDetails: { include: { seat: true } },
+    },
+  });
 };
 
 export default {
@@ -188,4 +210,5 @@ export default {
   getPaymentByReservationId,
   createPayment,
   updatePaymentStatusByReservationId,
+  checkInReservation,
 };

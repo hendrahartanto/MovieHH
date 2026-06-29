@@ -49,6 +49,14 @@ export const paths = {
       path: "movie-schedules",
       getHref: () => "/admin/movie-schedules",
     },
+    checkIn: {
+      path: "check-in",
+      getHref: () => "/admin/check-in",
+    },
+    verifyCheckIn: {
+      path: "check-in/verify/:reservationId",
+      getHref: (id: string) => `/admin/check-in/verify/${id}`,
+    },
   },
 
   home: {

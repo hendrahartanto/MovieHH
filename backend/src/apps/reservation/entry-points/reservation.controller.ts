@@ -130,6 +130,16 @@ const getReservation = asyncHandler<ProtectedRequest>(async (req, res) => {
   }).send(res);
 });
 
+const checkInReservation = asyncHandler<ProtectedRequest>(async (req, res) => {
+  const reservationId = req.params.id;
+  const updatedReservation =
+    await reservationService.checkInReservation(reservationId);
+
+  new SuccessResponse("Reservation checked in successfully", {
+    reservation: updatedReservation,
+  }).send(res);
+});
+
 export default {
   createReservationHold,
   createReservationPayment,
@@ -138,4 +148,5 @@ export default {
   getTransactionHistory,
   cancelReservation,
   getReservation,
+  checkInReservation,
 };

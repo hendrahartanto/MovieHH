@@ -173,6 +173,7 @@ model Reservation {
   status             ReservationStatus   @default(PENDING)
   totalPrice         Decimal
   expiresAt          DateTime
+  checkedInAt        DateTime?
   createAt           DateTime            @default(now())
   reservationDetails ReservationDetail[]
   payment            Payment?

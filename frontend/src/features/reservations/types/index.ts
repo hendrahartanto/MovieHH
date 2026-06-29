@@ -11,6 +11,7 @@ export type Reservation = {
   status: ReservationStatus;
   totalPrice: string | number;
   expiresAt: string;
+  checkedInAt?: string | null;
   createdAt: string;
   updatedAt: string;
 };

@@ -332,6 +332,23 @@ const getTransactionHistory = async (
   );
 };
 
+const checkInReservation = async (reservationId: string) => {
+  const reservation = await reservationRepository.getReservationById(reservationId);
+  if (!reservation) throw new NoDataError("Reservation not found");
+
+  if (reservation.status !== "CONFIRMED") {
+    throw new BadRequestError(`Cannot check in reservation with status: ${reservation.status}`);
+  }
+
+  if (reservation.checkedInAt) {
+    throw new BadRequestError(
+      `Reservation already checked in at ${reservation.checkedInAt.toLocaleTimeString()}`,
+    );
+  }
+
+  return reservationRepository.checkInReservation(reservationId);
+};
+
 export default {
   createReservationHold,
   createPaymentToken,
@@ -340,4 +357,5 @@ export default {
   getTransactionHistory,
   cancelReservation,
   getReservation,
+  checkInReservation,
 };

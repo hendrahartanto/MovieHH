@@ -12,7 +12,8 @@ import {
   Banknote,
   Hash,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 const formatDate = (iso: string) => {
   const d = new Date(iso);
@@ -70,9 +71,14 @@ interface TicketModalProps {
 }
 
 export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
+  const [isQrExpanded, setIsQrExpanded] = useState(false);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        setIsQrExpanded(false);
+        onClose();
+      }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
@@ -265,17 +271,38 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
                     {bookingId}
                   </span>
                 </div>
+                {reservation.checkedInAt && (
+                  <p className="text-[10px] text-emerald-400 font-semibold mt-1">
+                    Checked in
+                  </p>
+                )}
               </div>
 
-              <div className="flex items-end gap-px h-10 opacity-35 pr-1">
-                {BARCODE_HEIGHTS.map((h, i) => (
-                  <div
-                    key={i}
-                    className="w-[3px] bg-foreground rounded-full"
-                    style={{ height: `${h * 16}%` }}
+              {!reservation.checkedInAt && reservation.status === "CONFIRMED" ? (
+                <div
+                  onClick={() => setIsQrExpanded(true)}
+                  className="bg-white p-1 rounded-md shrink-0 border border-white/20 cursor-pointer hover:scale-105 transition-all duration-150 relative group"
+                  title="Click to enlarge"
+                >
+                  <QRCodeSVG
+                    value={`${window.location.origin}/admin/check-in/verify/${reservation.id}`}
+                    size={56}
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                    level="M"
                   />
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div className="flex items-end gap-px h-10 opacity-35 pr-1">
+                  {BARCODE_HEIGHTS.map((h, i) => (
+                    <div
+                      key={i}
+                      className="w-[3px] bg-foreground rounded-full"
+                      style={{ height: `${h * 16}%` }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -291,6 +318,50 @@ export const TicketModal = ({ reservation, onClose }: TicketModalProps) => {
           Present this ticket at the entrance
         </p>
       </div>
+
+      {isQrExpanded && !reservation.checkedInAt && reservation.status === "CONFIRMED" && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setIsQrExpanded(false)}
+        >
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={() => setIsQrExpanded(false)}
+              className="w-10 h-10 rounded-full bg-card/50 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150 shadow-lg cursor-pointer"
+              aria-label="Close fullscreen QR"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div
+            className="flex flex-col items-center justify-center bg-white p-6 rounded-2xl border border-white/20 shadow-2xl animate-in zoom-in-95 duration-200 max-w-sm w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <QRCodeSVG
+              value={`${window.location.origin}/admin/check-in/verify/${reservation.id}`}
+              size={260}
+              bgColor="#ffffff"
+              fgColor="#000000"
+              level="H"
+            />
+            <div className="mt-6 space-y-1 bg-black/5 p-4 rounded-xl w-full">
+              <h3 className="text-black font-extrabold text-lg leading-tight truncate">
+                {movie?.title ?? "Movie"}
+              </h3>
+              <p className="text-black/60 text-xs font-medium">
+                {theater?.name ?? "Cinema"} • {seats.length} Tickets
+              </p>
+              <p className="text-[10px] text-primary/70 font-mono tracking-widest font-bold mt-2 uppercase">
+                ID: {bookingId}
+              </p>
+            </div>
+            <p className="text-xs text-muted-foreground mt-4 flex items-center justify-center gap-1.5 font-medium">
+              Scan at the entrance
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
