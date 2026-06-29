@@ -57,6 +57,10 @@ export const paths = {
       path: "check-in/verify/:reservationId",
       getHref: (id: string) => `/admin/check-in/verify/${id}`,
     },
+    reservations: {
+      path: "reservations",
+      getHref: () => "/admin/reservations",
+    },
   },
 
   home: {

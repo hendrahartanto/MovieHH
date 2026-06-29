@@ -13,6 +13,7 @@ import {
   Calendar,
   Globe,
   QrCode,
+  Receipt,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
@@ -58,6 +59,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Movie Schedules",
       to: paths.admin.movieSchedules.getHref(),
       icon: <Calendar className="w-5 h-5" />,
+    },
+    {
+      name: "Reservations",
+      to: paths.admin.reservations.getHref(),
+      icon: <Receipt className="w-5 h-5" />,
     },
     {
       name: "Check-in Scanner",

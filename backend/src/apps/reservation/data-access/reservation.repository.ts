@@ -176,7 +176,74 @@ const getReservationsByUserId = async (
   ]);
 
   return { reservations, total };
-};const checkInReservation = async (
+};
+
+const getReservationsPaginatedAdmin = async (
+  page: number,
+  limit: number,
+  search: string = "",
+  status?: string,
+  tx: PrismaClient | Prisma.TransactionClient = prisma
+) => {
+  const whereClause: Prisma.ReservationWhereInput = {};
+
+  if (status) {
+    whereClause.status = status as any;
+  }
+
+  if (search.trim()) {
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(search.trim());
+    whereClause.OR = [
+      ...(isUuid ? [{ id: search.trim() }] : []),
+      {
+        user: {
+          name: { contains: search, mode: "insensitive" },
+        },
+      },
+      {
+        user: {
+          email: { contains: search, mode: "insensitive" },
+        },
+      },
+    ];
+  }
+
+  const [reservations, total] = await Promise.all([
+    tx.reservation.findMany({
+      where: whereClause,
+      skip: (page - 1) * limit,
+      take: limit,
+      include: {
+        payment: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatarUrl: true,
+          },
+        },
+        reservationDetails: { include: { seat: true } },
+        showTime: {
+          include: {
+            movieSchedule: {
+              include: {
+                movie: true,
+                theater: { include: { location: true } },
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createAt: "desc" },
+    }),
+    tx.reservation.count({ where: whereClause }),
+  ]);
+
+  return { reservations, total };
+};
+
+const checkInReservation = async (
   reservationId: string,
   tx: PrismaClient | Prisma.TransactionClient = prisma
 ) => {
@@ -211,4 +278,5 @@ export default {
   createPayment,
   updatePaymentStatusByReservationId,
   checkInReservation,
+  getReservationsPaginatedAdmin,
 };

@@ -138,6 +138,11 @@ const createAppRouter = (queryClient: QueryClient) =>
           lazy: () =>
             import("./pages/admin/check-in/verify").then(convert(queryClient)),
         },
+        {
+          path: paths.admin.reservations.path,
+          lazy: () =>
+            import("./pages/admin/reservations/reservations").then(convert(queryClient)),
+        },
       ],
     },
     {

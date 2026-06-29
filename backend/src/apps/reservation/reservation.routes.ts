@@ -15,6 +15,9 @@ router.get("/history", reservationController.getTransactionHistory);
 router.post("/hold", reservationController.createReservationHold);
 router.post("/payment", reservationController.createReservationPayment);
 router.post("/cancel", reservationController.cancelReservation);
+router.get("/admin", authorize(Role.ADMIN), reservationController.getReservationsAdmin);
+router.get("/admin/:id", authorize(Role.ADMIN), reservationController.getReservationAdmin);
+router.post("/admin/:id/cancel", authorize(Role.ADMIN), reservationController.cancelReservationAdmin);
 router.post("/:id/check-in", authorize(Role.ADMIN), reservationController.checkInReservation);
 router.get("/:id", reservationController.getReservation);
 

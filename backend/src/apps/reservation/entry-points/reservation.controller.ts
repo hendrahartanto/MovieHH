@@ -140,6 +140,48 @@ const checkInReservation = asyncHandler<ProtectedRequest>(async (req, res) => {
   }).send(res);
 });
 
+const getReservationsAdmin = asyncHandler<ProtectedRequest>(async (req, res) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const search = (req.query.search as string) || "";
+  const status = req.query.status as string;
+
+  const { reservations, total } = await reservationService.getReservationsAdmin(
+    page,
+    limit,
+    search,
+    status
+  );
+
+  new SuccessResponse("Get admin reservations successful", {
+    reservations,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  }).send(res);
+});
+
+const getReservationAdmin = asyncHandler<ProtectedRequest>(async (req, res) => {
+  const reservationId = req.params.id;
+  const reservation = await reservationService.getReservationAdmin(reservationId);
+
+  new SuccessResponse("Get admin reservation successful", {
+    reservation,
+  }).send(res);
+});
+
+const cancelReservationAdmin = asyncHandler<ProtectedRequest>(async (req, res) => {
+  const reservationId = req.params.id;
+  const cancelledReservation = await reservationService.cancelReservationAdmin(reservationId);
+
+  new SuccessResponse("Admin cancel reservation successful", {
+    cancelledReservation,
+  }).send(res);
+});
+
 export default {
   createReservationHold,
   createReservationPayment,
@@ -149,4 +191,7 @@ export default {
   cancelReservation,
   getReservation,
   checkInReservation,
+  getReservationsAdmin,
+  getReservationAdmin,
+  cancelReservationAdmin,
 };

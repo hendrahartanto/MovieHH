@@ -6,3 +6,5 @@ export * from "./get-active-reservations";
 export * from "./get-transaction-history";
 export * from "./check-in";
 export * from "./get-reservation";
+export * from "./admin-get-reservations";
+export * from "./admin-cancel-reservation";

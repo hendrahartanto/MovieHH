@@ -349,6 +349,97 @@ const checkInReservation = async (reservationId: string) => {
   return reservationRepository.checkInReservation(reservationId);
 };
 
+const getReservationsAdmin = async (
+  page: number = 1,
+  limit: number = 10,
+  search: string = "",
+  status?: string,
+) => {
+  return reservationRepository.getReservationsPaginatedAdmin(page, limit, search, status);
+};
+
+const getReservationAdmin = async (reservationId: string) => {
+  const reservation = await reservationRepository.getReservationById(reservationId);
+  if (!reservation) throw new NoDataError("Reservation not found");
+  return reservation;
+};
+
+const cancelReservationAdmin = async (reservationId: string) => {
+  const reservation = await reservationRepository.getReservationById(reservationId);
+  if (!reservation) throw new NoDataError("Reservation not found");
+  if (reservation.status !== "PENDING") {
+    throw new BadRequestError("Reservation status is not valid");
+  }
+  if (reservation.payment?.status === "PAID") {
+    throw new BadRequestError("Paid reservation cannot be cancelled");
+  }
+
+  if (reservation.payment?.status === "PENDING") {
+    try {
+      await cancelMidtransTransaction(reservationId);
+    } catch (error: any) {
+      const statusCode = error.httpStatusCode || error.ApiResponse?.status_code;
+      if (
+        statusCode !== 404 &&
+        statusCode !== 412 &&
+        statusCode !== "404" &&
+        statusCode !== "412"
+      ) {
+        throw new BadRequestError(
+          `Failed to cancel payment at Midtrans: ${error.message}`,
+        );
+      }
+    }
+  }
+
+  const cancelledReservation = await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${reservationId}))`;
+
+    const currentReservation = await reservationRepository.getReservationById(
+      reservationId,
+      tx,
+    );
+    if (!currentReservation) throw new NoDataError("Reservation not found");
+    if (currentReservation.status !== "PENDING")
+      throw new BadRequestError("Reservation status is not valid");
+    if (currentReservation.payment?.status === "PAID")
+      throw new BadRequestError("Paid reservation cannot be cancelled");
+
+    const jobToRemove = await reservationHoldQueue.getJob(reservation.id);
+    if (jobToRemove) {
+      await jobToRemove.remove();
+    }
+
+    const cancelledReservation =
+      await reservationRepository.updateReservationStatus(
+        reservationId,
+        "CANCELLED",
+        tx,
+      );
+    await reservationRepository.updatePaymentStatusByReservationId(
+      reservationId,
+      "CANCELLED",
+      tx,
+    );
+    await showTimeRepository.updateManySeatStatus(
+      currentReservation.showTimeId,
+      currentReservation.reservationDetails.map((detail) => detail.seatId),
+      "AVAILABLE",
+      tx,
+    );
+
+    return cancelledReservation;
+  });
+
+  broadcastSeatStatus(
+    reservation.showTimeId,
+    reservation.reservationDetails.map((detail) => detail.seatId),
+    "AVAILABLE",
+  );
+
+  return cancelledReservation;
+};
+
 export default {
   createReservationHold,
   createPaymentToken,
@@ -358,4 +449,7 @@ export default {
   cancelReservation,
   getReservation,
   checkInReservation,
+  getReservationsAdmin,
+  getReservationAdmin,
+  cancelReservationAdmin,
 };
