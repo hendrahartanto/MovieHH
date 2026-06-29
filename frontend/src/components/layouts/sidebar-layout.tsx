@@ -137,7 +137,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <nav className="flex-1 p-4 flex flex-col min-h-0">
-            <ul className="space-y-1 flex-1 overflow-y-auto">
+            <ul className="space-y-1 flex-1 overflow-y-auto scrollbar-subtle">
               {sidebarItems.map((item, index) => (
                 <li key={index}>
                   <Link
