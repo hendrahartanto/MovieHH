@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { socket } from "@/lib/socket";
+import { getAccessToken } from "@/lib/token-store";
 import { getShowTimeSeatsQueryOptions } from "../api/get-show-time-seats";
 import { ShowtimeSeat, SeatStatus } from "../types";
 import { ApiResponse } from "@/lib/api";
@@ -20,6 +21,7 @@ export const useShowTimeSeatsSocket = (
     if (!showTimeId) return;
 
     if (!socket.connected) {
+      socket.auth = { token: getAccessToken() };
       socket.connect();
     }
 

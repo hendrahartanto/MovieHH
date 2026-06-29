@@ -2,6 +2,8 @@ import { Server as HttpServer } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { corsOrigin } from "../config";
 
+import { verifyAccessToken } from "../lib/utils/jwt.util";
+
 let io: SocketIOServer | null = null;
 
 export const initSocket = (server: HttpServer): SocketIOServer => {
@@ -11,6 +13,21 @@ export const initSocket = (server: HttpServer): SocketIOServer => {
       credentials: true,
       methods: ["GET", "POST"],
     },
+  });
+
+  io.use((socket, next) => {
+    try {
+      const token = socket.handshake.auth?.token;
+      if (!token) {
+        return next(new Error("Authentication error: Token missing"));
+      }
+
+      const decoded = verifyAccessToken(token) as { userId: string };
+      socket.data = { userId: decoded.userId };
+      return next();
+    } catch (err) {
+      return next(new Error("Authentication error: Invalid or expired token"));
+    }
   });
 
   io.on("connection", (socket: Socket) => {
