@@ -61,6 +61,10 @@ export const paths = {
       path: "reservations",
       getHref: () => "/admin/reservations",
     },
+    users: {
+      path: "users",
+      getHref: () => "/admin/users",
+    },
   },
 
   home: {

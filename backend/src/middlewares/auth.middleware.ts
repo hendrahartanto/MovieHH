@@ -22,6 +22,7 @@ export const authenticate = asyncHandler(
 
       const user = await userRepository.getUserById(decoded.userId);
       if (!user) throw new AuthFailureError("User not found");
+      if (user.isSuspended) throw new AuthFailureError("Your account has been suspended by an administrator.");
       req.user = user;
 
       return next();

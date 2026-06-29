@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../../../db";
 import { CreateUserDTO } from "../../auth/dto/create-user.dto";
 
@@ -30,10 +31,66 @@ const updateUserProfile = async (
   });
 };
 
+const getUsersPaginatedAdmin = async (
+  page: number,
+  limit: number,
+  search: string = ""
+) => {
+  const whereClause: Prisma.UserWhereInput = {};
+
+  if (search.trim()) {
+    whereClause.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { email: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where: whereClause,
+      skip: (page - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isSuspended: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: {
+          select: { reservations: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.user.count({ where: whereClause }),
+  ]);
+
+  return { users, total };
+};
+
+const updateUserRole = async (userId: string, role: "USER" | "ADMIN") => {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { role },
+  });
+};
+
+const toggleUserSuspension = async (userId: string, isSuspended: boolean) => {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { isSuspended },
+  });
+};
+
 export default {
   createUser,
   getUserByEmail,
   getUserById,
   updateUserPassword,
   updateUserProfile,
+  getUsersPaginatedAdmin,
+  updateUserRole,
+  toggleUserSuspension,
 };

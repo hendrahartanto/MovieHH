@@ -20,6 +20,7 @@ model User {
   role         Role          @default(USER)
   password     String
   avatarUrl    String?
+  isSuspended  Boolean       @default(false)
   reservations Reservation[]
 
   createdAt DateTime @default(now())

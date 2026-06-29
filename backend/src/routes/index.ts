@@ -8,6 +8,7 @@ import theater from "../apps/theater/theater.routes";
 import location from "../apps/location/location.routes";
 import webhook from "../apps/webhook/webhook.routes";
 import dashboard from "../apps/dashboard/dashboard.routes";
+import user from "../apps/user/user.routes";
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use("/genres", genre);
 router.use("/locations", location);
 router.use("/webhook", webhook);
 router.use("/dashboard", dashboard);
+router.use("/users", user);
 
 export default router;

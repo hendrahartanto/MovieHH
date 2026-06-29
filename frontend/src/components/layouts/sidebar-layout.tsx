@@ -14,6 +14,7 @@ import {
   Globe,
   QrCode,
   Receipt,
+  Users,
 } from "lucide-react";
 import { paths } from "@/config/paths";
 import { useUser } from "@/lib/auth";
@@ -64,6 +65,11 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
       name: "Reservations",
       to: paths.admin.reservations.getHref(),
       icon: <Receipt className="w-5 h-5" />,
+    },
+    {
+      name: "Users",
+      to: paths.admin.users.getHref(),
+      icon: <Users className="w-5 h-5" />,
     },
     {
       name: "Check-in Scanner",
