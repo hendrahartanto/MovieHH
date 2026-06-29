@@ -81,7 +81,7 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
         <div
           className={`${
             isCollapsed ? "w-20" : "w-64"
-          } bg-card border-r border-border flex flex-col shadow-lg transition-all duration-300 ease-in-out`}
+          } h-screen bg-card border-r border-border flex flex-col shadow-lg transition-all duration-300 ease-in-out`}
         >
           <div
             className={`${
@@ -130,8 +130,8 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
             )}
           </div>
 
-          <nav className="flex-1 p-4">
-            <ul className="space-y-1">
+          <nav className="flex-1 p-4 flex flex-col min-h-0">
+            <ul className="space-y-1 flex-1 overflow-y-auto">
               {sidebarItems.map((item, index) => (
                 <li key={index}>
                   <Link
@@ -140,13 +140,17 @@ export const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
                       isCollapsed ? "justify-center px-0" : "gap-3 px-4"
                     } py-3 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 group relative overflow-hidden`}
                   >
-                    <div className={`relative z-10 flex items-center ${
-                      isCollapsed ? "justify-center" : "gap-3 w-full"
-                    }`}>
+                    <div
+                      className={`relative z-10 flex items-center ${
+                        isCollapsed ? "justify-center" : "gap-3 w-full"
+                      }`}
+                    >
                       <div className="transition-transform duration-200 group-hover:scale-110">
                         {item.icon}
                       </div>
-                      {!isCollapsed && <span className="font-medium">{item.name}</span>}
+                      {!isCollapsed && (
+                        <span className="font-medium">{item.name}</span>
+                      )}
                     </div>
                     <div className="absolute inset-0 bg-linear-to-r from-orange-500/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg" />
                   </Link>
