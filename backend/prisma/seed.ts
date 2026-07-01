@@ -244,7 +244,10 @@ async function main() {
   for (let offset = -30; offset <= 7; offset++) {
     const targetDate = new Date(now);
     targetDate.setDate(now.getDate() + offset);
-    targetDate.setHours(0, 0, 0, 0);
+    const utcYear = targetDate.getUTCFullYear();
+    const utcMonth = String(targetDate.getUTCMonth() + 1).padStart(2, "0");
+    const utcDay = String(targetDate.getUTCDate()).padStart(2, "0");
+    const targetDateUTC = new Date(`${utcYear}-${utcMonth}-${utcDay}T00:00:00.000Z`);
 
     for (const theater of theaters) {
       for (let slotIndex = 0; slotIndex < slots.length; slotIndex++) {
@@ -256,21 +259,12 @@ async function main() {
 
         const movieSchedule = await prisma.movieSchedule.create({
           data: {
-            date: targetDate,
+            date: targetDateUTC,
             movieId: movie.id,
             theaterId: theater.id,
             price: 60000,
           },
         });
-
-        const [startHour, startMin] = slot.start.split(":").map(Number);
-        const [endHour, endMin] = slot.end.split(":").map(Number);
-
-        const startTime = new Date(targetDate);
-        startTime.setHours(startHour, startMin, 0, 0);
-
-        const endTime = new Date(targetDate);
-        endTime.setHours(endHour, endMin, 0, 0);
 
         const showTime = await showTimeService.createShowTime({
           movieScheduleId: movieSchedule.id,
@@ -280,8 +274,8 @@ async function main() {
 
         createdShowTimes.push({
           id: showTime.id,
-          startTime,
-          endTime,
+          startTime: showTime.startTime,
+          endTime: showTime.endTime,
           theaterId: theater.id,
           price: 60000,
         });
