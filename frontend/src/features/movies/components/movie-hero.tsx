@@ -14,7 +14,7 @@ export const MovieHero = ({ movie, onPlayTrailer }: MovieHeroProps) => {
         className="absolute inset-0 bg-cover bg-center scale-105"
         style={{
           backgroundImage: movie.bannerUrl
-            ? `url(${formatImageUrl(movie.bannerUrl)})`
+            ? `url("${formatImageUrl(movie.bannerUrl)}")`
             : undefined,
           backgroundColor:
             !movie.bannerUrl && !movie.posterUrl ? "hsl(0,0%,12%)" : undefined,
