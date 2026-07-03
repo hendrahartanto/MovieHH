@@ -3,6 +3,7 @@ import midtransClient from "midtrans-client";
 type MidtransTransactionClient = {
   cancel: (transactionId: string) => Promise<unknown>;
   expire: (transactionId: string) => Promise<unknown>;
+  status: (transactionId: string) => Promise<any>;
 };
 
 type MidtransSnapWithTransaction = {
@@ -25,3 +26,8 @@ export const cancelMidtransTransaction = (transactionId: string) => {
 export const expireMidtransTransaction = (transactionId: string) => {
   return midtransTransaction.expire(transactionId);
 };
+
+export const getMidtransTransactionStatus = (transactionId: string) => {
+  return midtransTransaction.status(transactionId);
+};
+

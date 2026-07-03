@@ -6,7 +6,9 @@ import {
 import {
   cancelMidtransTransaction,
   midtransSnap,
+  getMidtransTransactionStatus,
 } from "../../../infrastructure/midtrans";
+import webhookService from "../../webhook/domain/webhook.service";
 import prisma from "../../../db";
 import { reservationHoldQueue } from "../../../queue/reservation-hold-queue";
 import showTimeRepository from "../../show-time/data-access/show-time.repository";
@@ -196,9 +198,38 @@ const createPaymentToken = async (
   }
 };
 
+const syncReservationPaymentStatus = async (reservationId: string) => {
+  try {
+    const statusResponse = await getMidtransTransactionStatus(reservationId);
+    if (statusResponse) {
+      await webhookService.handleMidtransNotification(statusResponse);
+    }
+  } catch (error: any) {
+    const statusCode = error.httpStatusCode || error.ApiResponse?.status_code;
+    if (statusCode === 404 || statusCode === "404") {
+      console.log(`Transaction ${reservationId} not found in Midtrans.`);
+    } else {
+      console.error(
+        `Failed to sync payment status for reservation ${reservationId}: ${error.message}`
+      );
+    }
+  }
+};
+
 const getActiveReservationPayment = async (userId: string) => {
-  const activeReservation =
+  let activeReservation =
     await reservationRepository.getActivePendingReservationByUserId(userId);
+
+  if (!activeReservation) {
+    return null;
+  }
+
+  if (activeReservation.status === "PENDING") {
+    await syncReservationPaymentStatus(activeReservation.id);
+    activeReservation =
+      (await reservationRepository.getActivePendingReservationByUserId(userId)) ??
+      activeReservation;
+  }
 
   if (!activeReservation) {
     return null;
@@ -211,6 +242,7 @@ const getActiveReservationPayment = async (userId: string) => {
     payment,
   };
 };
+
 
 const cancelReservation = async (reservationId: string, userId: string) => {
   const reservation =
@@ -292,7 +324,7 @@ const cancelReservation = async (reservationId: string, userId: string) => {
 };
 
 const getReservation = async (reservationId: string, userId: string) => {
-  const reservation =
+  let reservation =
     await reservationRepository.getReservationById(reservationId);
 
   if (!reservation) {
@@ -301,6 +333,13 @@ const getReservation = async (reservationId: string, userId: string) => {
 
   if (reservation.userId !== userId) {
     throw new BadRequestError("Unauthorized access to reservation");
+  }
+
+  if (reservation.status === "PENDING") {
+    await syncReservationPaymentStatus(reservationId);
+    reservation =
+      (await reservationRepository.getReservationById(reservationId)) ??
+      reservation;
   }
 
   return reservation;

@@ -1,0 +1,83 @@
+services:
+  db:
+    image: "postgres:15-alpine"
+    container_name: "moviehh-db"
+    restart: "always"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "moviehh"
+    ports:
+      - "5435:5432"
+    volumes:
+      - "postgres_data:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d moviehh"]
+      interval: "5s"
+      timeout: "5s"
+      retries: 5
+
+  redis:
+    image: "redis:7-alpine"
+    container_name: "moviehh-redis"
+    restart: "always"
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: "5s"
+      timeout: "5s"
+      retries: 5
+
+  backend:
+    build:
+      context: "./backend"
+      dockerfile: "Dockerfile.dev"
+    container_name: "moviehh-backend"
+    restart: "always"
+    ports:
+      - "3000:3000"
+    environment:
+      - "PORT=3000"
+      - "NODE_ENV=development"
+      - "DATABASE_URL=postgresql://postgres:postgres@db:5432/moviehh?schema=public"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "ACCESS_SECRET=access_secret"
+      - "REFRESH_SECRET=refresh_secret"
+      - "RESERVATION_HOLD_MINUTES=5"
+      - "MIDTRANS_SERVER_KEY=Mid-server-yWXnSnpHDaZmNMEWenWJcoJP"
+      - "MIDTRANS_CLIENT_KEY=Mid-client-CxOV8pS753CE5bsp"
+      - "CORS_ORIGIN=http://localhost:5173"
+    volumes:
+      - "./backend:/app"
+      - "/app/node_modules"
+    depends_on:
+      db:
+        condition: "service_healthy"
+      redis:
+        condition: "service_healthy"
+    command: >
+      sh -c "npx prisma db push && npx ts-node prisma/seed-init.ts && npm run dev"
+
+
+  frontend:
+    build:
+      context: "./frontend"
+      dockerfile: "Dockerfile.dev"
+    container_name: "moviehh-frontend"
+    restart: "always"
+    ports:
+      - "5173:5173"
+    environment:
+      - "VITE_APP_API_URL=http://localhost:3000"
+      - "VITE_MIDTRANS_CLIENT_KEY=Mid-client-CxOV8pS753CE5bsp"
+      - "VITE_MIDTRANS_SNAP_SCRIPT_URL=https://app.sandbox.midtrans.com/snap/snap.js"
+    volumes:
+      - "./frontend:/app"
+      - "/app/node_modules"
+    depends_on:
+      - "backend"
+
+volumes:
+  postgres_data:
