@@ -36,7 +36,15 @@ const processQueue = (error: any, token: string | null = null) => {
 const refreshTokenIfNeeded = async (error: any) => {
   const originalRequest = error.config;
 
-  if (error.response?.status === 401 && !originalRequest._retry) {
+  const isAuthMutation =
+    originalRequest.url?.includes("/auth/login") ||
+    originalRequest.url?.includes("/auth/register");
+
+  if (
+    error.response?.status === 401 &&
+    !originalRequest._retry &&
+    !isAuthMutation
+  ) {
     if (isRefreshing) {
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
