@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router";
 import { useAdminUsers } from "../../api/admin-get-users";
+import { ConfirmationDialog } from "@/components/ui/confirmation-modal";
 import {
   useAdminUpdateUserRole,
   useAdminToggleSuspension,
@@ -58,27 +59,19 @@ export const UsersList = () => {
 
   const handleRoleToggle = async (userId: string, currentRole: "USER" | "ADMIN") => {
     const targetRole = currentRole === "ADMIN" ? "USER" : "ADMIN";
-    const msg = `Are you sure you want to change this user's role to ${targetRole}?`;
-    if (window.confirm(msg)) {
-      try {
-        await updateRoleMutation.mutateAsync({ userId, role: targetRole });
-      } catch (err: any) {
-        alert(err.message || "Failed to update user role");
-      }
+    try {
+      await updateRoleMutation.mutateAsync({ userId, role: targetRole });
+    } catch (err: any) {
+      alert(err.message || "Failed to update user role");
     }
   };
 
   const handleSuspensionToggle = async (userId: string, isCurrentlySuspended: boolean) => {
     const nextState = !isCurrentlySuspended;
-    const msg = nextState
-      ? "Are you sure you want to suspend this user? They will be immediately blocked from all active sessions."
-      : "Are you sure you want to lift this user's suspension?";
-    if (window.confirm(msg)) {
-      try {
-        await toggleSuspensionMutation.mutateAsync({ userId, isSuspended: nextState });
-      } catch (err: any) {
-        alert(err.message || "Failed to toggle user suspension status");
-      }
+    try {
+      await toggleSuspensionMutation.mutateAsync({ userId, isSuspended: nextState });
+    } catch (err: any) {
+      alert(err.message || "Failed to toggle user suspension status");
     }
   };
 
@@ -165,44 +158,78 @@ export const UsersList = () => {
                     </TableCell>
                     <TableCell className="text-right pr-6">
                       <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={isSelf || updateRoleMutation.isPending}
-                          className="h-8 text-[11px] font-medium"
-                          onClick={() => handleRoleToggle(item.id, item.role)}
-                        >
-                          {item.role === "ADMIN" ? (
-                            <div className="flex items-center gap-1">
-                              <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-                              Demote
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-1">
-                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                              Promote
-                            </div>
-                          )}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={isSelf || toggleSuspensionMutation.isPending}
-                          className="h-8 text-[11px] font-medium"
-                          onClick={() => handleSuspensionToggle(item.id, item.isSuspended)}
-                        >
-                          {item.isSuspended ? (
-                            <div className="flex items-center gap-1">
-                              <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
-                              Unsuspend
-                            </div>
-                          ) : (
-                            <div className="flex items-center gap-1">
-                              <UserX className="w-3.5 h-3.5 text-rose-400" />
-                              Suspend
-                            </div>
-                          )}
-                        </Button>
+                        <ConfirmationDialog
+                          title="Change User Role"
+                          body={`Are you sure you want to change this user's role to ${item.role === "ADMIN" ? "USER" : "ADMIN"}?`}
+                          isDone={updateRoleMutation.isSuccess && updateRoleMutation.variables?.userId === item.id}
+                          triggerButton={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={isSelf || updateRoleMutation.isPending}
+                              className="h-8 text-[11px] font-medium"
+                            >
+                              {item.role === "ADMIN" ? (
+                                <div className="flex items-center gap-1">
+                                  <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                                  Demote
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                                  Promote
+                                </div>
+                              )}
+                            </Button>
+                          }
+                          confirmButton={
+                            <Button
+                              variant="default"
+                              disabled={updateRoleMutation.isPending}
+                              onClick={() => handleRoleToggle(item.id, item.role)}
+                            >
+                              Confirm
+                            </Button>
+                          }
+                        />
+                        <ConfirmationDialog
+                          title={item.isSuspended ? "Lift Suspension" : "Suspend User"}
+                          body={
+                            item.isSuspended
+                              ? "Are you sure you want to lift this user's suspension?"
+                              : "Are you sure you want to suspend this user? They will be immediately blocked from all active sessions."
+                          }
+                          isDone={toggleSuspensionMutation.isSuccess && toggleSuspensionMutation.variables?.userId === item.id}
+                          triggerButton={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={isSelf || toggleSuspensionMutation.isPending}
+                              className="h-8 text-[11px] font-medium"
+                            >
+                              {item.isSuspended ? (
+                                <div className="flex items-center gap-1">
+                                  <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                                  Unsuspend
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-1">
+                                  <UserX className="w-3.5 h-3.5 text-rose-400" />
+                                  Suspend
+                                </div>
+                              )}
+                            </Button>
+                          }
+                          confirmButton={
+                            <Button
+                              variant={item.isSuspended ? "default" : "destructive"}
+                              disabled={toggleSuspensionMutation.isPending}
+                              onClick={() => handleSuspensionToggle(item.id, item.isSuspended)}
+                            >
+                              Confirm
+                            </Button>
+                          }
+                        />
                       </div>
                     </TableCell>
                   </TableRow>

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ConfirmationDialog } from "@/components/ui/confirmation-modal";
 import { useAdminReservation } from "../../api/admin-get-reservations";
 import { useAdminCancelReservation } from "../../api/admin-cancel-reservation";
 import { formatPrice } from "@/helper/format-helper";
@@ -31,12 +32,10 @@ export const ReservationDetailsDialog: React.FC<ReservationDetailsDialogProps> =
   const cancelMutation = useAdminCancelReservation();
 
   const handleCancelReservation = async () => {
-    if (window.confirm("Are you sure you want to cancel this reservation? This will release all locked seats.")) {
-      try {
-        await cancelMutation.mutateAsync(reservationId);
-      } catch (err: any) {
-        alert(err.message || "Failed to cancel reservation");
-      }
+    try {
+      await cancelMutation.mutateAsync(reservationId);
+    } catch (err: any) {
+      alert(err.message || "Failed to cancel reservation");
     }
   };
 
@@ -205,16 +204,31 @@ export const ReservationDetailsDialog: React.FC<ReservationDetailsDialogProps> =
         <DialogFooter className="flex sm:justify-between items-center gap-2 pt-2 border-t border-border/40">
           <div>
             {!isLoading && !error && reservation?.status === "PENDING" && (
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleCancelReservation}
-                disabled={cancelMutation.isPending}
-                className="flex items-center gap-1.5"
-              >
-                <Ban className="w-4 h-4" />
-                {cancelMutation.isPending ? "Cancelling..." : "Cancel Reservation"}
-              </Button>
+              <ConfirmationDialog
+                title="Cancel Reservation"
+                body="Are you sure you want to cancel this reservation? This will release all locked seats."
+                isDone={cancelMutation.isSuccess}
+                triggerButton={
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={cancelMutation.isPending}
+                    className="flex items-center gap-1.5"
+                  >
+                    <Ban className="w-4 h-4" />
+                    Cancel Reservation
+                  </Button>
+                }
+                confirmButton={
+                  <Button
+                    variant="destructive"
+                    disabled={cancelMutation.isPending}
+                    onClick={handleCancelReservation}
+                  >
+                    Confirm
+                  </Button>
+                }
+              />
             )}
           </div>
           <Button variant="secondary" size="sm" onClick={onClose}>
