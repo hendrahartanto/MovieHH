@@ -8,6 +8,7 @@ export const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   store: new RedisStore({
+    prefix: "rl:global:",
     sendCommand: (...args: string[]) =>
       redisConnection.call(args[0], ...args.slice(1)) as any,
   }),
@@ -25,6 +26,7 @@ export const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   store: new RedisStore({
+    prefix: "rl:auth:",
     sendCommand: (...args: string[]) =>
       redisConnection.call(args[0], ...args.slice(1)) as any,
   }),
