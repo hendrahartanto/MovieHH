@@ -12,13 +12,7 @@ import {
   SubmitButtonType,
 } from "@/components/ui/form/submit-button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { paths } from "@/config/paths";
 import { useRegister } from "@/lib/auth";
 import { RegisterInput, registerInputSchema } from "@/features/auth";
@@ -93,33 +87,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger
-                        className={`w-full ${
-                          form.formState.errors.role
-                            ? "border-destructive-foreground"
-                            : ""
-                        }`}
-                      >
-                        <SelectValue placeholder="Role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="USER">Regular</SelectItem>
-                        <SelectItem value="ADMIN">Admin</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <SubmitButton
               isPending={register.isPending}
               type={SubmitButtonType.REGISTER}
