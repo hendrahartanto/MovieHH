@@ -86,7 +86,7 @@ To ensure reliability and high performance, MovieHH implements several advanced 
 
 ---
 
-## 💻 Getting Started (Local Demo)
+## 💻 Set up (Local Demo)
 
 You can easily run a local demo of the entire stack using Docker Compose.
 
