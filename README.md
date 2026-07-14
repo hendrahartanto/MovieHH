@@ -1,5 +1,5 @@
 <div align="center">
-  <img src=".\frontend\src\assets\moviehh_logo.png" alt="MovieHH Banner" width="20%" />
+  <img src=".\frontend\src\assets\moviehh_logo.png" alt="MovieHH Banner" width="30%" />
   
   <p><strong>A Modern Full-Stack Movie Reservation & Management System</strong></p>
   
