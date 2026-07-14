@@ -4,7 +4,7 @@
   <p><strong>A Modern Full-Stack Movie Reservation & Management System</strong></p>
   
   <p>
-        <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
+    <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React 19" />
     <img src="https://img.shields.io/badge/Node.js-Backend-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js" />
     <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
     <img src="https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
@@ -113,16 +113,21 @@ You can easily run a local demo of the entire stack using Docker Compose.
 
 ---
 
-<!-- ## 📸 Screenshots
+## 📸 Screenshots
 
-|                                 User Interface                                  |                                 Admin Dashboard                                  |
-| :-----------------------------------------------------------------------------: | :------------------------------------------------------------------------------: |
-| <img src="./docs/assets/user-booking.png" alt="User Booking View" width="400"/> | <img src="./docs/assets/admin-dashboard.png" alt="Admin Dashboard" width="400"/> |
-|                        **Seat Selection & Reservation**                         |                         **Revenue & Capacity Analytics**                         |
+#### Home
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/84288c56-f2ca-49ca-82f0-e89f32956706" />
 
-|                            Mobile Responsive                             |                       Digital Ticket & Payment                       |
-| :----------------------------------------------------------------------: | :------------------------------------------------------------------: |
-| <img src="./docs/assets/mobile-view.png" alt="Mobile View" width="400"/> | <img src="./docs/assets/ticket-qr.png" alt="QR Ticket" width="400"/> |
-|                   **Seamless Browsing on Any Device**                    |               **Midtrans Integration & QR Generation**               | -->
+#### Movie
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/24726f52-76fd-495f-8452-af5f9c8b8c2a" />
+
+#### Seat Selector
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/d2bede97-4488-4c31-a1d7-5ff54893411a" />
+
+#### Midtrans Payment
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/c2b07bc1-d522-4d7b-aae6-be028a82adf9" />
+
+#### Admin Dashboard
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/dba7d5c6-f32e-4cfb-9ba0-01f3d89bcc4b" />
 
 ---
