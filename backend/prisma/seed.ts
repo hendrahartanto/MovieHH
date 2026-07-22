@@ -384,58 +384,11 @@ async function main() {
 
         reservationsCount++;
       }
-    } else {
-      const timeDiff = showTime.startTime.getTime() - now.getTime();
-      const isSoon = timeDiff > 0 && timeDiff < 2 * 24 * 60 * 60 * 1000;
-      if (isSoon && Math.random() < 0.2) {
-        const user = demoUsers[Math.floor(Math.random() * demoUsers.length)];
-        const seats = theaterSeatsMap[showTime.theaterId];
-
-        const numSeats = Math.floor(Math.random() * 2) + 1;
-        const selectedSeats = seats.slice(0, numSeats);
-
-        const expiresAt = new Date();
-        expiresAt.setMinutes(expiresAt.getMinutes() + 10);
-
-        const totalPrice = selectedSeats.length * showTime.price;
-
-        const reservation = await prisma.reservation.create({
-          data: {
-            userId: user.id,
-            showTimeId: showTime.id,
-            status: "PENDING",
-            totalPrice,
-            expiresAt,
-            reservationDetails: {
-              create: selectedSeats.map((seat) => ({ seatId: seat.id })),
-            },
-          },
-        });
-
-        await prisma.payment.create({
-          data: {
-            reservationId: reservation.id,
-            token: `token_${reservation.id.substring(0, 8)}`,
-            redirectUrl: `https://app.sandbox.midtrans.com/snap/v2/vtweb/${reservation.id.substring(0, 8)}`,
-            status: "PENDING",
-          },
-        });
-
-        await prisma.seatsOnShowTimes.updateMany({
-          where: {
-            showTimeId: showTime.id,
-            seatId: { in: selectedSeats.map((s) => s.id) },
-          },
-          data: { status: "HOLD" },
-        });
-
-        reservationsCount++;
-      }
     }
   }
 
   console.log(
-    `Seeded ${reservationsCount} reservations across past and upcoming showtimes!`,
+    `Seeded ${reservationsCount} reservations across past showtimes!`,
   );
   console.log("Seeding complete!");
 }
