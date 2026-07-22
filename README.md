@@ -76,6 +76,12 @@
 
 ## 📐 Architecture & System Design
 
+<div align="center">
+  <img width="80%" alt="MovieHH Architecture Diagram" src="https://github.com/user-attachments/assets/60de4865-eaf4-4901-920a-64f87946663f" />
+  <p><em>High-level overview of the MovieHH system architecture and data flow.</em></p>
+</div>
+<br />
+
 To ensure reliability and high performance, MovieHH implements several advanced architectural patterns:
 
 1. **Seat Locking Mechanism:** When a user selects a seat, a Socket.io event is emitted to lock the seat temporarily. This state is broadcasted to all connected clients viewing the same showtime, providing a real-time collaborative booking experience.
